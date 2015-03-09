@@ -13,6 +13,9 @@
     "ember-qunit-notifications": "0.0.7",
     "qunit": "~1.17.1",
     "bourbon": "~4.2.1",
-    "neat": "~1.7.1"
+    "neat": "~1.7.1",
+    "jquery-ui": "~1.11.3",
+    "foundation": "~5.5.1",
+    "font-awesome": "~4.3.0"
   }
 }

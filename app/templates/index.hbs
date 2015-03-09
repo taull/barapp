@@ -1,0 +1,61 @@
+{{outlet}}
+
+<div class="slider-value">
+  <p><span>0</span>{{num}} </p>
+</div>
+
+<input type="checkbox" id="sidebartoggler" name="" value="">
+
+<div class="page-wrap">
+
+  <div class="sidebar">
+    <div class="slider">
+      <div class="slider-wrap-back">
+        <div class="slider-wrap">
+          <div class="slider-container">
+            {{jqui-slider value=num min=1 max=25 step=1 slide="slideAction" id="jquery-slider"}}
+          </div>
+        </div>
+      </div>
+
+      <div class="toggle-wrap-back">
+        <div class="toggle-wrap"></div>
+      </div>
+
+      <div class="toggle-container">
+        <label for="sidebartoggler" class="toggle">Set Radius</label>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<div class="homepage-container">
+
+  <!-- <div class="feed-header">
+    <p class="feed-heading">Local scene</p>
+    <p class="feed-subheading">Hear straight from your favorite bars</p>
+  </div> -->
+
+  <div class="feed-container">
+    <div class="feed-post">
+      <ul>
+        <div class="feed-avatar-container">
+          <li class="feed-avatar"></li>
+        </div>
+        <div class="feed-info-container">
+          <li class="feed-name">Henry's Bar and Grill {{fa-icon "check-circle"}} </li>
+          <li><span class="feed-radius">2 miles away</span><span class="feed-time">5 minutes ago</span></li>
+          <li class="feed-status">Your favorite bartender Nate is working tonight. Half price off well bourbons all night! This is some extra text to test the length of the post. Means absolutely nothing.</li>
+          <li class="feed-social-buttons">{{fa-icon "beer"}} 24</li>
+        </div>
+      </ul>
+    </div>
+  </div>
+
+
+  <div class="sidebar-container">
+  </div>
+
+</div>

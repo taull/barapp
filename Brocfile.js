@@ -1,5 +1,6 @@
 /* global require, module */
 
+
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 var app = new EmberApp();
@@ -16,5 +17,15 @@ var app = new EmberApp();
 // modules that you would like to import into your application
 // please specify an object with the list of modules as keys
 // along with the exports of each module as its value.
+
+app.import('bower_components/jquery-ui/jquery-ui.js');
+app.import('bower_components/jquery-ui/ui/tooltip.js');
+
+
+/*
+This example is more verbose than necessary for the sake of illustration.
+You could, for example, include the Font Awesome assets as a Broccoli tree.
+*/
+app.import("bower_components/font-awesome/css/font-awesome.css");
 
 module.exports = app.toTree();
