@@ -15,7 +15,11 @@
         <li class="business-profile-hours"><div class="profile-span-name">Everyday from 11am–2am</div></li>
         <li class="business-profile-website"><div class="profile-span-name"><a href="/">www.henrysbarandgrill.com</a></div></li>
       </ul>
-      <div class="business-profile-info-edit"><a href="/">{{fa-icon "magic"}} Edit Info</a></div>
+        <div class="business-profile-info-edit">
+          {{#link-to 'business-edit'}}
+            {{fa-icon "magic"}} Edit Info
+          {{/link-to}}
+        </div>
       <div class="business-profile-background-edit"><a href="/">{{fa-icon "file-image-o"}} Upload Cover Image</a></div>
     </div>
   </div>
