@@ -11,16 +11,19 @@
 header {
   width: 100%;
   height: 75px;
-  background:#5385d6;
-  position:absolute;
-  top:0;
-  z-index:10;
+  background: #5385d6;
+  position: absolute;
+  top: 0;
+  z-index: 10;
 }
 
 .header-container {
-  width: 320px;
+  width: 414px;
+  background: #5385d6;
   margin: 0 auto;
-  padding-top: 15px;
+  padding-top: 19px;
+  height: 75px;
+  position: relative;
 }
 
 .header-container p {
@@ -37,6 +40,7 @@ header {
   width: 100px;
   height: 50px;
   margin: 0 auto;
+  margin-top:-45px;
 }
 
 .footer-container {
@@ -161,6 +165,51 @@ header {
 
 /* END SIDEBAR */
 
+/* MENU SLIDE IN */
+
+.header-nav-wrap {
+  text-align:center;
+}
+
+.header-nav {
+  width: 414px;
+  margin: 0 auto;
+  z-index: -1;
+  transition: 1s;
+  margin-top: -58px;
+  height: 50px;
+  background: #f0f0f0;
+}
+
+.toggle-container {
+  margin-top:-24px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.menu-toggle {
+  font-size: 40px;
+  color: #FFF;
+  transition: 1s;
+  position: relative;
+  padding-left: 24px;
+
+}
+
+
+
+#menu-bars {
+  display: none;
+}
+
+#menu-bars:checked + .header-nav-wrap .header-nav {
+  margin-top:0px;
+}
+
+#menu-bars:checked + .header-nav-wrap .menu-toggle {
+  color:#fff;
+}
+
 /* jQuery Slider */
 
 #jquery-slider > span {
@@ -248,7 +297,7 @@ header {
 
 .feed-info-container {
   display: inline-block;
-  width: 85%;
+  width: 83%;
   vertical-align: top;
   padding-left: 0px;
 }
@@ -310,10 +359,17 @@ header {
 
 .signin-container {
   position: relative;
-  width: 300px;
+  background:#fff;
+  width: 414px;
   margin: 0 auto;
-  top: 75px;
-  padding: 30px;
+  padding: 30px 80px;
+  box-shadow: 0 0 30px -10px #000;
+}
+
+.signin-wrap {
+  width: 100%;
+  background: #f8f8f8;
+  margin-top:75px;
 }
 
 
@@ -522,6 +578,7 @@ header {
   margin:0px auto;
   padding-top:0px;
   font-size:0;
+  box-shadow: 0 0 30px -10px #000;
 }
 
 .business-profile-avatar {
@@ -573,7 +630,7 @@ header {
 
 .business-profile-info {
   position: relative;
-  margin-top: -165px;
+  margin-top: -170px;
   width: 414px;
   display: block;
   vertical-align: top;
@@ -619,7 +676,21 @@ header {
 .business-profile-feed {
   display:block;
   position:relative;
+  background: #fff;
   width: 414px;
+  margin:0 auto;
+  box-shadow: 0 0 30px -10px #000;
+}
+
+.business-profile-info-wrap {
+  width: 100%;
+  background: #444;
+  height: 275px;
+}
+
+.business-profile-feed-wrap {
+  width: 100%;
+  background: #f8f8f8;
 }
 
 .uber-container {
