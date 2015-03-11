@@ -1,1 +1,69 @@
 {{outlet}}
+
+
+
+
+<div class="business-profile-info-wrap">
+  <div class="business-profile-container">
+    <div class="business-profile-background"></div>
+
+    <div class="business-profile-info">
+      <ul>
+        <li class="business-profile-name"><div class="profile-span-name business-profile-span-name">Henry's Bar and Grill {{fa-icon "check-circle"}}</div></li>
+        <li class="business-profile-username"><div class="profile-span-name profile-span-username">@henrysbar</div></li>
+        <li class="business-profile-address1"><div class="profile-span-name profile-span-address"><a href="/">2967 Blossom St.</a> • Columbia, SC 29205</div></li>
+        <li class="business-profile-hours"><div class="profile-span-name">Everyday from 11am–2am</div></li>
+        <li class="business-profile-website"><div class="profile-span-name"><a href="/">www.henrysbarandgrill.com</a></div></li>
+      </ul>
+      <div class="business-profile-info-edit"><a href="/">{{fa-icon "magic"}} Edit Info</a></div>
+      <div class="business-profile-background-edit"><a href="/">{{fa-icon "file-image-o"}} Upload Cover Image</a></div>
+    </div>
+  </div>
+</div>
+
+<div class="business-profile-feed-wrap">
+  <div class="business-profile-feed">
+
+    <div class="business-profile-status">
+      <form class="" method="post">
+        {{textarea id="business-status" value=recipe autoresize=true maxHeight=200 placeholder="What's going on?"}}
+
+        <div class="submit-status">
+          <button class="post-status" {{action "submitPost"}}>Post</button>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="feed-container">
+      <div class="feed-post">
+        <ul>
+          <div class="feed-avatar-container">
+            <li class="feed-avatar"></li>
+          </div>
+          <div class="feed-info-container">
+            <li class="feed-name">Henry's Bar and Grill {{fa-icon "check-circle"}} </li>
+            <li class="feed-dynamic"><span class="feed-radius">2 miles away</span><span class="feed-time">5 minutes ago</span></li>
+            <li class="feed-status">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</li>
+            <li class="feed-social-buttons"><span class="beer-icon">{{fa-icon "beer"}}</span> 24</li>
+          </div>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-container">
+
+      <div class="footer-copyright">
+        <p>Keith® 2015 All Rights Reserved</p>
+      </div>
+
+      <div class="footer-social-icons">
+        <a href="/">{{fa-icon "facebook"}}</a>
+        <a href="/">{{fa-icon "twitter"}}</a>
+        <a href="/">{{fa-icon "instagram"}}</a>
+      </div>
+
+    </div>
+
+  </div>
+</div>

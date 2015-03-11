@@ -1,37 +1,23 @@
 {{outlet}}
 
-<div class="slider-value">
-  <p><span>0</span>{{num}} </p>
-</div>
+<div class="homepage-container">
 
-<input type="checkbox" id="sidebartoggler" name="" value="">
 
-<div class="page-wrap">
 
-  <div class="sidebar">
-    <div class="slider">
-      <div class="slider-wrap-back">
-        <div class="slider-wrap">
-          <div class="slider-container">
-            {{jqui-slider value=num min=1 max=25 step=1 slide="slideAction" id="jquery-slider"}}
-          </div>
+  <div class="slider">
+    <div class="slider-wrap-back">
+      <div class="slider-wrap">
+        <div class="slider-container">
+          {{jqui-slider value=num min=1 max=25 step=1 slide="slideAction" id="jquery-slider"}}
         </div>
       </div>
-
-      <div class="toggle-wrap-back">
-        <div class="toggle-wrap"></div>
-      </div>
-
-      <div class="toggle-container">
-        <label for="sidebartoggler" class="toggle">Set Radius</label>
-      </div>
-
     </div>
   </div>
-</div>
 
+  <div class="slider-value">
+    <p><span>0</span>{{num}} </p>
+  </div>
 
-<div class="homepage-container">
 
   <!-- <div class="feed-header">
     <p class="feed-heading">Local scene</p>
@@ -54,10 +40,5 @@
     </div>
   </div>
 
-
-  <div class="sidebar-container">
-
-
-  </div>
 
 </div>

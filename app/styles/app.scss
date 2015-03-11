@@ -50,9 +50,8 @@ header {
 
 .slider {
   width: 100%;
-  height:70px;
+  height:30px;
   padding: 0;
-  margin:-17px 0 0 0;
 }
 
 .slider-container {
@@ -64,14 +63,26 @@ header {
   margin-top:-22px;
 }
 
+.slider-wrap {
+  width:360px;
+  border-right: 30px solid #f0f0f0;
+  border-left: 30px solid #f0f0f0;
+  border-top: 30px solid #dfdfdf;
+  margin:0 auto;
+}
+
+.slider-wrap-back {
+  width:100%;
+  background:#f0f0f0;
+}
+
 .slider-value {
-  font-size: 38px;
+  font-size: 24px;
   position: relative;
   z-index: 10;
   margin: 0px auto;
   text-align: center;
-  padding-top: 24px;
-  color:#fff;
+  color:#000;
   font-weight:bold;
 }
 
@@ -80,90 +91,6 @@ header {
   z-index:100;
 }
 
-
-/* Sidebar */
-
-.page-wrap {
-  text-align:center;
-}
-
-.sidebar {
-  width: 100%;
-  z-index:-1;
-  transition:1s;
-  margin-top:0px;
-}
-
-.toggle-wrap {
-  border-right: 30px solid #fff;
-  border-left: 30px solid #fff;
-  border-top: 30px solid #333;
-  width:180px;
-  margin-left:auto;
-  margin-right:auto;
-
-}
-
-.toggle-wrap-back {
-  width:100%;
-  background:#fff;
-}
-
-.slider-wrap {
-  width:360px;
-  border-right: 30px solid #f0f0f0;
-  border-left: 30px solid #f0f0f0;
-  border-top: 30px solid #dfdfdf;
-  margin:0 auto;
-
-}
-
-.slider-wrap-back {
-  width:100%;
-  background:#f0f0f0;
-}
-
-.toggle-container {
-  margin-top:-24px;
-  margin-left:auto;
-  margin-right:auto;
-}
-
-.toggle {
-  font-size:10px;
-  color:#FFF;
-  text-transform:uppercase;
-  letter-spacing:2px;
-  font-weight:lighter;
-  transition: 1s;
-  position:relative;
-  text-align:center;
-  background:transparent;
-  padding: 5px 20px;
-
-}
-
-
-
-#sidebartoggler {
-  display: none;
-}
-
-#sidebartoggler:checked + .page-wrap .sidebar {
-  margin-top:28px;
-}
-
-#sidebartoggler:checked + .page-wrap .toggle {
-  color:#fff;
-}
-
-.sidebar-icon {
-  display:inline-block;
-  font-size:14px;
-  width:24px;
-}
-
-/* END SIDEBAR */
 
 /* MENU SLIDE IN */
 
@@ -233,8 +160,10 @@ header {
 
 
 .homepage-container {
-  width:960px;
+  width: 414px;
   margin: 0 auto;
+  margin-top: 75px;
+  box-shadow: 0 0 30px -10px #000;
 }
 
 .sidebar-container {
@@ -334,7 +263,7 @@ header {
 }
 
 .feed-dynamic {
-  padding-top:5px;
+  padding-top:0px;
 }
 
 .feed-social-buttons {
@@ -624,8 +553,12 @@ header {
   color: #FFF;
 }
 
+.profile-span-username {
+  font-size: 16px;
+}
+
 .profile-span-address {
-  line-height: 16px;
+  padding-top: 10px;
 }
 
 .business-profile-info {
@@ -655,7 +588,7 @@ header {
   top: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,.7);
+  background: rgba(0,0,0,.6);
 }
 
 .business-profile-info ul {
@@ -698,7 +631,7 @@ header {
   background: #000;
   height: 32px;
   color:#fff;
-  border-radius: 5px;
+  border-radius: 4px;
   margin: 20px auto 0 auto;
 
 }
@@ -727,5 +660,111 @@ header {
   padding-top: 1px;
   float: left;
   background: #ff0000;
-  border-radius: 5px 0px 0px 5px;
+  border-radius: 4px 0px 0px 4px;
+}
+
+
+/* MY BUSINESS PROFILE */
+
+.business-profile-info-edit {
+  padding-top: 10px;
+  text-align:center;
+}
+
+.business-profile-info-edit a {
+  color: #ff0000;;
+  text-decoration: none;
+}
+
+.business-profile-background-edit {
+  padding-top: 25px;
+  padding-left:15px;
+  text-align:left;
+}
+
+.business-profile-background-edit a {
+  color: #f0f0f0;
+  text-decoration: none;
+}
+
+/* STATUS UPDATE */
+
+.business-profile-status {
+  width: 100%;
+  padding: 25px 0px 0px 0px;
+  background: #f5f5f5;
+}
+
+#business-status {
+  width: 100%;
+  max-width: 100%;
+  border: none;
+  outline: none;
+  background: #f5f5f5;
+  font-size: 14px;
+  line-height: 16px;
+  resize: none;
+  padding: 5px 25px;
+}
+
+.post-status {
+  width: 20%;
+  height: 40px;
+  outline: none;
+  border: none;
+  border-radius: 0;
+  background: #5385d6;
+  color: #fff;
+  display: inline-block;
+  float: right;
+  padding-top: 5px;
+}
+.submit-status {
+  width: 100%;
+  padding: 0 0px;
+  background: #f0f0f0;
+  height: 40px;
+  margin-top: -5px;
+}
+
+/* Font Awesome Icons */
+
+.fa-bars {
+  text-shadow: 1px 1px 6px #0A4590;
+}
+
+
+/* Footer */
+
+footer {
+  background: #f8f8f8;
+  width: 100%;
+  height: 300px;
+}
+
+.footer-container {
+  width: 414px;
+  margin:0 auto;
+  border-top: 0px solid #dfdfdf;
+  background: #fff;
+  height: 150px;
+}
+
+.footer-copyright {
+  padding: 15px;
+  font-size: 10px;
+  display: inline-block;
+}
+
+.footer-social-icons {
+  display: inline-block;
+  vertical-align: top;
+  font-size: 18px;
+  float:right;
+  padding: 10px 15px;
+}
+
+.footer-social-icons a {
+  color: navy;
+  padding-left: 10px;
 }
