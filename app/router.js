@@ -6,6 +6,14 @@ var Router = Ember.Router.extend({
 });
 
 Router.map(function() {
+  this.route('business-edit');
+  this.route('business-profile');
+  this.route('user-profile');
+  this.route('user-signup');
+  this.route('business-signup');
+  this.route('my-business-profile');
+  this.route('signin');
+  this.route('signup-type');
 });
 
 export default Router;
