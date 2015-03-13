@@ -29,14 +29,16 @@
   <div class="business-profile-feed">
 
     <div class="business-profile-status">
-      <form class="" method="post">
-        {{textarea id="business-status" value=recipe autoresize=true maxHeight=200 placeholder="What's going on?"}}
+      <form {{action 'createStatus' on="submit"}}>
+
+        {{textarea id="business-status" value=model.post autoresize=true maxHeight=200 placeholder="What's going on?"}}
 
         <div class="submit-status">
-          <button class="post-status" {{action "submitPost"}}>Post</button>
+          <input type="submit" class="post-status">
         </div>
 
       </form>
+
     </div>
 
     <div class="feed-container">

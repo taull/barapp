@@ -1,0 +1,40 @@
+{{outlet}}
+
+<div class="login-wrap">
+  <div class="login-container">
+
+    <form {{action 'authenticate' on='submit'}}>
+      <div class="login-email">
+        {{input value=identification placeholder='Enter Email' type='email'}}
+      </div>
+      <div class="login-password">
+        {{input value=password placeholder='Enter Password' type='password'}}
+      </div>
+      <div class="login-submit">
+        <button type="submit">Sign In</button>
+      </div>
+    </form>
+
+    <div class="new-user-link">
+
+      {{#link-to 'register'}}
+        <p>New User? Sign up here</p>
+      {{/link-to}}
+    </div>
+
+  </div>
+</div>
+
+  <div class="footer-container">
+
+    <div class="footer-copyright">
+      <p>Keith® 2015 All Rights Reserved</p>
+    </div>
+
+    <div class="footer-social-icons">
+      <a href="/">{{fa-icon "facebook"}}</a>
+      <a href="/">{{fa-icon "twitter"}}</a>
+      <a href="/">{{fa-icon "instagram"}}</a>
+    </div>
+
+  </div>

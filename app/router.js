@@ -14,6 +14,9 @@ Router.map(function() {
   this.route('my-business-profile');
   this.route('signin');
   this.route('signup-type');
+  this.route('login');
+  this.route('new');
+  this.route('register');
 });
 
 export default Router;

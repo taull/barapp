@@ -13,9 +13,26 @@ module.exports = function(environment) {
       }
     },
 
+    'simple-auth': {
+      routeAfterAuthentication: 'home'
+    },
+
+
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
+    },
+
+    contentSecurityPolicy: {
+      'report-uri': "'http://localhost:4200'",
+      'default-src': "'none'",
+      'script-src': "'self' 'unsafe-inline'",
+      'font-src': "'self' *",
+      'connect-src': "'self' *",
+      'img-src': "'self' *",
+      'style-src': "'self' 'unsafe-inline'",
+      'media-src': "'self'",
+      'frame-src': "'self' *"
     }
   };
 

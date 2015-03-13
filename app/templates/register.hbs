@@ -1,0 +1,46 @@
+<div class="business-signup-container">
+
+  <form id="business-signup-form" {{action 'register' on='submit'}}>
+
+    <div class="business-signup-name">
+    </div>
+
+    <div class="business-signup-firstname">
+      {{input placeholder="First Name" value=firstName}}
+    </div>
+
+    <div class="business-signup-lastname">
+      {{input placeholder="Last Name" value=lastName}}
+    </div>
+
+    <div class="business-signup-email">
+      {{input placeholder="email" type='email' value=username}}
+    </div>
+
+    <div class="business-signup-password">
+      {{input placeholder="password" type='password' value=password}}
+    </div>
+
+    <div class="business-signup-submit">
+      <button type="submit">Register</button>
+    </div>
+
+  </form>
+
+</div>
+
+<div class="footer-container">
+
+  <div class="footer-copyright">
+    <p>Keith® 2015 All Rights Reserved</p>
+  </div>
+
+  <div class="footer-social-icons">
+    <a href="/">{{fa-icon "facebook"}}</a>
+    <a href="/">{{fa-icon "twitter"}}</a>
+    <a href="/">{{fa-icon "instagram"}}</a>
+  </div>
+
+</div>
+
+{{outlet}}

@@ -286,24 +286,25 @@ header {
 
 /* Sign In */
 
-.signin-container {
+.login-container {
   position: relative;
   background:#fff;
   width: 414px;
   margin: 0 auto;
   padding: 30px 80px;
   box-shadow: 0 0 30px -10px #000;
+  margin-top: 75px;
 }
 
-.signin-wrap {
+.login-wrap {
   width: 100%;
   background: #f8f8f8;
   margin-top:75px;
 }
 
 
-.signin-email input,
-.signin-password input {
+.login-email input,
+.login-password input {
   transition: 1000ms;
   border:none;
   border-radius: 0px;
@@ -321,21 +322,21 @@ header {
   }
 }
 
-.signin-email input::-webkit-input-placeholder,
-.signin-password input::-webkit-input-placeholder {
+.login-email input::-webkit-input-placeholder,
+.login-password input::-webkit-input-placeholder {
   font-size:14px;
   font-weight: lighter;
 }
 
-.signin-password input {
+.login-password input {
   font-size:14px;
 }
 
-.signin-password {
+.login-password {
   margin-top: 15px;
 }
 
-.signin-submit button {
+.login-submit button {
   height: 45px;
   width: 100%;
   background: #5385d6;
@@ -363,14 +364,39 @@ header {
   color: #5385d6;
 }
 
+.loggedin-link {
+  float: right;
+  margin-top: -30px;
+  padding-right: 10px;
+  border-left: 1px solid #fff;
+  padding-left: 5px;
+}
+
+.loggedin-link a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.sign-out a {
+  float: right;
+  margin-top: -30px;
+  padding-right: 10px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 12px;
+  border-left: 1px solid #f0f0f0;
+  padding-left: 5px;
+  height: 15px;
+  padding-top: 3px;
+}
 
 /* User Sign Up */
 
 .user-signup-container {
-  position: relative;
-  width: 300px;
+  width: 414px;
   margin: 0 auto;
-  top: 150px;
+  margin-top: 75px;
   padding: 30px;
 }
 
@@ -390,8 +416,7 @@ header {
   background: #f8f8f8;
 
   &:focus {
-    border: 1px solid #5385d6;
-    outline:0;
+    background: #f0f0f0;
   }
 }
 
@@ -430,11 +455,11 @@ header {
 
 /* Business Sign Up */
 
-.business-signup-container {
-  position: relative;
+.business-signup-container,
+.business-edit-container {
   width: 414px;
   margin: 0 auto;
-  top: 150px;
+  margin-top: 75px;
   padding: 30px;
   background: transparent;
   border-radius: 5px;
@@ -445,7 +470,16 @@ header {
 .business-signup-lastname input,
 .business-signup-email input,
 .business-signup-confirm input,
-.business-signup-password input {
+.business-signup-password input,
+.business-edit-name input,
+.business-edit-firstname input,
+.business-edit-lastname input,
+.business-edit-email input,
+.business-edit-address input,
+.business-edit-city input,
+.business-edit-state input,
+.business-edit-zip input,
+.business-edit-hours input {
   transition: 1000ms;
   border:none;
   border-radius: 0px;
@@ -457,8 +491,7 @@ header {
   background: #f8f8f8;
 
   &:focus {
-    border: 1px solid #5385d6;
-    outline:0;
+    background:#f0f0f0;
   }
 }
 
@@ -720,6 +753,7 @@ header {
   padding-top: 5px;
   font-size: 14px;
   margin-top:-1px;
+
 }
 
 .submit-status {
@@ -742,9 +776,14 @@ header {
 /* Footer */
 
 footer {
-  background: #f8f8f8;
+  background: #dfdfdf;
   width: 100%;
-  height: 300px;
+  border-top:1px solid #ccc;
+  margin: 0 auto;
+  position: relative;
+  bottom: 0;
+  height: 60px;
+
 }
 
 .footer-container {
@@ -772,4 +811,39 @@ footer {
 .footer-social-icons a {
   color: navy;
   padding-left: 10px;
+}
+
+.fixed-footer ul {
+  list-style: none;
+  padding-left: 0;
+  font-size: 0;
+}
+
+.fixed-footer {
+  width: 414px;
+  background: #dfdfdf;
+  margin: 0 auto;
+  position:relative;
+  height: 60px;
+}
+
+.footer-social-icon {
+  display: block;
+  text-align: center;
+  font-size: 24px;
+
+}
+
+.footer-social {
+  width: 25%;
+  display: inline-block;
+  font-size: 10px;
+  text-align: center;
+  border-left: 1px solid #ccc;
+  padding-top: 10px;
+  height: 60px;
+}
+
+.footer-social:first-child {
+  border-left: none;
 }

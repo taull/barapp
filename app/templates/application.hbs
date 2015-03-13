@@ -7,6 +7,20 @@
     <div class="header-logo">
     </div>
 
+    {{#if session.isAuthenticated}}
+
+      <div class="sign-out">
+        <a {{ action 'invalidateSession' }} href="javascript:void(0)">Sign out {{fa-icon "sign-out"}}</a>
+      </div>
+
+      {{else}}
+
+      <div class="loggedin-link">
+        {{#link-to 'login'}}Login{{/link-to}}
+      </div>
+
+    {{/if}}
+
   </div>
 
   <input type="checkbox" id="menu-bars" name="" value="">
@@ -20,3 +34,18 @@
 
 </header>
 {{outlet}}
+
+
+
+<footer>
+<div class="fixed-footer">
+
+  <ul>
+    <li class="footer-social"><div class="footer-social-icon">{{fa-icon "comments"}}</div><p>Activity</p></li>
+    <li class="footer-social"><div class="footer-social-icon">{{fa-icon "star"}}</div><p>Favorites</p></li>
+    <li class="footer-social"><div class="footer-social-icon">{{fa-icon "user"}}</div><p>My Profile</p></li>
+    <li class="footer-social"><div class="footer-social-icon">{{fa-icon "cog"}}</div><p>Settings</p></li>
+  </ul>
+
+</div>
+</footer>
