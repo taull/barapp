@@ -10,6 +10,7 @@
     {{#if session.isAuthenticated}}
 
       <div class="sign-out">
+        <p>{{session.currentUser.firstName}}</p>
         <a {{ action 'invalidateSession' }} href="javascript:void(0)">Sign out {{fa-icon "sign-out"}}</a>
       </div>
 
@@ -41,10 +42,10 @@
 <div class="fixed-footer">
 
   <ul>
-    <li class="footer-social"><div class="footer-social-icon">{{fa-icon "comments"}}</div><p>Activity</p></li>
-    <li class="footer-social"><div class="footer-social-icon">{{fa-icon "star"}}</div><p>Favorites</p></li>
-    <li class="footer-social"><div class="footer-social-icon">{{fa-icon "user"}}</div><p>My Profile</p></li>
-    <li class="footer-social"><div class="footer-social-icon">{{fa-icon "cog"}}</div><p>Settings</p></li>
+    {{#link-to 'index'}}<li class="footer-social"><div class="footer-social-icon">{{fa-icon "comments"}}</div><p>Activity</p></li>{{/link-to}}
+    {{#link-to 'index'}}<li class="footer-social fs-favorites"><div class="footer-social-icon">{{fa-icon "star"}}</div><p>Favorites</p></li>{{/link-to}}
+    {{#link-to 'my-business-profile'}}<li class="footer-social fs-profile"><div class="footer-social-icon">{{fa-icon "user"}}</div><p>My Profile</p></li>{{/link-to}}
+    {{#link-to 'index'}}<li class="footer-social fs-settings"><div class="footer-social-icon">{{fa-icon "cog"}}</div><p>Settings</p></li>{{/link-to}}
   </ul>
 
 </div>

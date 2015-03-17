@@ -13,17 +13,20 @@ html {
   /* box-sizing: box-sizing; */
   font-family: sans-serif; }
 
+body {
+  background: #f8f8f8; }
+
 header {
   width: 100%;
   height: 75px;
-  background: #5385d6;
+  background: #333;
   position: absolute;
   top: 0;
   z-index: 10; }
 
 .header-container {
   width: 414px;
-  background: #5385d6;
+  background: #000;
   margin: 0 auto;
   padding-top: 19px;
   height: 75px;
@@ -140,7 +143,7 @@ header {
   width: 414px;
   margin: 0 auto;
   margin-top: 75px;
-  box-shadow: 0 0 30px -10px #000; }
+  background: #fff; }
 
 .sidebar-container {
   display: inline-block;
@@ -241,16 +244,16 @@ header {
 /* Sign In */
 .login-container {
   position: relative;
-  background: #fff;
+  background: #FFF;
   width: 414px;
   margin: 0 auto;
   padding: 30px 80px;
-  box-shadow: 0 0 30px -10px #000;
   margin-top: 75px; }
 
 .login-wrap {
   width: 100%;
   background: #f8f8f8;
+  background-size: cover;
   margin-top: 75px; }
 
 .login-email input, .login-password input {
@@ -305,27 +308,38 @@ header {
 
 .loggedin-link {
   float: right;
-  margin-top: -30px;
-  padding-right: 10px;
-  border-left: 1px solid #fff;
+  margin-top: -35px;
+  padding-right: 15px;
   padding-left: 5px; }
 
 .loggedin-link a {
-  color: #fff;
+  color: #f0f0f0;
   text-decoration: none;
   font-size: 12px; }
 
-.sign-out a {
+.sign-out {
   float: right;
-  margin-top: -30px;
-  padding-right: 10px;
-  color: #fff;
+  margin-top: -35px;
+  padding-right: 15px; }
+
+.sign-out a {
+  color: #f0f0f0;
   text-decoration: none;
   font-size: 12px;
-  border-left: 1px solid #f0f0f0;
-  padding-left: 5px;
-  height: 15px;
-  padding-top: 3px; }
+  padding-left: 2px; }
+
+.sign-out p {
+  color: #f0f0f0;
+  font-size: 12px;
+  display: inline-block;
+  border-right: 1px solid #555;
+  vertical-align: top;
+  padding: 0;
+  height: 20px;
+  padding-top: 5px;
+  padding-right: 5px;
+  text-transform: none;
+  margin-top: -2px; }
 
 /* User Sign Up */
 .user-signup-container {
@@ -374,10 +388,12 @@ header {
 .business-signup-container, .business-edit-container {
   width: 414px;
   margin: 0 auto;
-  margin-top: 75px;
+  margin-top: -25px;
   padding: 30px;
   background: transparent;
-  border-radius: 5px; }
+  border-radius: 0px;
+  background: #fff;
+  margin-bottom: 100px; }
 
 .business-signup-name input, .business-signup-firstname input, .business-signup-lastname input, .business-signup-email input, .business-signup-confirm input, .business-signup-password input, .business-edit-name input, .business-edit-firstname input, .business-edit-lastname input, .business-edit-email input, .business-edit-address input, .business-edit-city input, .business-edit-state input, .business-edit-zip input, .business-edit-hours input {
   transition: 1000ms;
@@ -388,9 +404,11 @@ header {
   padding: 0px 5px;
   font-size: 14px;
   text-align: center;
-  background: #f8f8f8; }
+  background: #f8f8f8;
+  margin-top: 15px; }
   .business-signup-name input:focus, .business-signup-firstname input:focus, .business-signup-lastname input:focus, .business-signup-email input:focus, .business-signup-confirm input:focus, .business-signup-password input:focus, .business-edit-name input:focus, .business-edit-firstname input:focus, .business-edit-lastname input:focus, .business-edit-email input:focus, .business-edit-address input:focus, .business-edit-city input:focus, .business-edit-state input:focus, .business-edit-zip input:focus, .business-edit-hours input:focus {
-    background: #f0f0f0; }
+    background: #f0f0f0;
+    outline: 0; }
 
 .business-signup-name input::-webkit-input-placeholder, .business-signup-firstname input::-webkit-input-placeholder, .business-signup-lastname input::-webkit-input-placeholder, .business-signup-email input::-webkit-input-placeholder, .business-signup-confirm input::-webkit-input-placeholder, .business-signup-password input::-webkit-input-placeholder {
   font-size: 14px;
@@ -399,10 +417,10 @@ header {
 .business-signup-password, .business-signup-confirm, .business-signup-email, .business-signup-firstname, .business-signup-lastname {
   margin-top: 15px; }
 
-.business-signup-submit button {
+.business-signup-submit button, .business-edit-submit button {
   height: 45px;
   width: 100%;
-  background: #fff;
+  background: #5385d6;
   border: none;
   border-radius: 0px;
   text-align: center;
@@ -411,7 +429,7 @@ header {
   transition: 500ms;
   font-family: sans-serif;
   font-size: 14px;
-  color: #5385d6;
+  color: #fff;
   font-weight: 400;
   text-decoration: none; }
 
@@ -470,14 +488,14 @@ header {
 
 .business-profile-info {
   position: relative;
-  margin-top: -170px;
+  margin-top: -200px;
   width: 414px;
   display: block;
   vertical-align: top;
   color: #000;
   font-size: 12px;
   font-weight: normal;
-  padding-bottom: 40px; }
+  padding-top: 20px; }
 
 .business-profile-background {
   background: url('/assets/images/henrysbar.jpg');
@@ -512,8 +530,7 @@ header {
   position: relative;
   background: #fff;
   width: 414px;
-  margin: 0 auto;
-  box-shadow: 0 0 30px -10px #000; }
+  margin: 0 auto; }
 
 .business-profile-info-wrap {
   width: 100%;
@@ -620,9 +637,8 @@ header {
 
 /* Footer */
 footer {
-  background: #dfdfdf;
+  background: #f8f8f8;
   width: 100%;
-  border-top: 1px solid #ccc;
   margin: 0 auto;
   position: relative;
   bottom: 0;
@@ -633,7 +649,7 @@ footer {
   margin: 0 auto;
   border-top: 0px solid #dfdfdf;
   background: #fff;
-  height: 150px; }
+  height: 40px; }
 
 .footer-copyright {
   padding: 15px;
@@ -673,11 +689,11 @@ footer {
   display: inline-block;
   font-size: 10px;
   text-align: center;
-  border-left: 1px solid #ccc;
   padding-top: 10px;
-  height: 60px; }
+  height: 60px;
+  color: #000; }
 
-.footer-social:first-child {
-  border-left: none; }
+.fs-favorites, .fs-settings, .fs-profile {
+  border-left: 1px solid #ccc; }
 
 /*# sourceMappingURL=barapp.css.map */

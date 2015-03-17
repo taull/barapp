@@ -9,11 +9,11 @@
 
     <div class="business-profile-info">
       <ul>
-        <li class="business-profile-name"><div class="profile-span-name business-profile-span-name">Henry's Bar and Grill {{fa-icon "check-circle"}}</div></li>
-        <li class="business-profile-username"><div class="profile-span-name profile-span-username">@henrysbar</div></li>
-        <li class="business-profile-address1"><div class="profile-span-name profile-span-address"><a href="/">2967 Blossom St.</a> • Columbia, SC 29205</div></li>
-        <li class="business-profile-hours"><div class="profile-span-name">Everyday from 11am–2am</div></li>
-        <li class="business-profile-website"><div class="profile-span-name"><a href="/">www.henrysbarandgrill.com</a></div></li>
+        <li class="business-profile-name"><div class="profile-span-name business-profile-span-name">{{session.currentUser.businessName}} {{fa-icon "check-circle"}} </div></li>
+        <li class="business-profile-username"><div class="profile-span-name profile-span-username">@{{session.currentUser.handle}}</div></li>
+        <li class="business-profile-address1"><div class="profile-span-name profile-span-address"><a href="/">{{session.currentUser.address}}</a> • {{session.currentUser.city}}, {{session.currentUser.state}} {{session.currentUser.zip}}</div></li>
+        <li class="business-profile-hours"><div class="profile-span-name">{{session.currentUser.businessHours}}</div></li>
+        <li class="business-profile-website"><div class="profile-span-name"><a href="/">{{session.currentUser.website}}</a></div></li>
       </ul>
         <div class="business-profile-info-edit">
           {{#link-to 'business-edit'}}
