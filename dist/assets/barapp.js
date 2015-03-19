@@ -120,7 +120,13 @@ define('barapp/authenticators/parse-email', ['exports', 'ic-ajax', 'simple-auth/
 
     restore: function restore(data) {
       this.set("sessionToken", data.sessionToken);
-      return ajax['default']("https://api.parse.com/1/users/me");
+      return new Ember['default'].RSVP.Promise(function (resolve, reject) {
+        if (!Ember['default'].isEmpty(data.sessionToken)) {
+          resolve(data);
+        } else {
+          reject();
+        }
+      });
     },
 
     authenticate: function authenticate(credentials) {
@@ -138,23 +144,31 @@ define('barapp/authenticators/parse-email', ['exports', 'ic-ajax', 'simple-auth/
 
       return ajax['default']("https://api.parse.com/1/" + endpoint, options).then((function (response) {
         this.set("sessionToken", response.sessionToken);
-        return response;
+        return { sessionToken: response.sessionToken };
       }).bind(this));
     },
 
     invalidate: function invalidate() {
       this.set("sessionToken", null);
       return Ember['default'].RSVP.resolve();
-    },
+    }
+  });
 
-    _setupHeaders: Ember['default'].immediateObserver("sessionToken", function () {
-      var token = this.get("sessionToken");
-      Ember['default'].$.ajaxSetup({
-        headers: {
-          "X-Parse-Session-Token": token
-        }
-      });
-    })
+});
+define('barapp/authorizers/parse', ['exports', 'ember', 'simple-auth/authorizers/base', 'barapp/config/environment'], function (exports, Ember, Base, ENV) {
+
+  'use strict';
+
+  exports['default'] = Base['default'].extend({
+    authorize: function authorize(jqXHR) {
+      jqXHR.setRequestHeader("X-Parse-Application-Id", ENV['default'].parseKeys.applicationId);
+      jqXHR.setRequestHeader("X-Parse-REST-API-Key", ENV['default'].parseKeys.restApi);
+
+      var sessionToken = this.get("session.sessionToken");
+      if (!Ember['default'].isEmpty(sessionToken)) {
+        jqXHR.setRequestHeader("X-Parse-Session-Token", sessionToken);
+      }
+    }
   });
 
 });
@@ -410,17 +424,43 @@ define('barapp/controllers/index', ['exports', 'ember'], function (exports, Embe
   });
 
 });
-define('barapp/controllers/loading', function () {
-
-	'use strict';
-
-});
-define('barapp/controllers/login', ['exports', 'simple-auth/mixins/login-controller-mixin'], function (exports, LoginControllerMixin) {
+define('barapp/controllers/login', ['exports', 'simple-auth/mixins/login-controller-mixin', 'ember'], function (exports, LoginControllerMixin, Ember) {
 
   'use strict';
 
-  exports['default'] = Ember.Controller.extend(LoginControllerMixin['default'], {
+  exports['default'] = Ember['default'].Controller.extend(LoginControllerMixin['default'], {
     authenticator: "authenticator:parse-email"
+  });
+
+});
+define('barapp/controllers/my-business-profile', ['exports', 'ic-ajax', 'ember'], function (exports, ajax, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Controller.extend({
+    actions: {
+      postStatus: function postStatus() {
+        // var self = this;
+        var data = this.getProperties("status");
+        data.creator = {
+          __type: "Pointer",
+          className: "_User",
+          objectId: this.get("session.currentUser.id")
+        };
+        data.business = {
+          __type: "Pointer",
+          className: "_User",
+          objectId: this.get("model.id")
+        };
+        ajax['default']({
+          url: "https://api.parse.com/1/classes/Post",
+          type: "POST",
+          data: JSON.stringify(data),
+          contentType: "application/json"
+        }).then((function (response) {
+          this.transitionToRoute("my-business-profile", response);
+        }).bind(this));
+      } }
   });
 
 });
@@ -454,17 +494,6 @@ define('barapp/controllers/status', ['exports', 'ember'], function (exports, Emb
 	'use strict';
 
 	exports['default'] = Ember['default'].Controller.extend({});
-
-	// actions: {
-	//   destroy: function(){
-	//     this.get('model').destroy();
-	//   },
-	//
-	//   addFavorite: function(){
-	//     var status = this.get('model');
-	//     this.get('session.currentUser').addFavorite(status);
-	//   }
-	// }
 
 });
 define('barapp/helpers/fa-icon', ['exports', 'ember'], function (exports, Ember) {
@@ -589,7 +618,7 @@ define('barapp/initializers/autoresize', ['exports', 'ember-autoresize/ext/text-
   };
 
 });
-define('barapp/initializers/current-user', ['exports', 'ember', 'simple-auth/session'], function (exports, Ember, Session) {
+define('barapp/initializers/current-user', ['exports', 'ember', 'simple-auth/session', 'ic-ajax'], function (exports, Ember, Session, ajax) {
 
   'use strict';
 
@@ -598,14 +627,19 @@ define('barapp/initializers/current-user', ['exports', 'ember', 'simple-auth/ses
   function initialize(container) {
     Session['default'].reopen({
       setCurrentUser: (function () {
-        var id = this.get("objectId");
+        var token = this.get("sessionToken");
 
-        if (!Ember['default'].isEmpty(id)) {
-          return container.lookup("service:store").find("user", id).then((function (user) {
+        if (this.get("isAuthenticated") && !Ember['default'].isEmpty(token)) {
+          var store = container.lookup("store:main");
+          ajax['default']("https://api.parse.com/1/users/me").then((function (response) {
+            response.id = response.objectId;
+            delete response.objectId;
+            delete response.sessionToken;
+            var user = store.push("user", response);
             this.set("currentUser", user);
           }).bind(this));
         }
-      }).observes("objectId")
+      }).observes("sessionToken")
     });
   }
 
@@ -625,6 +659,26 @@ define('barapp/initializers/ember-foundation', ['exports', 'ember'], function (e
     initialize: function initialize(container, app) {
       app.inject("component:f-breadcrumbs", "router", "router:main");
     }
+  };
+
+});
+define('barapp/initializers/ember-magic-man', ['exports', 'ember-magic-man/store'], function (exports, Store) {
+
+  'use strict';
+
+  exports.initialize = initialize;
+
+  function initialize(container, application) {
+    application.register("store:main", Store['default']);
+
+    application.inject("route", "store", "store:main");
+    application.inject("controller", "store", "store:main");
+    application.inject("model", "store", "store:main");
+  }
+
+  exports['default'] = {
+    name: "ember-magic-man",
+    initialize: initialize
   };
 
 });
@@ -651,28 +705,6 @@ define('barapp/initializers/export-application-global', ['exports', 'ember', 'ba
   };
 
 });
-define('barapp/initializers/parse-keys', ['exports', 'ember'], function (exports, Ember) {
-
-  'use strict';
-
-  exports.initialize = initialize;
-
-  function initialize() {
-    Ember['default'].$.ajaxSetup({
-      headers: {
-        "X-Parse-Application-Id": "AfNszK8Rd7zcsyJhCHpyoRCPM338C6aiylN6mgC6",
-        "X-Parse-REST-API-Key": "COVAwkICU4GoLPTQt2AN9rBI0Y7jUVk7ZbBzudFy"
-      }
-    });
-  }
-
-  exports['default'] = {
-    name: "parse-keys",
-    initialize: initialize
-  };
-  /* container, application */
-
-});
 define('barapp/initializers/simple-auth', ['exports', 'simple-auth/configuration', 'simple-auth/setup', 'barapp/config/environment'], function (exports, Configuration, setup, ENV) {
 
   'use strict';
@@ -686,134 +718,70 @@ define('barapp/initializers/simple-auth', ['exports', 'simple-auth/configuration
   };
 
 });
-define('barapp/initializers/store-service', ['exports'], function (exports) {
-
-  'use strict';
-
-  exports.initialize = initialize;
-
-  function initialize(container, application) {
-    application.inject("route", "store", "service:store");
-    application.inject("controller", "store", "service:store");
-    application.inject("model", "store", "service:store");
-  }
-
-  exports['default'] = {
-    name: "store-service",
-    initialize: initialize
-  };
-
-});
-define('barapp/models/identity-map', ['exports', 'ember'], function (exports, Ember) {
+define('barapp/models/status', ['exports', 'ember'], function (exports, Ember) {
 
   'use strict';
 
   exports['default'] = Ember['default'].Object.extend({
-    init: function init() {
-      this._map = Ember['default'].Object.create();
-    },
+    // destroy: function(){
+    //   return this.store.destroy('status', this);
+    // },
+    //
+    // save: function(){
+    //   return this.store.save('status', this);
+    // },
 
-    get: function get(type, id) {
-      var typeArray = this._getType(type);
-      if (id) {
-        /* SINGLE RECORD */
-        return typeArray.findBy("__jsim_meta_id", id);
-      } else {
-        /* ALL RECORDS */
-        return typeArray;
-      }
-    },
+    toJSON: function toJSON() {
+      var data = Ember['default'].Object.create(this);
 
-    set: function set(type, id, record) {
-      var typeArray = this._getType(type);
-      var cached = typeArray.findBy("__jsim_meta_id", id);
-      if (cached) {
-        cached.setProperties(record);
-      } else {
-        var v = record instanceof Ember['default'].Object ? record : Ember['default'].Object.create(record);
-        v.__jsim_meta_id = id;
-        typeArray.addObject(v);
+      var userId = this.get("status.id");
+      if (userId) {
+        data.set("status", {
+          __type: "Pointer",
+          className: "_User",
+          objectId: userId
+        });
       }
-    },
 
-    _getType: function _getType(type) {
-      var typeArray = this._map.get(type);
-      if (!typeArray) {
-        this._map.set(type, Ember['default'].A());
-        typeArray = this._map.get(type);
-      }
-      return typeArray;
+      return data;
     }
   });
 
 });
-define('barapp/models/status', ['exports', 'ember'], function (exports, Ember) {
+define('barapp/models/user', ['exports', 'ic-ajax', 'ember'], function (exports, ajax, Ember) {
 
-	'use strict';
+  'use strict';
 
-	exports['default'] = Ember['default'].Object.extend({});
+  exports['default'] = Ember['default'].Object.extend({
+    destroy: function destroy() {
+      return this.store.destroy("user", this);
+    },
 
-	// destroy: function(){
-	//   return this.store.destroy('status', this);
-	// },
-	//
-	// save: function(){
-	//   return this.store.save('status', this);
-	// },
-	//
-	// toJSON: function(){
-	//   var data = Ember.Object.create(this);
-	//
-	//   var userId = this.get('createdBy.id');
-	//   if(userId) {
-	//     data.set('createdBy', {
-	//       __type: 'Pointer',
-	//       className: '_User',
-	//       objectId: userId
-	//     });
-	//   }
-	//
-	//   return data;
-	// }
+    save: function save() {
+      return this.store.save("user", this);
+    },
 
-});
-define('barapp/models/user', ['exports', 'ember'], function (exports, Ember) {
+    toJSON: function toJSON() {
+      // console.log('User#toJSON');
+      return this;
+    },
 
-	'use strict';
-
-	// import ajax from 'ic-ajax';
-	exports['default'] = Ember['default'].Object.extend({});
-
-	// destroy: function(){
-	//   return this.store.destroy('user', this);
-	// },
-	//
-	// save: function(){
-	//   return this.store.save('user', this);
-	// },
-	//
-	// toJSON: function(){
-	//   // console.log('User#toJSON');
-	//   return this;
-	// },
-	//
-	// addFavorite: function(status) {
-	//   return ajax("https://api.parse.com/1/users/" + this.id, {
-	//     type: "PUT",
-	//     data: JSON.stringify({
-	//       favorites: {
-	//         __op: "AddRelation",
-	//         objects: [
-	//           {
-	//             __type: 'Pointer',
-	//             className: 'Status',
-	//             objectId: status.id
-	//           }
-	//         ]
-	//       }
-	//     })
-	//   });
-	// }
+    postStatus: function postStatus(status) {
+      return ajax['default']("https://api.parse.com/1/users/" + this.id, {
+        type: "PUT",
+        data: JSON.stringify({
+          favorites: {
+            __op: "AddRelation",
+            objects: [{
+              __type: "Pointer",
+              className: "Status",
+              objectId: status.id
+            }]
+          }
+        })
+      });
+    }
+  });
 
 });
 define('barapp/router', ['exports', 'ember', 'barapp/config/environment'], function (exports, Ember, config) {
@@ -891,11 +859,28 @@ define('barapp/routes/my-business-profile', ['exports', 'ember'], function (expo
 
   'use strict';
 
+  // import ajax from 'ic-ajax';
   exports['default'] = Ember['default'].Route.extend({
-    model: function model(params) {
-      return this.store.find("_User", params.user_id);
-    }
-  });
+    model: function model() {
+      // this is ok for the arbitrary user profile
+      // return this.store.find("user", params.user_id);
+      return this.get("session.currentUser");
+    } });
+
+  //   actions: {
+  //     postStatus: function(){
+  //       // var self = this;
+  //       var data = this.getProperties('status');
+  //       ajax({
+  //         url:  "https://api.parse.com/1/classes/Post",
+  //         type: "POST",
+  //         data: JSON.stringify(data),
+  //         contentType: 'application/json'
+  //       }).then(function(response){
+  //         this.transitionToRoute('my-business-profile', response);
+  //       }.bind(this));
+  //   },
+  // }
 
 });
 define('barapp/routes/new', ['exports', 'ember'], function (exports, Ember) {
@@ -952,79 +937,6 @@ define('barapp/routes/user-signup', ['exports', 'ember'], function (exports, Emb
 	'use strict';
 
 	exports['default'] = Ember['default'].Route.extend({});
-
-});
-define('barapp/services/store', ['exports', 'ember', 'barapp/models/identity-map'], function (exports, Ember, IdentityMap) {
-
-  'use strict';
-
-  var identityMap = IdentityMap['default'].create();
-
-  exports['default'] = Ember['default'].Object.extend({
-    find: function find(type, id) {
-
-      var cached = identityMap.get(type, id);
-      if (cached) {
-        return Ember['default'].RSVP.resolve(cached);
-      }
-
-      var adapter = this.container.lookup("adapter:" + type);
-      return adapter.find(type, id).then((function (recordData) {
-        var record = this.createRecord(type, recordData);
-        identityMap.set(type, id, record);
-        return record;
-      }).bind(this));
-    },
-
-    findAll: function findAll(type) {
-      var adapter = this.container.lookup("adapter:" + type);
-      return adapter.findAll(type).then((function (recordsData) {
-        identityMap.clear(type);
-        recordsData.forEach((function (recordData) {
-          var record = this.createRecord(type, recordData);
-          identityMap.set(type, record.id, record);
-        }).bind(this));
-
-        return identityMap.get(type);
-      }).bind(this));
-    },
-
-    findQuery: function findQuery(type, query) {
-      var adapter = this.container.lookup("adapter:" + type);
-      return adapter.findQuery(type, query);
-    },
-
-    destroy: function destroy(type, record) {
-      var adapter = this.container.lookup("adapter:" + type);
-      return adapter.destroy(type, record).then(function () {
-        identityMap.remove(type, record);
-      });
-    },
-
-    save: function save(type, record) {
-      var adapter = this.container.lookup("adapter:" + type);
-      var serialized = record.toJSON();
-
-      return adapter.save(type, serialized).then((function (recordData) {
-        var record = this.createRecord(type, recordData);
-        identityMap.set(type, record.id, record);
-        return identityMap.get(type, record.id);
-      }).bind(this));
-    },
-
-    push: function push(type, record) {
-      return identityMap.set(type, record.id, record);
-    },
-
-    createRecord: function createRecord(type, properties) {
-      var klass = this.modelFor(type);
-      return klass.create(properties);
-    },
-
-    modelFor: function modelFor(type) {
-      return this.container.lookupFactory("model:" + type);
-    }
-  });
 
 });
 define('barapp/templates/application', ['exports'], function (exports) {
@@ -1507,12 +1419,6 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
         dom.setAttribute(el3,"class","business-edit-name");
         var el4 = dom.createTextNode("\n      ");
         dom.appendChild(el3, el4);
-        var el4 = dom.createElement("input");
-        dom.setAttribute(el4,"type","text");
-        dom.setAttribute(el4,"class","businessEditFirstname");
-        dom.setAttribute(el4,"placeholder","Business Name");
-        dom.setAttribute(el4,"value","");
-        dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
@@ -1521,12 +1427,6 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
         var el3 = dom.createElement("div");
         dom.setAttribute(el3,"class","business-edit-firstname");
         var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("input");
-        dom.setAttribute(el4,"type","text");
-        dom.setAttribute(el4,"class","businessEditFirstname");
-        dom.setAttribute(el4,"placeholder","First Name");
-        dom.setAttribute(el4,"value","");
         dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
@@ -1537,27 +1437,6 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
         dom.setAttribute(el3,"class","business-edit-lastname");
         var el4 = dom.createTextNode("\n      ");
         dom.appendChild(el3, el4);
-        var el4 = dom.createElement("input");
-        dom.setAttribute(el4,"type","text");
-        dom.setAttribute(el4,"class","businessEditLastname");
-        dom.setAttribute(el4,"placeholder","Last Name");
-        dom.setAttribute(el4,"value","");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n    ");
-        dom.appendChild(el3, el4);
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","business-edit-email");
-        var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("input");
-        dom.setAttribute(el4,"type","text");
-        dom.setAttribute(el4,"class","businessEditEmail");
-        dom.setAttribute(el4,"placeholder","Email Address");
-        dom.setAttribute(el4,"value","");
-        dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
@@ -1566,12 +1445,6 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
         var el3 = dom.createElement("div");
         dom.setAttribute(el3,"class","business-edit-address");
         var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("input");
-        dom.setAttribute(el4,"type","text");
-        dom.setAttribute(el4,"class","businessEditAddress");
-        dom.setAttribute(el4,"placeholder","Address");
-        dom.setAttribute(el4,"value","");
         dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
@@ -1582,12 +1455,6 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
         dom.setAttribute(el3,"class","business-edit-city");
         var el4 = dom.createTextNode("\n      ");
         dom.appendChild(el3, el4);
-        var el4 = dom.createElement("input");
-        dom.setAttribute(el4,"type","text");
-        dom.setAttribute(el4,"class","businessEditCity");
-        dom.setAttribute(el4,"placeholder","City");
-        dom.setAttribute(el4,"value","");
-        dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
@@ -1596,12 +1463,6 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
         var el3 = dom.createElement("div");
         dom.setAttribute(el3,"class","business-edit-state");
         var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("input");
-        dom.setAttribute(el4,"type","text");
-        dom.setAttribute(el4,"class","businessEditState");
-        dom.setAttribute(el4,"placeholder","State");
-        dom.setAttribute(el4,"value","");
         dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
@@ -1612,12 +1473,6 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
         dom.setAttribute(el3,"class","business-edit-zip");
         var el4 = dom.createTextNode("\n      ");
         dom.appendChild(el3, el4);
-        var el4 = dom.createElement("input");
-        dom.setAttribute(el4,"type","text");
-        dom.setAttribute(el4,"class","businessEditZip");
-        dom.setAttribute(el4,"placeholder","Zip");
-        dom.setAttribute(el4,"value","");
-        dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
@@ -1626,12 +1481,6 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
         var el3 = dom.createElement("div");
         dom.setAttribute(el3,"class","business-edit-hours");
         var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("input");
-        dom.setAttribute(el4,"type","text");
-        dom.setAttribute(el4,"class","businessEditHours");
-        dom.setAttribute(el4,"placeholder","Business Hours");
-        dom.setAttribute(el4,"value","");
         dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
@@ -1655,27 +1504,7 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n\n");
         dom.appendChild(el1, el2);
-        var el2 = dom.createElement("form");
-        dom.setAttribute(el2,"id","fileupload");
-        dom.setAttribute(el2,"name","fileupload");
-        dom.setAttribute(el2,"enctype","multipart/form-data");
-        dom.setAttribute(el2,"method","post");
-        var el3 = dom.createTextNode("\n    ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("input");
-        dom.setAttribute(el3,"type","file");
-        dom.setAttribute(el3,"name","fileselect");
-        dom.setAttribute(el3,"id","fileselect");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("input");
-        dom.setAttribute(el3,"id","uploadbutton");
-        dom.setAttribute(el3,"type","button");
-        dom.setAttribute(el3,"value","Upload to Parse");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n");
-        dom.appendChild(el2, el3);
+        var el2 = dom.createComment(" <form id=\"fileupload\" name=\"fileupload\" enctype=\"multipart/form-data\" method=\"post\">\n    <input type=\"file\" name=\"fileselect\" id=\"fileselect\">\n    <input id=\"uploadbutton\" type=\"button\" value=\"Upload to Parse\"/>\n</form> ");
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n\n");
         dom.appendChild(el1, el2);
@@ -1686,7 +1515,7 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
       },
       render: function render(context, env, contextualElement) {
         var dom = env.dom;
-        var hooks = env.hooks, content = hooks.content;
+        var hooks = env.hooks, content = hooks.content, get = hooks.get, inline = hooks.inline;
         dom.detectNamespace(contextualElement);
         var fragment;
         if (env.useFragmentCache && dom.canClone) {
@@ -1705,8 +1534,25 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
           fragment = this.build(dom);
         }
         if (this.cachedFragment) { dom.repairClonedNode(fragment,[0]); }
+        var element0 = dom.childAt(fragment, [2, 1]);
         var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
+        var morph1 = dom.createMorphAt(dom.childAt(element0, [1]),0,1);
+        var morph2 = dom.createMorphAt(dom.childAt(element0, [3]),0,1);
+        var morph3 = dom.createMorphAt(dom.childAt(element0, [5]),0,1);
+        var morph4 = dom.createMorphAt(dom.childAt(element0, [7]),0,1);
+        var morph5 = dom.createMorphAt(dom.childAt(element0, [9]),0,1);
+        var morph6 = dom.createMorphAt(dom.childAt(element0, [11]),0,1);
+        var morph7 = dom.createMorphAt(dom.childAt(element0, [13]),0,1);
+        var morph8 = dom.createMorphAt(dom.childAt(element0, [15]),0,1);
         content(env, morph0, context, "outlet");
+        inline(env, morph1, context, "input", [], {"placeholder": "Business Name", "value": get(env, context, "session.currentUser.businessName")});
+        inline(env, morph2, context, "input", [], {"placeholder": "First Name", "value": get(env, context, "session.currentUser.firstName")});
+        inline(env, morph3, context, "input", [], {"placeholder": "Last Name", "value": get(env, context, "session.currentUser.lastName")});
+        inline(env, morph4, context, "input", [], {"placeholder": "Address", "value": get(env, context, "session.currentUser.address")});
+        inline(env, morph5, context, "input", [], {"placeholder": "City", "value": get(env, context, "session.currentUser.city")});
+        inline(env, morph6, context, "input", [], {"placeholder": "State", "value": get(env, context, "session.currentUser.state")});
+        inline(env, morph7, context, "input", [], {"placeholder": "Zip", "value": get(env, context, "session.currentUser.zip")});
+        inline(env, morph8, context, "input", [], {"placeholder": "Business Hours", "value": get(env, context, "session.currentUser.businessHours")});
         return fragment;
       }
     };
@@ -3810,7 +3656,37 @@ define('barapp/templates/index', ['exports'], function (exports) {
         var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n\n\n  ");
+        var el2 = dom.createTextNode("\n\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","feed-search");
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("form");
+        var el4 = dom.createTextNode("\n\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","submit-status");
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("button");
+        dom.setAttribute(el5,"type","submit");
+        dom.setAttribute(el5,"class","post-status");
+        var el6 = dom.createTextNode("Filter");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n      ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n\n    ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n\n  ");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n\n\n\n\n  ");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment(" <div class=\"feed-header\">\n    <p class=\"feed-heading\">Local scene</p>\n    <p class=\"feed-subheading\">Hear straight from your favorite bars</p>\n  </div> ");
         dom.appendChild(el1, el2);
@@ -3849,20 +3725,15 @@ define('barapp/templates/index', ['exports'], function (exports) {
         dom.appendChild(el6, el7);
         var el7 = dom.createTextNode(" ");
         dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n          ");
-        dom.appendChild(el5, el6);
-        var el6 = dom.createElement("li");
-        var el7 = dom.createElement("span");
-        dom.setAttribute(el7,"class","feed-radius");
-        var el8 = dom.createTextNode("2 miles away");
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
         var el7 = dom.createElement("span");
         dom.setAttribute(el7,"class","feed-time");
         var el8 = dom.createTextNode("5 minutes ago");
         dom.appendChild(el7, el8);
         dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createComment(" <li><span class=\"feed-radius\">2 miles away</span></li> ");
         dom.appendChild(el5, el6);
         var el6 = dom.createTextNode("\n          ");
         dom.appendChild(el5, el6);
@@ -3876,9 +3747,14 @@ define('barapp/templates/index', ['exports'], function (exports) {
         var el6 = dom.createElement("li");
         dom.setAttribute(el6,"class","feed-social-buttons");
         var el7 = dom.createElement("span");
-        dom.setAttribute(el7,"class","beer-icon");
+        dom.setAttribute(el7,"class","feed-likes");
+        var el8 = dom.createTextNode(" 24 people like this");
+        dom.appendChild(el7, el8);
         dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode(" 24");
+        var el7 = dom.createElement("span");
+        dom.setAttribute(el7,"class","feed-addfavorite");
+        var el8 = dom.createTextNode(" Add to Favorites");
+        dom.appendChild(el7, el8);
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
         var el6 = dom.createTextNode("\n        ");
@@ -3891,6 +3767,48 @@ define('barapp/templates/index', ['exports'], function (exports) {
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n  ");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","footer-container");
+        var el3 = dom.createTextNode("\n\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","footer-copyright");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("p");
+        var el5 = dom.createTextNode("Keith® 2015 All Rights Reserved");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","footer-social-icons");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("a");
+        dom.setAttribute(el4,"href","/");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("a");
+        dom.setAttribute(el4,"href","/");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("a");
+        dom.setAttribute(el4,"href","/");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n\n  ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n\n\n");
@@ -3922,17 +3840,29 @@ define('barapp/templates/index', ['exports'], function (exports) {
         }
         if (this.cachedFragment) { dom.repairClonedNode(fragment,[0]); }
         var element0 = dom.childAt(fragment, [2]);
-        var element1 = dom.childAt(element0, [7, 1, 1, 3]);
+        var element1 = dom.childAt(element0, [9, 1, 1, 3]);
+        var element2 = dom.childAt(element1, [7]);
+        var element3 = dom.childAt(element0, [11, 3]);
         var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
         var morph1 = dom.createMorphAt(dom.childAt(element0, [1, 1, 1, 1]),0,1);
         var morph2 = dom.createMorphAt(dom.childAt(element0, [3, 1]),0,1);
-        var morph3 = dom.createMorphAt(dom.childAt(element1, [1]),0,1);
-        var morph4 = dom.createMorphAt(dom.childAt(element1, [7, 0]),-1,-1);
+        var morph3 = dom.createMorphAt(dom.childAt(element0, [5, 1]),0,1);
+        var morph4 = dom.createMorphAt(dom.childAt(element1, [1]),0,1);
+        var morph5 = dom.createMorphAt(dom.childAt(element2, [0]),-1,0);
+        var morph6 = dom.createMorphAt(dom.childAt(element2, [1]),-1,0);
+        var morph7 = dom.createMorphAt(dom.childAt(element3, [1]),-1,-1);
+        var morph8 = dom.createMorphAt(dom.childAt(element3, [3]),-1,-1);
+        var morph9 = dom.createMorphAt(dom.childAt(element3, [5]),-1,-1);
         content(env, morph0, context, "outlet");
         inline(env, morph1, context, "jqui-slider", [], {"value": get(env, context, "num"), "min": 1, "max": 25, "step": 1, "slide": "slideAction", "id": "jquery-slider"});
         content(env, morph2, context, "num");
-        inline(env, morph3, context, "fa-icon", ["check-circle"], {});
-        inline(env, morph4, context, "fa-icon", ["beer"], {});
+        inline(env, morph3, context, "input", [], {"placeholder": "Enter City or Zip", "type": "text"});
+        inline(env, morph4, context, "fa-icon", ["check-circle"], {});
+        inline(env, morph5, context, "fa-icon", ["beer"], {});
+        inline(env, morph6, context, "fa-icon", ["plus"], {});
+        inline(env, morph7, context, "fa-icon", ["facebook"], {});
+        inline(env, morph8, context, "fa-icon", ["twitter"], {});
+        inline(env, morph9, context, "fa-icon", ["instagram"], {});
         return fragment;
       }
     };
@@ -4191,6 +4121,112 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         }
       };
     }());
+    var child1 = (function() {
+      return {
+        isHTMLBars: true,
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("              ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("div");
+          dom.setAttribute(el1,"class","feed-avatar-container");
+          var el2 = dom.createTextNode("\n                ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("li");
+          dom.setAttribute(el2,"class","feed-avatar");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n              ");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n              ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("div");
+          dom.setAttribute(el1,"class","feed-info-container");
+          var el2 = dom.createTextNode("\n                ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("li");
+          dom.setAttribute(el2,"class","feed-name");
+          var el3 = dom.createTextNode(" ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode(" ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("span");
+          dom.setAttribute(el3,"class","feed-time");
+          var el4 = dom.createTextNode("5 minutes ago");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n                ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createComment(" <li class=\"feed-dynamic\"><span class=\"feed-radius\">2 miles away</span></li> ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n                ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("li");
+          dom.setAttribute(el2,"class","feed-status");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n                ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("li");
+          dom.setAttribute(el2,"class","feed-social-buttons");
+          var el3 = dom.createElement("span");
+          dom.setAttribute(el3,"class","feed-likes");
+          var el4 = dom.createTextNode(" 24 people like this");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("span");
+          dom.setAttribute(el3,"class","feed-addfavorite");
+          var el4 = dom.createTextNode(" Add to Favorites");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n              ");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          var hooks = env.hooks, content = hooks.content, inline = hooks.inline;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          var element0 = dom.childAt(fragment, [3]);
+          var element1 = dom.childAt(element0, [1]);
+          var element2 = dom.childAt(element0, [7]);
+          var morph0 = dom.createMorphAt(element1,-1,0);
+          var morph1 = dom.createMorphAt(element1,0,1);
+          var morph2 = dom.createMorphAt(dom.childAt(element0, [5]),-1,-1);
+          var morph3 = dom.createMorphAt(dom.childAt(element2, [0]),-1,0);
+          var morph4 = dom.createMorphAt(dom.childAt(element2, [1]),-1,0);
+          content(env, morph0, context, "model.creator.businessName");
+          inline(env, morph1, context, "fa-icon", ["check-circle"], {});
+          content(env, morph2, context, "model.status");
+          inline(env, morph3, context, "fa-icon", ["beer"], {});
+          inline(env, morph4, context, "fa-icon", ["plus"], {});
+          return fragment;
+        }
+      };
+    }());
     return {
       isHTMLBars: true,
       blockParams: 0,
@@ -4332,9 +4368,11 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         dom.setAttribute(el5,"class","submit-status");
         var el6 = dom.createTextNode("\n          ");
         dom.appendChild(el5, el6);
-        var el6 = dom.createElement("input");
+        var el6 = dom.createElement("button");
         dom.setAttribute(el6,"type","submit");
         dom.setAttribute(el6,"class","post-status");
+        var el7 = dom.createTextNode("Post");
+        dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
         var el6 = dom.createTextNode("\n        ");
         dom.appendChild(el5, el6);
@@ -4353,70 +4391,12 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
         dom.setAttribute(el4,"class","feed-post");
-        var el5 = dom.createTextNode("\n        ");
+        var el5 = dom.createTextNode("\n          ");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("ul");
-        var el6 = dom.createTextNode("\n          ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","feed-avatar-container");
-        var el7 = dom.createTextNode("\n            ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createElement("li");
-        dom.setAttribute(el7,"class","feed-avatar");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n          ");
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n          ");
-        dom.appendChild(el5, el6);
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","feed-info-container");
-        var el7 = dom.createTextNode("\n            ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createElement("li");
-        dom.setAttribute(el7,"class","feed-name");
-        var el8 = dom.createTextNode("Henry's Bar and Grill ");
-        dom.appendChild(el7, el8);
-        var el8 = dom.createTextNode(" ");
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n            ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createElement("li");
-        dom.setAttribute(el7,"class","feed-dynamic");
-        var el8 = dom.createElement("span");
-        dom.setAttribute(el8,"class","feed-radius");
-        var el9 = dom.createTextNode("2 miles away");
-        dom.appendChild(el8, el9);
-        dom.appendChild(el7, el8);
-        var el8 = dom.createElement("span");
-        dom.setAttribute(el8,"class","feed-time");
-        var el9 = dom.createTextNode("5 minutes ago");
-        dom.appendChild(el8, el9);
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n            ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createElement("li");
-        dom.setAttribute(el7,"class","feed-status");
-        var el8 = dom.createTextNode("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n            ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createElement("li");
-        dom.setAttribute(el7,"class","feed-social-buttons");
-        var el8 = dom.createElement("span");
-        dom.setAttribute(el8,"class","beer-icon");
-        dom.appendChild(el7, el8);
-        var el8 = dom.createTextNode(" 24");
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n          ");
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n        ");
+        var el6 = dom.createTextNode("          ");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
         var el5 = dom.createTextNode("\n      ");
@@ -4498,32 +4478,30 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
           fragment = this.build(dom);
         }
         if (this.cachedFragment) { dom.repairClonedNode(fragment,[0]); }
-        var element0 = dom.childAt(fragment, [2, 1, 3]);
-        var element1 = dom.childAt(element0, [1]);
-        var element2 = dom.childAt(element1, [1, 0]);
-        var element3 = dom.childAt(element1, [5, 0]);
-        var element4 = dom.childAt(fragment, [4, 1]);
-        var element5 = dom.childAt(element4, [1, 1]);
-        var element6 = dom.childAt(element4, [3, 1, 1, 3]);
-        var element7 = dom.childAt(element4, [5, 3]);
+        var element3 = dom.childAt(fragment, [2, 1, 3]);
+        var element4 = dom.childAt(element3, [1]);
+        var element5 = dom.childAt(element4, [1, 0]);
+        var element6 = dom.childAt(element4, [5, 0]);
+        var element7 = dom.childAt(fragment, [4, 1]);
+        var element8 = dom.childAt(element7, [1, 1]);
+        var element9 = dom.childAt(element7, [5, 3]);
         var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
-        var morph1 = dom.createMorphAt(element2,-1,0);
-        var morph2 = dom.createMorphAt(element2,0,1);
-        var morph3 = dom.createMorphAt(dom.childAt(element1, [3, 0]),0,-1);
-        var morph4 = dom.createMorphAt(dom.childAt(element3, [0]),-1,-1);
-        var morph5 = dom.createMorphAt(element3,1,2);
-        var morph6 = dom.createMorphAt(element3,2,3);
-        var morph7 = dom.createMorphAt(element3,3,-1);
-        var morph8 = dom.createMorphAt(dom.childAt(element1, [7, 0]),-1,-1);
-        var morph9 = dom.createMorphAt(dom.childAt(element1, [9, 0, 0]),-1,-1);
-        var morph10 = dom.createMorphAt(dom.childAt(element0, [3]),0,1);
-        var morph11 = dom.createMorphAt(dom.childAt(element0, [5, 0]),-1,0);
-        var morph12 = dom.createMorphAt(element5,0,1);
-        var morph13 = dom.createMorphAt(dom.childAt(element6, [1]),0,1);
-        var morph14 = dom.createMorphAt(dom.childAt(element6, [7, 0]),-1,-1);
-        var morph15 = dom.createMorphAt(dom.childAt(element7, [1]),-1,-1);
-        var morph16 = dom.createMorphAt(dom.childAt(element7, [3]),-1,-1);
-        var morph17 = dom.createMorphAt(dom.childAt(element7, [5]),-1,-1);
+        var morph1 = dom.createMorphAt(element5,-1,0);
+        var morph2 = dom.createMorphAt(element5,0,1);
+        var morph3 = dom.createMorphAt(dom.childAt(element4, [3, 0]),0,-1);
+        var morph4 = dom.createMorphAt(dom.childAt(element6, [0]),-1,-1);
+        var morph5 = dom.createMorphAt(element6,1,2);
+        var morph6 = dom.createMorphAt(element6,2,3);
+        var morph7 = dom.createMorphAt(element6,3,-1);
+        var morph8 = dom.createMorphAt(dom.childAt(element4, [7, 0]),-1,-1);
+        var morph9 = dom.createMorphAt(dom.childAt(element4, [9, 0, 0]),-1,-1);
+        var morph10 = dom.createMorphAt(dom.childAt(element3, [3]),0,1);
+        var morph11 = dom.createMorphAt(dom.childAt(element3, [5, 0]),-1,0);
+        var morph12 = dom.createMorphAt(element8,0,1);
+        var morph13 = dom.createMorphAt(dom.childAt(element7, [3, 1, 1]),0,1);
+        var morph14 = dom.createMorphAt(dom.childAt(element9, [1]),-1,-1);
+        var morph15 = dom.createMorphAt(dom.childAt(element9, [3]),-1,-1);
+        var morph16 = dom.createMorphAt(dom.childAt(element9, [5]),-1,-1);
         content(env, morph0, context, "outlet");
         content(env, morph1, context, "session.currentUser.businessName");
         inline(env, morph2, context, "fa-icon", ["check-circle"], {});
@@ -4536,13 +4514,12 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         content(env, morph9, context, "session.currentUser.website");
         block(env, morph10, context, "link-to", ["business-edit"], {}, child0, null);
         inline(env, morph11, context, "fa-icon", ["file-image-o"], {});
-        element(env, element5, context, "action", ["createStatus"], {"on": "submit"});
-        inline(env, morph12, context, "textarea", [], {"id": "business-status", "value": get(env, context, "model.post"), "autoresize": true, "maxHeight": 200, "placeholder": "What's going on?"});
-        inline(env, morph13, context, "fa-icon", ["check-circle"], {});
-        inline(env, morph14, context, "fa-icon", ["beer"], {});
-        inline(env, morph15, context, "fa-icon", ["facebook"], {});
-        inline(env, morph16, context, "fa-icon", ["twitter"], {});
-        inline(env, morph17, context, "fa-icon", ["instagram"], {});
+        element(env, element8, context, "action", ["postStatus"], {"on": "submit"});
+        inline(env, morph12, context, "textarea", [], {"id": "business-status", "value": get(env, context, "status"), "autoresize": true, "maxHeight": 200, "placeholder": "What's going on?"});
+        block(env, morph13, context, "each", [get(env, context, "model")], {}, child1, null);
+        inline(env, morph14, context, "fa-icon", ["facebook"], {});
+        inline(env, morph15, context, "fa-icon", ["twitter"], {});
+        inline(env, morph16, context, "fa-icon", ["instagram"], {});
         return fragment;
       }
     };
@@ -5166,6 +5143,16 @@ define('barapp/tests/authenticators/parse-email.jshint', function () {
   });
 
 });
+define('barapp/tests/authorizers/parse.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - authorizers');
+  test('authorizers/parse.js should pass jshint', function() { 
+    ok(true, 'authorizers/parse.js should pass jshint.'); 
+  });
+
+});
 define('barapp/tests/components/loading-icon.jshint', function () {
 
   'use strict';
@@ -5196,23 +5183,23 @@ define('barapp/tests/controllers/index.jshint', function () {
   });
 
 });
-define('barapp/tests/controllers/loading.jshint', function () {
-
-  'use strict';
-
-  module('JSHint - controllers');
-  test('controllers/loading.js should pass jshint', function() { 
-    ok(true, 'controllers/loading.js should pass jshint.'); 
-  });
-
-});
 define('barapp/tests/controllers/login.jshint', function () {
 
   'use strict';
 
   module('JSHint - controllers');
   test('controllers/login.js should pass jshint', function() { 
-    ok(false, 'controllers/login.js should pass jshint.\ncontrollers/login.js: line 3, col 16, \'Ember\' is not defined.\n\n1 error'); 
+    ok(true, 'controllers/login.js should pass jshint.'); 
+  });
+
+});
+define('barapp/tests/controllers/my-business-profile.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - controllers');
+  test('controllers/my-business-profile.js should pass jshint', function() { 
+    ok(true, 'controllers/my-business-profile.js should pass jshint.'); 
   });
 
 });
@@ -5300,36 +5287,6 @@ define('barapp/tests/initializers/current-user.jshint', function () {
   module('JSHint - initializers');
   test('initializers/current-user.js should pass jshint', function() { 
     ok(true, 'initializers/current-user.js should pass jshint.'); 
-  });
-
-});
-define('barapp/tests/initializers/parse-keys.jshint', function () {
-
-  'use strict';
-
-  module('JSHint - initializers');
-  test('initializers/parse-keys.js should pass jshint', function() { 
-    ok(true, 'initializers/parse-keys.js should pass jshint.'); 
-  });
-
-});
-define('barapp/tests/initializers/store-service.jshint', function () {
-
-  'use strict';
-
-  module('JSHint - initializers');
-  test('initializers/store-service.js should pass jshint', function() { 
-    ok(true, 'initializers/store-service.js should pass jshint.'); 
-  });
-
-});
-define('barapp/tests/models/identity-map.jshint', function () {
-
-  'use strict';
-
-  module('JSHint - models');
-  test('models/identity-map.js should pass jshint', function() { 
-    ok(true, 'models/identity-map.js should pass jshint.'); 
   });
 
 });
@@ -5490,16 +5447,6 @@ define('barapp/tests/routes/user-signup.jshint', function () {
   module('JSHint - routes');
   test('routes/user-signup.js should pass jshint', function() { 
     ok(true, 'routes/user-signup.js should pass jshint.'); 
-  });
-
-});
-define('barapp/tests/services/store.jshint', function () {
-
-  'use strict';
-
-  module('JSHint - services');
-  test('services/store.js should pass jshint', function() { 
-    ok(true, 'services/store.js should pass jshint.'); 
   });
 
 });
@@ -5708,6 +5655,32 @@ define('barapp/tests/unit/controllers/login-test.jshint', function () {
   });
 
 });
+define('barapp/tests/unit/controllers/my-business-profile-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleFor("controller:my-business-profile", {});
+
+  // Replace this with your real tests.
+  ember_qunit.test("it exists", function (assert) {
+    var controller = this.subject();
+    assert.ok(controller);
+  });
+
+  // Specify the other units that are required for this test.
+  // needs: ['controller:foo']
+
+});
+define('barapp/tests/unit/controllers/my-business-profile-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/controllers');
+  test('unit/controllers/my-business-profile-test.js should pass jshint', function() { 
+    ok(true, 'unit/controllers/my-business-profile-test.js should pass jshint.'); 
+  });
+
+});
 define('barapp/tests/unit/controllers/register-test', ['ember-qunit'], function (ember_qunit) {
 
   'use strict';
@@ -5792,102 +5765,6 @@ define('barapp/tests/unit/initializers/current-user-test.jshint', function () {
   module('JSHint - unit/initializers');
   test('unit/initializers/current-user-test.js should pass jshint', function() { 
     ok(true, 'unit/initializers/current-user-test.js should pass jshint.'); 
-  });
-
-});
-define('barapp/tests/unit/initializers/parse-keys-test', ['ember', 'barapp/initializers/parse-keys', 'qunit'], function (Ember, parse_keys, qunit) {
-
-  'use strict';
-
-  var container, application;
-
-  qunit.module("ParseKeysInitializer", {
-    beforeEach: function beforeEach() {
-      Ember['default'].run(function () {
-        application = Ember['default'].Application.create();
-        container = application.__container__;
-        application.deferReadiness();
-      });
-    }
-  });
-
-  // Replace this with your real tests.
-  qunit.test("it works", function (assert) {
-    parse_keys.initialize(container, application);
-
-    // you would normally confirm the results of the initializer here
-    assert.ok(true);
-  });
-
-});
-define('barapp/tests/unit/initializers/parse-keys-test.jshint', function () {
-
-  'use strict';
-
-  module('JSHint - unit/initializers');
-  test('unit/initializers/parse-keys-test.js should pass jshint', function() { 
-    ok(true, 'unit/initializers/parse-keys-test.js should pass jshint.'); 
-  });
-
-});
-define('barapp/tests/unit/initializers/parse-service-test', ['ember', 'barapp/initializers/parse-service', 'qunit'], function (Ember, parse_service, qunit) {
-
-  'use strict';
-
-  var container, application;
-
-  qunit.module("ParseServiceInitializer", {
-    beforeEach: function beforeEach() {
-      Ember['default'].run(function () {
-        application = Ember['default'].Application.create();
-        container = application.__container__;
-        application.deferReadiness();
-      });
-    }
-  });
-
-  // Replace this with your real tests.
-  qunit.test("it works", function (assert) {
-    parse_service.initialize(container, application);
-
-    // you would normally confirm the results of the initializer here
-    assert.ok(true);
-  });
-
-});
-define('barapp/tests/unit/initializers/parse-service-test.jshint', function () {
-
-  'use strict';
-
-  module('JSHint - unit/initializers');
-  test('unit/initializers/parse-service-test.js should pass jshint', function() { 
-    ok(true, 'unit/initializers/parse-service-test.js should pass jshint.'); 
-  });
-
-});
-define('barapp/tests/unit/models/identity-map-test', ['ember-qunit'], function (ember_qunit) {
-
-  'use strict';
-
-  ember_qunit.moduleForModel("identity-map", {
-    // Specify the other units that are required for this test.
-    needs: []
-  });
-
-  ember_qunit.test("it exists", function (assert) {
-    var model = this.subject();
-    // var store = this.store();
-    assert.ok(!!model);
-  });
-
-});
-define('barapp/tests/unit/models/identity-map-test.jshint', function () {
-
-  'use strict';
-
-  module('JSHint - unit/models');
-  test('unit/models/identity-map-test.js should pass jshint', function() { 
-    ok(true, 'unit/models/identity-map-test.js should pass jshint.'); 
   });
 
 });
@@ -6268,32 +6145,6 @@ define('barapp/tests/unit/routes/user-signup-test.jshint', function () {
   });
 
 });
-define('barapp/tests/unit/services/store-test', ['ember-qunit'], function (ember_qunit) {
-
-  'use strict';
-
-  ember_qunit.moduleFor("service:store", {});
-
-  // Replace this with your real tests.
-  ember_qunit.test("it exists", function (assert) {
-    var service = this.subject();
-    assert.ok(service);
-  });
-
-  // Specify the other units that are required for this test.
-  // needs: ['service:foo']
-
-});
-define('barapp/tests/unit/services/store-test.jshint', function () {
-
-  'use strict';
-
-  module('JSHint - unit/services');
-  test('unit/services/store-test.js should pass jshint', function() { 
-    ok(true, 'unit/services/store-test.js should pass jshint.'); 
-  });
-
-});
 define('barapp/tests/unit/views/index-test', ['ember-qunit'], function (ember_qunit) {
 
   'use strict';
@@ -6362,7 +6213,7 @@ catch(err) {
 if (runningTests) {
   require("barapp/tests/test-helper");
 } else {
-  require("barapp/app")["default"].create({"name":"barapp","version":"0.0.0.986a3d59"});
+  require("barapp/app")["default"].create({"name":"barapp","version":"0.0.0.f2b1f26b"});
 }
 
 /* jshint ignore:end */

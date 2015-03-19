@@ -8,19 +8,19 @@ export default Ember.Object.extend({
   // save: function(){
   //   return this.store.save('status', this);
   // },
-  //
-  // toJSON: function(){
-  //   var data = Ember.Object.create(this);
-  //
-  //   var userId = this.get('createdBy.id');
-  //   if(userId) {
-  //     data.set('createdBy', {
-  //       __type: 'Pointer',
-  //       className: '_User',
-  //       objectId: userId
-  //     });
-  //   }
-  //
-  //   return data;
-  // }
+
+  toJSON: function(){
+    var data = Ember.Object.create(this);
+
+    var userId = this.get('status.id');
+    if(userId) {
+      data.set('status', {
+        __type: 'Pointer',
+        className: '_User',
+        objectId: userId
+      });
+    }
+
+    return data;
+  }
 });

@@ -14,7 +14,14 @@ module.exports = function(environment) {
     },
 
     'simple-auth': {
+      authorizer: 'authorizer:parse',
+      crossOriginWhitelist: ['https://api.parse.com'],
       routeAfterAuthentication: 'home'
+    },
+
+    parseKeys: {
+      applicationId: "AfNszK8Rd7zcsyJhCHpyoRCPM338C6aiylN6mgC6",
+      restApi: "COVAwkICU4GoLPTQt2AN9rBI0Y7jUVk7ZbBzudFy"
     },
 
 
@@ -30,7 +37,7 @@ module.exports = function(environment) {
       'font-src': "'self' *",
       'connect-src': "'self' *",
       'img-src': "'self' *",
-      'style-src': "'self' 'unsafe-inline'",
+      'style-src': "'self' 'unsafe-inline' http://fonts.googleapis.com",
       'media-src': "'self'",
       'frame-src': "'self' *"
     }

@@ -16,10 +16,7 @@ export default Ember.Controller.extend({
         this.transitionToRoute('/', response);
         this.session.authenticate('authenticator:parse-email', {
           sessionToken: response.sessionToken,
-
         });
-
-
 
       }.bind(this));
   },

@@ -1,3 +1,4 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,300,700,500,300italic,400italic);
 html {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -8,10 +9,11 @@ html {
   -moz-box-sizing: inherit;
   box-sizing: inherit; }
 
+/* @import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300,700);*/
 * {
   margin: 0;
   /* box-sizing: box-sizing; */
-  font-family: sans-serif; }
+  font-family: 'Roboto', sans-serif; }
 
 body {
   background: #f8f8f8; }
@@ -28,7 +30,7 @@ header {
   width: 414px;
   background: #000;
   margin: 0 auto;
-  padding-top: 19px;
+  padding-top: 10px;
   height: 75px;
   position: relative; }
 
@@ -54,7 +56,8 @@ header {
 .slider {
   width: 100%;
   height: 30px;
-  padding: 0; }
+  padding: 0;
+  display: none; }
 
 .slider-container {
   position: relative;
@@ -82,11 +85,22 @@ header {
   margin: 0px auto;
   text-align: center;
   color: #000;
-  font-weight: bold; }
+  font-weight: bold;
+  display: none; }
 
 .jquery-slider {
   position: absolute;
   z-index: 100; }
+
+.feed-search input {
+  width: 100%;
+  height: 45px;
+  border: none;
+  background: #f5f5f5;
+  /* padding-left: 10px; */
+  outline: none;
+  text-align: center;
+  font-size: 14px; }
 
 /* MENU SLIDE IN */
 .header-nav-wrap {
@@ -206,32 +220,45 @@ header {
 .feed-time {
   font-size: 12px;
   padding-left: 5px;
-  font-weight: normal;
+  font-weight: 300;
+  float: right;
   color: #999; }
 
 .feed-status {
   font-size: 12px;
   padding-top: 5px;
   width: 100%;
-  line-height: 16px; }
+  line-height: 18px;
+  font-weight: 300; }
 
 .feed-radius {
   font-size: 12px;
   color: #999;
   font-weight: normal;
-  border-right: 1px solid #dfdfdf;
   padding-right: 5px;
   height: 20px;
   padding-top: 2px; }
 
 .feed-dynamic {
-  padding-top: 0px; }
+  padding-top: 0px;
+  display: none; }
 
 .feed-social-buttons {
   color: #999;
-  font-size: 12px; }
+  font-weight: 300;
+  font-size: 10px; }
 
-.beer-icon:hover {
+.feed-addfavorite {
+  border-left: 1px solid #dfdfdf;
+  padding-left: 5px; }
+
+.feed-likes {
+  padding-right: 5px; }
+
+.feed-likes:hover {
+  color: #5385d6; }
+
+.feed-addfavorite:hover {
   color: #5385d6; }
 
 /* Business Edit */
@@ -247,7 +274,7 @@ header {
   background: #FFF;
   width: 414px;
   margin: 0 auto;
-  padding: 30px 80px;
+  padding: 30px 50px;
   margin-top: 75px; }
 
 .login-wrap {
@@ -256,7 +283,7 @@ header {
   background-size: cover;
   margin-top: 75px; }
 
-.login-email input, .login-password input {
+.login-email input, .login-password input, .user-signup-firstname input, .user-signup-lastname input, .user-signup-email input, .user-signup-confirm input, .user-signup-password input, .business-signup-name input, .business-signup-firstname input, .business-signup-lastname input, .business-signup-email input, .business-signup-confirm input, .business-signup-password input, .business-edit-name input, .business-edit-firstname input, .business-edit-lastname input, .business-edit-email input, .business-edit-address input, .business-edit-city input, .business-edit-state input, .business-edit-zip input, .business-edit-hours input {
   transition: 1000ms;
   border: none;
   border-radius: 0px;
@@ -265,11 +292,14 @@ header {
   padding: 0px 5px;
   font-size: 14px;
   text-align: center;
-  background: #f8f8f8; }
-  .login-email input:focus, .login-password input:focus {
+  border-bottom: 1px solid #f0f0f0;
+  background: transparent;
+  margin-top: 10px; }
+  .login-email input:focus, .login-password input:focus, .user-signup-firstname input:focus, .user-signup-lastname input:focus, .user-signup-email input:focus, .user-signup-confirm input:focus, .user-signup-password input:focus, .business-signup-name input:focus, .business-signup-firstname input:focus, .business-signup-lastname input:focus, .business-signup-email input:focus, .business-signup-confirm input:focus, .business-signup-password input:focus, .business-edit-name input:focus, .business-edit-firstname input:focus, .business-edit-lastname input:focus, .business-edit-email input:focus, .business-edit-address input:focus, .business-edit-city input:focus, .business-edit-state input:focus, .business-edit-zip input:focus, .business-edit-hours input:focus {
     border: none;
     outline: 0;
-    background: #f5f5f5; }
+    background: transparent;
+    border-bottom: 1px solid #5385d6; }
 
 .login-email input::-webkit-input-placeholder, .login-password input::-webkit-input-placeholder {
   font-size: 14px;
@@ -329,17 +359,16 @@ header {
   padding-left: 2px; }
 
 .sign-out p {
-  color: #f0f0f0;
+  color: #F0F0F0;
   font-size: 12px;
   display: inline-block;
   border-right: 1px solid #555;
   vertical-align: top;
-  padding: 0;
+  padding: 2px 5px 0px 0px;
   height: 20px;
-  padding-top: 5px;
-  padding-right: 5px;
   text-transform: none;
-  margin-top: -2px; }
+  margin-top: 2px;
+  font-weight: normal; }
 
 /* User Sign Up */
 .user-signup-container {
@@ -347,19 +376,6 @@ header {
   margin: 0 auto;
   margin-top: 75px;
   padding: 30px; }
-
-.user-signup-firstname input, .user-signup-lastname input, .user-signup-email input, .user-signup-confirm input, .user-signup-password input {
-  transition: 1000ms;
-  border: none;
-  border-radius: 0px;
-  width: 100%;
-  height: 45px;
-  padding: 0px 5px;
-  font-size: 16px;
-  text-align: center;
-  background: #f8f8f8; }
-  .user-signup-firstname input:focus, .user-signup-lastname input:focus, .user-signup-email input:focus, .user-signup-confirm input:focus, .user-signup-password input:focus {
-    background: #f0f0f0; }
 
 .user-signup-firstname input::-webkit-input-placeholder, .user-signup-lastname input::-webkit-input-placeholder, .user-signup-email input::-webkit-input-placeholder, .user-signup-confirm input::-webkit-input-placeholder, .user-signup-password input::-webkit-input-placeholder {
   font-size: 14px;
@@ -394,21 +410,6 @@ header {
   border-radius: 0px;
   background: #fff;
   margin-bottom: 100px; }
-
-.business-signup-name input, .business-signup-firstname input, .business-signup-lastname input, .business-signup-email input, .business-signup-confirm input, .business-signup-password input, .business-edit-name input, .business-edit-firstname input, .business-edit-lastname input, .business-edit-email input, .business-edit-address input, .business-edit-city input, .business-edit-state input, .business-edit-zip input, .business-edit-hours input {
-  transition: 1000ms;
-  border: none;
-  border-radius: 0px;
-  width: 100%;
-  height: 45px;
-  padding: 0px 5px;
-  font-size: 14px;
-  text-align: center;
-  background: #f8f8f8;
-  margin-top: 15px; }
-  .business-signup-name input:focus, .business-signup-firstname input:focus, .business-signup-lastname input:focus, .business-signup-email input:focus, .business-signup-confirm input:focus, .business-signup-password input:focus, .business-edit-name input:focus, .business-edit-firstname input:focus, .business-edit-lastname input:focus, .business-edit-email input:focus, .business-edit-address input:focus, .business-edit-city input:focus, .business-edit-state input:focus, .business-edit-zip input:focus, .business-edit-hours input:focus {
-    background: #f0f0f0;
-    outline: 0; }
 
 .business-signup-name input::-webkit-input-placeholder, .business-signup-firstname input::-webkit-input-placeholder, .business-signup-lastname input::-webkit-input-placeholder, .business-signup-email input::-webkit-input-placeholder, .business-signup-confirm input::-webkit-input-placeholder, .business-signup-password input::-webkit-input-placeholder {
   font-size: 14px;
@@ -619,7 +620,7 @@ header {
   display: inline-block;
   float: right;
   padding-top: 5px;
-  font-size: 14px;
+  font-size: 12px;
   margin-top: -1px; }
 
 .submit-status {
@@ -642,7 +643,8 @@ footer {
   margin: 0 auto;
   position: relative;
   bottom: 0;
-  height: 60px; }
+  height: 60px;
+  display: none; }
 
 .footer-container {
   width: 414px;
@@ -695,5 +697,39 @@ footer {
 
 .fs-favorites, .fs-settings, .fs-profile {
   border-left: 1px solid #ccc; }
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 413px) {
+  .header-container {
+    width: 320px; }
+  .login-container {
+    width: 320px;
+    padding: 30px; }
+  .footer-container {
+    width: 320px; }
+  .fixed-footer {
+    width: 320px; }
+  .header-nav {
+    width: 320px; }
+  .homepage-container {
+    width: 320px; }
+  .feed-avatar-container {
+    display: none; }
+  .feed-info-container {
+    width: 100%; }
+  .feed-container {
+    width: 320px; }
+  .slider-wrap {
+    width: 320px; }
+  .slider-container {
+    width: 220px; }
+  .header-logo {
+    width: 80px;
+    height: 40px;
+    background-size: contain;
+    margin-left: 70px; }
+  .sign-out {
+    margin-top: -27px; }
+  .business-profile-container, .business-profile-background, .business-profile-info, .business-profile-feed {
+    width: 320px; } }
 
 /*# sourceMappingURL=barapp.css.map */
