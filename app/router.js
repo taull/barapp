@@ -17,6 +17,7 @@ Router.map(function() {
   this.route('login');
   this.route('new');
   this.route('register');
+  this.route('cover-upload');
 });
 
 export default Router;

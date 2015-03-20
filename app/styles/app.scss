@@ -14,6 +14,13 @@ body {
   background: #f8f8f8;
 }
 
+input {
+    -webkit-appearance: none;
+    -webkit-border-radius:0;
+    -moz-appearance: none;
+    -moz-border-radius: 0;
+}
+
 header {
   width: 100%;
   height: 75px;
@@ -563,6 +570,88 @@ header {
 }
 
 
+label#largeFile:after {
+  position: absolute;
+  width: 250px;
+  max-width: 800px;
+  content: "Select your file";
+  left: 0;
+  right: 0;
+  margin: 0px auto;
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px dashed #ccc;
+  color: #ccc;
+  font-family: "Helvetica Neue", Helvetica, Arial;
+  font-size: 22px;
+  margin-top: -26px;
+  z-index: 0;
+}
+
+label#largeFile:hover:after {
+  color:#5385d6;
+  cursor:pointer;
+  border: 2px dashed #5385d6;
+}
+
+
+label#largeFile input#file {
+  width: 215px;
+  height: 30px;
+  margin-top: 72px;
+  outline: 0px none;
+  border: 1px solid #DFDFDF;
+  border-radius: 5px;
+  text-align: right;
+  padding-top: 5px;
+  padding-left: 0px;
+  background: #F8F8F8 none repeat scroll 0% 0%;
+  position: relative;
+  padding-right: 20px;
+  margin-left: 10px;
+}
+
+.hide-choose {
+  width: 83px;
+  height: 30px;
+  background: #f8f8f8;
+  position: absolute;
+  z-index: 20;
+  margin-left: 25px;
+  margin-top: 72px;
+  /* display: none; */
+  border: 1px solid #dfdfdf;
+  border-right: none;
+  border-radius: 5px 0px 0px 5px;
+}
+
+
+#cover-upload {
+  text-align:center;
+  width:250px;
+  margin: 50px auto;
+}
+
+.cover-upload-heading {
+  text-align:center;
+}
+
+#uploadbutton {
+  display: block;
+  text-align: center;
+  z-index: 30;
+  position: absolute;
+  margin-top: -30px;
+  margin-left: 13px;
+  width: 80px;
+  background: #5385D6 none repeat scroll 0% 0%;
+  border: medium none;
+  color: #FFF;
+  height: 30px;
+  border-radius: 5px 0px 0px 5px;
+}
+
 /* Business Profile */
 
 .business-profile-container {
@@ -944,7 +1033,8 @@ and (max-device-width : 413px) {
   .business-profile-container,
   .business-profile-background,
   .business-profile-info,
-  .business-profile-feed {
+  .business-profile-feed,
+  .business-edit-container {
     width: 320px;
   }
 
