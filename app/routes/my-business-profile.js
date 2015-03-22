@@ -12,6 +12,12 @@ export default Ember.Route.extend({
     return this.get('session.currentUser');
   },
 
+  function(){
+    return this.store.findAll('post');
+  },
+
+
+
 //   actions: {
 //     postStatus: function(){
 //       // var self = this;

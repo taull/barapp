@@ -16,7 +16,11 @@ html {
   font-family: 'Roboto', sans-serif; }
 
 body {
-  background: #f8f8f8; }
+  background: url(/assets/images/nightlife.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover; }
 
 input {
   -webkit-appearance: none;
@@ -28,13 +32,13 @@ header {
   width: 100%;
   height: 75px;
   background: #333;
+  background: rgba(0, 0, 0, 0.9);
   position: absolute;
   top: 0;
   z-index: 10; }
 
 .header-container {
   width: 414px;
-  background: #000;
   margin: 0 auto;
   padding-top: 10px;
   height: 75px;
@@ -49,11 +53,12 @@ header {
   font-size: 36px; }
 
 .header-logo {
-  background: url('/assets/images/keith_logo1.png');
-  width: 100px;
-  height: 50px;
+  background: url('/assets/images/barkeep_logo.png');
+  background-size: contain;
+  width: 150px;
+  height: 25px;
   margin: 0 auto;
-  margin-top: -45px; }
+  margin-top: 15px; }
 
 .footer-container {
   width: 960px;
@@ -100,13 +105,15 @@ header {
 
 .feed-search input {
   width: 100%;
-  height: 45px;
+  height: 75px;
   border: none;
-  background: #f5f5f5;
+  background: rgba(0, 0, 0, 0.5);
   /* padding-left: 10px; */
   outline: none;
   text-align: center;
-  font-size: 14px; }
+  font-size: 20px;
+  font-weight: 300;
+  color: #f0f0f0; }
 
 /* MENU SLIDE IN */
 .header-nav-wrap {
@@ -119,7 +126,7 @@ header {
   transition: 1s;
   margin-top: -58px;
   height: 50px;
-  background: #f0f0f0; }
+  background: transparent; }
 
 .toggle-container {
   margin-top: -24px;
@@ -131,7 +138,8 @@ header {
   color: #FFF;
   transition: 1s;
   position: relative;
-  padding-left: 24px; }
+  padding-left: 24px;
+  display: none; }
 
 #menu-bars {
   display: none; }
@@ -163,7 +171,7 @@ header {
   width: 414px;
   margin: 0 auto;
   margin-top: 75px;
-  background: #fff; }
+  background: transparent; }
 
 .sidebar-container {
   display: inline-block;
@@ -174,8 +182,7 @@ header {
   display: inline-block;
   width: 414px;
   margin: 0 auto;
-  background: transparent;
-  padding-top: 10px; }
+  background: #f0f0f0; }
 
 .feed-header {
   padding-left: 15px; }
@@ -190,9 +197,12 @@ header {
   font-weight: lighter;
   color: #999; }
 
+.feed-post {
+  background: #FFF;
+  box-shadow: 0 0 30px -15px #000; }
+
 .feed-post ul {
   list-style: none;
-  border-bottom: 1px solid #f0f0f0;
   padding: 15px; }
 
 .feed-post li {
@@ -204,12 +214,12 @@ header {
   border: 1px solid #dfdfdf;
   background: url('https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTAm6vTZeaQGiR3ujW09Bg1V6iKEYBJ9-abSowMsEs06dZn9zxd') no-repeat center center;
   background-size: contain;
-  border-radius: 25px; }
+  border-radius: 4px; }
 
 .feed-avatar-container {
   display: inline-block;
   width: 15%;
-  margin-top: -8px; }
+  margin-top: 3px; }
 
 .feed-info-container {
   display: inline-block;
@@ -218,7 +228,7 @@ header {
   padding-left: 0px; }
 
 .feed-name {
-  font-size: 12px;
+  font-size: 14px;
   color: navy;
   font-weight: bold;
   width: 100%; }
@@ -231,11 +241,12 @@ header {
   color: #999; }
 
 .feed-status {
-  font-size: 12px;
+  font-size: 14px;
   padding-top: 5px;
   width: 100%;
-  line-height: 18px;
-  font-weight: 300; }
+  line-height: 20px;
+  font-weight: 300;
+  color: #555; }
 
 .feed-radius {
   font-size: 12px;
@@ -252,7 +263,7 @@ header {
 .feed-social-buttons {
   color: #999;
   font-weight: 300;
-  font-size: 10px; }
+  font-size: 12px; }
 
 .feed-addfavorite {
   border-left: 1px solid #dfdfdf;
@@ -267,45 +278,66 @@ header {
 .feed-addfavorite:hover {
   color: #5385d6; }
 
-/* Business Edit */
-.business-edit-container {
-  position: relative;
-  top: 100px;
-  width: 960px;
-  margin: 0 auto; }
-
 /* Sign In */
-.login-container {
+.login-container, .business-signup-container, .business-edit-container {
   position: relative;
-  background: #FFF;
   width: 414px;
   margin: 0 auto;
-  padding: 30px 50px;
-  margin-top: 75px; }
+  padding: 0px 50px 30px 50px;
+  margin-top: 0px; }
+
+.cover-upload-container {
+  position: relative;
+  width: 414px;
+  margin: 0 auto;
+  padding: 0px 50px 30px 50px;
+  margin-top: 0px; }
 
 .login-wrap {
-  width: 100%;
-  background: #f8f8f8;
+  width: 414px;
   background-size: cover;
-  margin-top: 75px; }
+  margin-top: 75px;
+  background: rgba(0, 0, 0, 0.7);
+  margin: 75px auto 0 auto; }
 
-.login-email input, .login-password input, .user-signup-firstname input, .user-signup-lastname input, .user-signup-email input, .user-signup-confirm input, .user-signup-password input, .business-signup-name input, .business-signup-firstname input, .business-signup-lastname input, .business-signup-email input, .business-signup-confirm input, .business-signup-password input, .business-edit-name input, .business-edit-firstname input, .business-edit-lastname input, .business-edit-email input, .business-edit-address input, .business-edit-city input, .business-edit-state input, .business-edit-zip input, .business-edit-hours input {
+.login-email input, .login-password input, .user-signup-firstname input, .user-signup-lastname input, .user-signup-email input, .user-signup-confirm input, .user-signup-password input, .business-signup-name input, .business-signup-firstname input, .business-signup-lastname input, .business-signup-email input, .business-signup-confirm input, .business-signup-password input, .business-edit-name input, .business-edit-firstname input, .business-edit-lastname input, .business-edit-email input, .business-edit-address input, .business-edit-city input, .business-edit-state input, .business-edit-zip input, .business-edit-website input, .business-edit-hours input {
   transition: 1000ms;
   border: none;
   border-radius: 0px;
   width: 100%;
-  height: 45px;
+  height: 50px;
   padding: 0px 5px;
   font-size: 14px;
   text-align: center;
-  border-bottom: 1px solid #f0f0f0;
-  background: transparent;
+  background: #dfdfdf;
+  background: rgba(255, 255, 255, 0.1);
+  color: #f0f0f0;
   margin-top: 10px; }
-  .login-email input:focus, .login-password input:focus, .user-signup-firstname input:focus, .user-signup-lastname input:focus, .user-signup-email input:focus, .user-signup-confirm input:focus, .user-signup-password input:focus, .business-signup-name input:focus, .business-signup-firstname input:focus, .business-signup-lastname input:focus, .business-signup-email input:focus, .business-signup-confirm input:focus, .business-signup-password input:focus, .business-edit-name input:focus, .business-edit-firstname input:focus, .business-edit-lastname input:focus, .business-edit-email input:focus, .business-edit-address input:focus, .business-edit-city input:focus, .business-edit-state input:focus, .business-edit-zip input:focus, .business-edit-hours input:focus {
+  .login-email input:focus, .login-password input:focus, .user-signup-firstname input:focus, .user-signup-lastname input:focus, .user-signup-email input:focus, .user-signup-confirm input:focus, .user-signup-password input:focus, .business-signup-name input:focus, .business-signup-firstname input:focus, .business-signup-lastname input:focus, .business-signup-email input:focus, .business-signup-confirm input:focus, .business-signup-password input:focus, .business-edit-name input:focus, .business-edit-firstname input:focus, .business-edit-lastname input:focus, .business-edit-email input:focus, .business-edit-address input:focus, .business-edit-city input:focus, .business-edit-state input:focus, .business-edit-zip input:focus, .business-edit-website input:focus, .business-edit-hours input:focus {
     border: none;
     outline: 0;
-    background: transparent;
-    border-bottom: 1px solid #5385d6; }
+    background: rgba(255, 255, 255, 0.2); }
+
+.business-edit-name input, .login-email input, .business-signup-firstname input {
+  margin-top: 0; }
+
+.login-header {
+  width: 100%;
+  background: url('/assets/images/bartender.png');
+  background-size: cover;
+  height: 200px; }
+
+.register-header {
+  width: 100%;
+  background: url('/assets/images/bartender-girl.png');
+  background-size: cover;
+  height: 200px; }
+
+.business-edit-header {
+  width: 100%;
+  background: url('/assets/images/bartender-guy.png');
+  background-size: cover;
+  height: 196px; }
 
 .login-email input::-webkit-input-placeholder, .login-password input::-webkit-input-placeholder {
   font-size: 14px;
@@ -314,18 +346,14 @@ header {
 .login-password input {
   font-size: 14px; }
 
-.login-password {
-  margin-top: 15px; }
-
 .login-submit button {
   height: 45px;
   width: 100%;
-  background: #5385d6;
+  background: rgba(83, 133, 214, 0.8);
   border: none;
   border-radius: 0px;
   text-align: center;
-  margin-top: 15px;
-  padding-top: 7px;
+  margin-top: 12px;
   transition: 500ms;
   font-family: sans-serif;
   font-size: 14px;
@@ -344,7 +372,7 @@ header {
 
 .loggedin-link {
   float: right;
-  margin-top: -35px;
+  margin-top: -25px;
   padding-right: 15px;
   padding-left: 5px; }
 
@@ -393,7 +421,7 @@ header {
 .user-signup-submit button {
   height: 45px;
   width: 100%;
-  background: #5385d6;
+  background: rgba(83, 133, 214, 0.8);
   border: none;
   border-radius: 0px;
   text-align: center;
@@ -407,27 +435,23 @@ header {
   text-decoration: none; }
 
 /* Business Sign Up */
-.business-signup-container, .business-edit-container {
+/* .business-edit-container {
   width: 414px;
   margin: 0 auto;
-  margin-top: -25px;
-  padding: 30px;
-  background: transparent;
+  margin-top: -50px;
+  padding: 1px;
+  background: rgba(0,0,0,.5);
   border-radius: 0px;
-  background: #fff;
-  margin-bottom: 100px; }
-
+  margin-bottom: 100px;
+} */
 .business-signup-name input::-webkit-input-placeholder, .business-signup-firstname input::-webkit-input-placeholder, .business-signup-lastname input::-webkit-input-placeholder, .business-signup-email input::-webkit-input-placeholder, .business-signup-confirm input::-webkit-input-placeholder, .business-signup-password input::-webkit-input-placeholder {
   font-size: 14px;
   font-weight: lighter; }
 
-.business-signup-password, .business-signup-confirm, .business-signup-email, .business-signup-firstname, .business-signup-lastname {
-  margin-top: 15px; }
-
 .business-signup-submit button, .business-edit-submit button {
   height: 45px;
   width: 100%;
-  background: #5385d6;
+  background: rgba(83, 133, 214, 0.8);
   border: none;
   border-radius: 0px;
   text-align: center;
@@ -442,50 +466,50 @@ header {
 
 label#largeFile:after {
   position: absolute;
-  width: 250px;
-  max-width: 800px;
   content: "Select your file";
-  left: 0;
-  right: 0;
-  margin: 0px auto;
+  left: 0px;
+  right: 0px;
+  margin: -26px auto 0px;
   text-align: center;
-  padding: 20px;
-  border-radius: 10px;
-  border: 2px dashed #ccc;
-  color: #ccc;
-  font-family: "Helvetica Neue", Helvetica, Arial;
+  padding: 25px;
+  /* border-radius: 10px; */
+  /* border: 2px dashed #CCC; */
+  color: #FFF;
   font-size: 22px;
-  margin-top: -26px;
-  z-index: 0; }
+  z-index: 0;
+  width: 100%;
+  text-shadow: 1px 1px 10px #000;
+  font-weight: 300;
+  background: rgba(255, 255, 255, 0.1); }
 
 label#largeFile:hover:after {
   color: #5385d6;
-  cursor: pointer;
-  border: 2px dashed #5385d6; }
+  cursor: pointer; }
 
 label#largeFile input#file {
-  width: 215px;
-  height: 30px;
-  margin-top: 72px;
+  height: 45px;
   outline: 0px none;
   border: 1px solid #DFDFDF;
   border-radius: 5px;
   text-align: right;
-  padding-top: 5px;
-  padding-left: 0px;
+  padding-top: 15px;
+  padding-left: 20px;
   background: #F8F8F8 none repeat scroll 0% 0%;
   position: relative;
   padding-right: 20px;
-  margin-left: 10px; }
+  margin-left: 0px;
+  width: 95%;
+  font-size: 12px;
+  margin-top: 75px; }
 
 .hide-choose {
-  width: 83px;
-  height: 30px;
+  width: 86px;
+  height: 45px;
   background: #f8f8f8;
   position: absolute;
   z-index: 20;
   margin-left: 25px;
-  margin-top: 72px;
+  margin-top: 75px;
   /* display: none; */
   border: 1px solid #dfdfdf;
   border-right: none;
@@ -493,7 +517,7 @@ label#largeFile input#file {
 
 #cover-upload {
   text-align: center;
-  width: 250px;
+  width: 90%;
   margin: 50px auto; }
 
 .cover-upload-heading {
@@ -504,14 +528,15 @@ label#largeFile input#file {
   text-align: center;
   z-index: 30;
   position: absolute;
-  margin-top: -30px;
-  margin-left: 13px;
+  margin-top: -45px;
+  margin-left: 7px;
   width: 80px;
   background: #5385D6 none repeat scroll 0% 0%;
   border: medium none;
   color: #FFF;
-  height: 30px;
-  border-radius: 5px 0px 0px 5px; }
+  border-radius: 5px 0px 0px 5px;
+  height: 45px;
+  font-size: 14px; }
 
 /* Business Profile */
 .business-profile-container {
@@ -608,18 +633,16 @@ label#largeFile input#file {
 .business-profile-feed {
   display: block;
   position: relative;
-  background: #fff;
+  background: transparent;
   width: 414px;
-  margin: 0 auto; }
+  margin: 10px auto 0 auto; }
 
 .business-profile-info-wrap {
   width: 100%;
-  background: #444;
   height: 275px; }
 
 .business-profile-feed-wrap {
-  width: 100%;
-  background: #f8f8f8; }
+  width: 100%; }
 
 .uber-container {
   width: 150px;
@@ -663,7 +686,7 @@ label#largeFile input#file {
   text-decoration: none; }
 
 .business-profile-background-edit {
-  padding-top: 25px;
+  padding-top: 10px;
   padding-left: 15px;
   text-align: left; }
 
@@ -674,42 +697,41 @@ label#largeFile input#file {
 /* STATUS UPDATE */
 .business-profile-status {
   width: 100%;
-  padding: 25px 0px 0px 0px;
-  background: #f5f5f5; }
+  padding: 50px 0px 0px 0px;
+  background: rgba(0, 0, 0, 0.6); }
 
 #business-status {
   width: 100%;
   max-width: 100%;
   border: none;
   outline: none;
-  background: #f5f5f5;
-  font-size: 14px;
-  line-height: 16px;
+  background: transparent;
+  font-size: 16px;
+  line-height: 18px;
   resize: none;
-  padding: 5px 25px; }
+  padding: 5px 25px;
+  color: #f0f0f0;
+  font-weight: 300; }
 
 .post-status {
   width: 30%;
-  height: 40px;
+  height: 50px;
   outline: none;
   border: none;
   border-radius: 0;
-  background: #5385d6;
+  background: rgba(0, 0, 0, 0.2);
   color: #fff;
   display: inline-block;
   float: right;
   padding-top: 5px;
-  font-size: 12px;
-  margin-top: -1px; }
+  font-size: 12px; }
 
 .submit-status {
   width: 100%;
   padding: 0 0px;
-  background: #f0f0f0;
-  height: 40px;
-  margin-top: 0px;
-  border-top: 1px solid #dfdfdf;
-  border-bottom: 1px solid #dfdfdf; }
+  background: rgba(83, 133, 214, 0.8);
+  height: 50px;
+  margin-top: 0px; }
 
 /* Font Awesome Icons */
 .fa-bars {
@@ -729,13 +751,14 @@ footer {
   width: 414px;
   margin: 0 auto;
   border-top: 0px solid #dfdfdf;
-  background: #fff;
+  background: rgba(0, 0, 0, 0.8);
   height: 40px; }
 
 .footer-copyright {
   padding: 15px;
   font-size: 10px;
-  display: inline-block; }
+  display: inline-block;
+  color: #f0f0f0; }
 
 .footer-social-icons {
   display: inline-block;
@@ -745,7 +768,7 @@ footer {
   padding: 10px 15px; }
 
 .footer-social-icons a {
-  color: navy;
+  color: #f0f0f0;
   padding-left: 10px; }
 
 .fixed-footer ul {
@@ -781,8 +804,7 @@ footer {
   .header-container {
     width: 320px; }
   .login-container {
-    width: 320px;
-    padding: 30px; }
+    width: 320px; }
   .footer-container {
     width: 320px; }
   .fixed-footer {
@@ -802,13 +824,18 @@ footer {
   .slider-container {
     width: 220px; }
   .header-logo {
-    width: 80px;
-    height: 40px;
-    background-size: contain;
     margin-left: 70px; }
   .sign-out {
     margin-top: -27px; }
-  .business-profile-container, .business-profile-background, .business-profile-info, .business-profile-feed, .business-edit-container {
-    width: 320px; } }
+  .business-profile-container, .business-profile-background, .business-profile-info, .business-profile-feed, .business-edit-container, .login-wrap {
+    width: 320px; }
+  .login-header {
+    height: 150px; } }
+
+@media only screen and (min-device-width: 668px) {
+  .login-wrap {
+    margin-top: 100px; }
+  .footer-container {
+    margin-bottom: 50px; } }
 
 /*# sourceMappingURL=barapp.css.map */
