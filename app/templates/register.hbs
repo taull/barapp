@@ -7,28 +7,34 @@
 
   <form id="business-signup-form" {{action 'register' on='submit'}}>
 
-    <div class="business-signup-name">
-    </div>
+
 
     <div class="business-signup-firstname">
-      {{input placeholder="First Name" value=firstName}}
+      {{input placeholder="First Name" value=firstName required=true}}
     </div>
 
     <div class="business-signup-lastname">
-      {{input placeholder="Last Name" value=lastName}}
+      {{input placeholder="Last Name" value=lastName required=true}}
     </div>
 
     <div class="business-signup-email">
-      {{input placeholder="email" type='email' value=username}}
+      {{input placeholder="email" type='email' value=username required=true}}
     </div>
 
     <div class="business-signup-password">
-      {{input placeholder="password" type='password' value=password}}
+      {{input placeholder="password" type='password' value=password required=true}}
+    </div>
+
+    <div class="business-signup-type">
+      <p>Select User Type:</p>
+      {{view "select" class="select-user-type" value=userType content=typeUser}}
     </div>
 
     <div class="business-signup-submit">
       <button type="submit">Register</button>
     </div>
+
+
 
   </form>
 

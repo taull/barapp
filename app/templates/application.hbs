@@ -1,16 +1,15 @@
 <header>
 
   <div class="header-container">
+    <!-- <p>{{session.currentUser.firstName}}</p> -->
 
     <label for="menu-bars" class="menu-toggle">{{fa-icon "bars"}}</label>
 
-    <div class="header-logo">
-    </div>
+
 
     {{#if session.isAuthenticated}}
 
       <div class="sign-out">
-        <p>{{session.currentUser.firstName}}</p>
         <a {{ action 'invalidateSession' }} href="javascript:void(0)">Sign out {{fa-icon "sign-out"}}</a>
       </div>
 
@@ -21,6 +20,9 @@
       </div>
 
     {{/if}}
+
+    <div class="header-logo">
+    </div>
 
   </div>
 

@@ -22,6 +22,11 @@ body {
   -o-background-size: cover;
   background-size: cover; }
 
+.loading {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8); }
+
 input {
   -webkit-appearance: none;
   -webkit-border-radius: 0;
@@ -53,12 +58,12 @@ header {
   font-size: 36px; }
 
 .header-logo {
-  background: url('/assets/images/barkeep_logo.png');
+  background: url('/assets/images/barkeep-logo.png');
   background-size: contain;
   width: 150px;
   height: 25px;
   margin: 0 auto;
-  margin-top: 15px; }
+  margin-top: 5px; }
 
 .footer-container {
   width: 960px;
@@ -107,7 +112,7 @@ header {
   width: 100%;
   height: 75px;
   border: none;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(255, 255, 255, 0.1);
   /* padding-left: 10px; */
   outline: none;
   text-align: center;
@@ -150,6 +155,65 @@ header {
 #menu-bars:checked + .header-nav-wrap .menu-toggle {
   color: #fff; }
 
+/* SELECT INPUT */
+select {
+  width: 100%;
+  height: 50px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-overflow: '';
+  display: block;
+  background: transparent;
+  position: relative;
+  z-index: 20;
+  text-align: center;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0;
+  font-size: 14px;
+  font-weight: 300;
+  color: #dfdfdf;
+  text-indent: 15px; }
+
+select:focus {
+  outline: 0;
+  border: 0;
+  background: rgba(255, 255, 255, 0.2); }
+
+.select-user-type {
+  position: relative;
+  width: 100%;
+  max-width: 375px;
+  margin: 0 auto; }
+
+.select-user-type:after {
+  content: "";
+  border-top: 10px solid #fff;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  position: absolute;
+  right: 16px;
+  top: 16px; }
+
+.select-user-type:before {
+  content: "";
+  width: 45px;
+  height: 40px;
+  background: lightblue;
+  position: absolute;
+  right: 0;
+  top: 0; }
+
+.business-signup-type {
+  text-align: left;
+  margin-top: 35px; }
+
+.business-signup-type p {
+  color: #dfdfdf;
+  font-weight: 300;
+  font-size: 12px;
+  padding-bottom: 5px; }
+
 /* jQuery Slider */
 #jquery-slider > span {
   background: #5385d6;
@@ -170,7 +234,6 @@ header {
 .homepage-container {
   width: 414px;
   margin: 0 auto;
-  margin-top: 75px;
   background: transparent; }
 
 .sidebar-container {
@@ -181,8 +244,7 @@ header {
 .feed-container {
   display: inline-block;
   width: 414px;
-  margin: 0 auto;
-  background: #f0f0f0; }
+  margin: 0 auto; }
 
 .feed-header {
   padding-left: 15px; }
@@ -198,8 +260,7 @@ header {
   color: #999; }
 
 .feed-post {
-  background: #FFF;
-  box-shadow: 0 0 30px -15px #000; }
+  background: rgba(255, 255, 255, 0.9); }
 
 .feed-post ul {
   list-style: none;
@@ -211,9 +272,8 @@ header {
 .feed-avatar {
   width: 50px;
   height: 50px;
-  border: 1px solid #dfdfdf;
-  background: url('https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTAm6vTZeaQGiR3ujW09Bg1V6iKEYBJ9-abSowMsEs06dZn9zxd') no-repeat center center;
-  background-size: contain;
+  background: url('/assets/images/henrysbar.jpg') no-repeat center center;
+  background-size: cover;
   border-radius: 4px; }
 
 .feed-avatar-container {
@@ -290,7 +350,7 @@ header {
   position: relative;
   width: 414px;
   margin: 0 auto;
-  padding: 0px 50px 30px 50px;
+  padding: 27px 50px 30px 50px;
   margin-top: 0px; }
 
 .login-wrap {
@@ -371,26 +431,26 @@ header {
   color: #5385d6; }
 
 .loggedin-link {
-  float: right;
-  margin-top: -25px;
-  padding-right: 15px;
-  padding-left: 5px; }
+  width: 100px;
+  position: relative;
+  margin: 0 auto;
+  text-align: center; }
 
 .loggedin-link a {
   color: #f0f0f0;
   text-decoration: none;
-  font-size: 12px; }
+  font-size: 10px; }
 
 .sign-out {
-  float: right;
-  margin-top: -35px;
-  padding-right: 15px; }
+  position: relative;
+  margin: 0 auto;
+  width: 100px;
+  text-align: center; }
 
 .sign-out a {
   color: #f0f0f0;
   text-decoration: none;
-  font-size: 12px;
-  padding-left: 2px; }
+  font-size: 10px; }
 
 .sign-out p {
   color: #F0F0F0;
@@ -449,7 +509,7 @@ header {
   font-weight: lighter; }
 
 .business-signup-submit button, .business-edit-submit button {
-  height: 45px;
+  height: 50px;
   width: 100%;
   background: rgba(83, 133, 214, 0.8);
   border: none;
@@ -461,7 +521,7 @@ header {
   font-family: sans-serif;
   font-size: 14px;
   color: #fff;
-  font-weight: 400;
+  font-weight: 300;
   text-decoration: none; }
 
 label#largeFile:after {
@@ -518,7 +578,7 @@ label#largeFile input#file {
 #cover-upload {
   text-align: center;
   width: 90%;
-  margin: 50px auto; }
+  margin: 0 auto; }
 
 .cover-upload-heading {
   text-align: center; }
@@ -600,7 +660,8 @@ label#largeFile input#file {
   color: #000;
   font-size: 12px;
   font-weight: normal;
-  padding-top: 20px; }
+  padding-top: 20px;
+  height: 200px; }
 
 .business-profile-background {
   background: url('/assets/images/henrysbar.jpg');
@@ -635,7 +696,7 @@ label#largeFile input#file {
   position: relative;
   background: transparent;
   width: 414px;
-  margin: 10px auto 0 auto; }
+  margin: 0px auto 0 auto; }
 
 .business-profile-info-wrap {
   width: 100%;
@@ -800,7 +861,7 @@ footer {
 .fs-favorites, .fs-settings, .fs-profile {
   border-left: 1px solid #ccc; }
 
-@media only screen and (min-device-width: 320px) and (max-device-width: 413px) {
+@media only screen and (min-device-width: 320px) and (max-device-width: 413px) and (orientation: portrait) {
   .header-container {
     width: 320px; }
   .login-container {
@@ -823,13 +884,15 @@ footer {
     width: 320px; }
   .slider-container {
     width: 220px; }
-  .header-logo {
-    margin-left: 70px; }
   .sign-out {
     margin-top: -27px; }
-  .business-profile-container, .business-profile-background, .business-profile-info, .business-profile-feed, .business-edit-container, .login-wrap {
+  .business-profile-container, .business-profile-background, .business-profile-info, .business-profile-feed, .business-edit-container, .business-signup-container, .login-wrap {
     width: 320px; }
   .login-header {
+    height: 150px; }
+  .register-header {
+    height: 150px; }
+  .business-edit-header {
     height: 150px; } }
 
 @media only screen and (min-device-width: 668px) {

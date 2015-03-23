@@ -1,4 +1,4 @@
-// import ajax from 'ic-ajax';
+import ajax from 'ic-ajax';
 import Ember from 'ember';
 
 // TODO: reverse id -> objectId for POST/PUT/DELETE
@@ -13,16 +13,16 @@ export default Ember.Object.extend({
   //   });
   // },
   //
-  // findAll: function(name) {
-  //   /* jshint unused: false */
-  //   return ajax("https://api.parse.com/1/classes/Status").then(function(response){
-  //     return response.results.map(function(status) {
-  //       status.id = status.objectId;
-  //       delete status.objectId;
-  //       return status;
-  //     });
-  //   });
-  // },
+  findAll: function(name) {
+    /* jshint unused: false */
+    return ajax("https://api.parse.com/1/classes/Post").then(function(response){
+      return response.results.map(function(post) {
+        post.id = post.objectId;
+        delete post.objectId;
+        return post;
+      });
+    });
+  },
   //
   // findQuery: function(name, query) {
   //   /* jshint unused: false */

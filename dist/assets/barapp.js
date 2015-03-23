@@ -2,79 +2,78 @@
 
 /* jshint ignore:end */
 
-define('barapp/adapters/status', ['exports', 'ember'], function (exports, Ember) {
+define('barapp/adapters/status', ['exports', 'ic-ajax', 'ember'], function (exports, ajax, Ember) {
 
-	'use strict';
+  'use strict';
 
-	// import ajax from 'ic-ajax';
-	exports['default'] = Ember['default'].Object.extend({});
+  exports['default'] = Ember['default'].Object.extend({
+    // find: function(name, id){
+    //   /* jshint unused: false */
+    //   return ajax("https://api.parse.com/1/classes/Status/" + id).then(function(status){
+    //     status.id = status.objectId;
+    //     delete status.objectId;
+    //     return status;
+    //   });
+    // },
+    //
+    findAll: function findAll(name) {
+      /* jshint unused: false */
+      return ajax['default']("https://api.parse.com/1/classes/Post").then(function (response) {
+        return response.results.map(function (post) {
+          post.id = post.objectId;
+          delete post.objectId;
+          return post;
+        });
+      });
+    } });
 
-	// find: function(name, id){
-	//   /* jshint unused: false */
-	//   return ajax("https://api.parse.com/1/classes/Status/" + id).then(function(status){
-	//     status.id = status.objectId;
-	//     delete status.objectId;
-	//     return status;
-	//   });
-	// },
-	//
-	// findAll: function(name) {
-	//   /* jshint unused: false */
-	//   return ajax("https://api.parse.com/1/classes/Status").then(function(response){
-	//     return response.results.map(function(status) {
-	//       status.id = status.objectId;
-	//       delete status.objectId;
-	//       return status;
-	//     });
-	//   });
-	// },
-	//
-	// findQuery: function(name, query) {
-	//   /* jshint unused: false */
-	//   return ajax("https://api.parse.com/1/classes/Status", {
-	//     data: Ember.$.param({
-	//             where: JSON.stringify(query)
-	//           })
-	//   }).then(function(response){
-	//     return response.results.map(function(status) {
-	//       status.id = status.objectId;
-	//       delete status.objectId;
-	//       return status;
-	//     });
-	//   });
-	// },
-	//
-	// destroy: function(name, record) {
-	//   /* jshint unused: false */
-	//   return ajax({
-	//     url: "https://api.parse.com/1/classes/Status/" + record.id,
-	//     type: "DELETE"
-	//   });
-	// },
-	//
-	// save: function(name, record) {
-	//   /* jshint unused: false */
-	//   if(record.id) {
-	//     return ajax({
-	//       url: "https://api.parse.com/1/classes/Status/" + record.id,
-	//       type: "PUT",
-	//       data: JSON.stringify(record)
-	//     }).then(function(response) {
-	//       response.id = response.objectId;
-	//       delete response.objectId;
-	//       return response;
-	//     });
-	//   } else {
-	//     return ajax({
-	//       url: "https://api.parse.com/1/classes/Status",
-	//       type: "POST",
-	//       data: JSON.stringify(record)
-	//     }).then(function(response) {
-	//       record.updatedAt = response.updatedAt;
-	//       return record;
-	//     });
-	//   }
-	// }
+  //
+  // findQuery: function(name, query) {
+  //   /* jshint unused: false */
+  //   return ajax("https://api.parse.com/1/classes/Status", {
+  //     data: Ember.$.param({
+  //             where: JSON.stringify(query)
+  //           })
+  //   }).then(function(response){
+  //     return response.results.map(function(status) {
+  //       status.id = status.objectId;
+  //       delete status.objectId;
+  //       return status;
+  //     });
+  //   });
+  // },
+  //
+  // destroy: function(name, record) {
+  //   /* jshint unused: false */
+  //   return ajax({
+  //     url: "https://api.parse.com/1/classes/Status/" + record.id,
+  //     type: "DELETE"
+  //   });
+  // },
+  //
+  // save: function(name, record) {
+  //   /* jshint unused: false */
+  //   if(record.id) {
+  //     return ajax({
+  //       url: "https://api.parse.com/1/classes/Status/" + record.id,
+  //       type: "PUT",
+  //       data: JSON.stringify(record)
+  //     }).then(function(response) {
+  //       response.id = response.objectId;
+  //       delete response.objectId;
+  //       return response;
+  //     });
+  //   } else {
+  //     return ajax({
+  //       url: "https://api.parse.com/1/classes/Status",
+  //       type: "POST",
+  //       data: JSON.stringify(record)
+  //     }).then(function(response) {
+  //       record.updatedAt = response.updatedAt;
+  //       return record;
+  //     });
+  //   }
+  // }
 
 });
 define('barapp/adapters/user', ['exports', 'ic-ajax', 'ember'], function (exports, ajax, Ember) {
@@ -509,10 +508,12 @@ define('barapp/controllers/register', ['exports', 'ic-ajax', 'ember'], function 
   'use strict';
 
   exports['default'] = Ember['default'].Controller.extend({
+    typeUser: ["Consumer", "Business"],
+
     actions: {
       register: function register() {
         // var self = this;
-        var data = this.getProperties("firstName", "lastName", "username", "password");
+        var data = this.getProperties("userType", "firstName", "lastName", "username", "password");
         data.email = data.username;
         ajax['default']({
           url: "https://api.parse.com/1/users",
@@ -887,13 +888,13 @@ define('barapp/routes/cover-upload', ['exports', 'ember'], function (exports, Em
 });
 define('barapp/routes/index', ['exports', 'simple-auth/mixins/authenticated-route-mixin', 'ember'], function (exports, AuthenticatedRouteMixin, Ember) {
 
-	'use strict';
+  'use strict';
 
-	exports['default'] = Ember['default'].Route.extend(AuthenticatedRouteMixin['default'], {});
-
-	// model: function(){
-	//   return this.store.findAll('status');
-	// }
+  exports['default'] = Ember['default'].Route.extend(AuthenticatedRouteMixin['default'], {
+    model: function model() {
+      return this.store.findAll("status");
+    }
+  });
 
 });
 define('barapp/routes/login', ['exports', 'ember'], function (exports, Ember) {
@@ -909,30 +910,41 @@ define('barapp/routes/my-business-profile', ['exports', 'ember'], function (expo
 
   // import ajax from 'ic-ajax';
   exports['default'] = Ember['default'].Route.extend({
+
+    beforeModel: function beforeModel() {
+
+      Ember['default'].$("body").addClass("loading");
+    },
+
     model: function model() {
       // this is ok for the arbitrary user profile
       // return this.store.find("user", params.user_id);
       return this.get("session.currentUser");
     },
 
-    "function": function _function() {
-      return this.store.findAll("post");
-    } });
+    // function(params){
+    //   return this.store.find("user", params.user_id);
+    // },
 
-  //   actions: {
-  //     postStatus: function(){
-  //       // var self = this;
-  //       var data = this.getProperties('status');
-  //       ajax({
-  //         url:  "https://api.parse.com/1/classes/Post",
-  //         type: "POST",
-  //         data: JSON.stringify(data),
-  //         contentType: 'application/json'
-  //       }).then(function(response){
-  //         this.transitionToRoute('my-business-profile', response);
-  //       }.bind(this));
-  //   },
-  // }
+    afterModel: function afterModel() {
+      Ember['default'].$("body").removeClass("loading");
+    }
+
+    //   actions: {
+    //     postStatus: function(){
+    //       // var self = this;
+    //       var data = this.getProperties('status');
+    //       ajax({
+    //         url:  "https://api.parse.com/1/classes/Post",
+    //         type: "POST",
+    //         data: JSON.stringify(data),
+    //         contentType: 'application/json'
+    //       }).then(function(response){
+    //         this.transitionToRoute('my-business-profile', response);
+    //       }.bind(this));
+    //   },
+    // }
+  });
 
 });
 define('barapp/routes/new', ['exports', 'ember'], function (exports, Ember) {
@@ -1010,10 +1022,6 @@ define('barapp/templates/application', ['exports'], function (exports) {
           dom.setAttribute(el1,"class","sign-out");
           var el2 = dom.createTextNode("\n        ");
           dom.appendChild(el1, el2);
-          var el2 = dom.createElement("p");
-          dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n        ");
-          dom.appendChild(el1, el2);
           var el2 = dom.createElement("a");
           dom.setAttribute(el2,"href","javascript:void(0)");
           var el3 = dom.createTextNode("Sign out ");
@@ -1028,7 +1036,7 @@ define('barapp/templates/application', ['exports'], function (exports) {
         },
         render: function render(context, env, contextualElement) {
           var dom = env.dom;
-          var hooks = env.hooks, content = hooks.content, element = hooks.element, inline = hooks.inline;
+          var hooks = env.hooks, element = hooks.element, inline = hooks.inline;
           dom.detectNamespace(contextualElement);
           var fragment;
           if (env.useFragmentCache && dom.canClone) {
@@ -1046,13 +1054,10 @@ define('barapp/templates/application', ['exports'], function (exports) {
           } else {
             fragment = this.build(dom);
           }
-          var element0 = dom.childAt(fragment, [1]);
-          var element1 = dom.childAt(element0, [3]);
-          var morph0 = dom.createMorphAt(dom.childAt(element0, [1]),-1,-1);
-          var morph1 = dom.createMorphAt(element1,0,-1);
-          content(env, morph0, context, "session.currentUser.firstName");
-          element(env, element1, context, "action", ["invalidateSession"], {});
-          inline(env, morph1, context, "fa-icon", ["sign-out"], {});
+          var element0 = dom.childAt(fragment, [1, 1]);
+          var morph0 = dom.createMorphAt(element0,0,-1);
+          element(env, element0, context, "action", ["invalidateSession"], {});
+          inline(env, morph0, context, "fa-icon", ["sign-out"], {});
           return fragment;
         }
       };
@@ -1325,22 +1330,26 @@ define('barapp/templates/application', ['exports'], function (exports) {
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2,"class","header-container");
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment(" <p>{{session.currentUser.firstName}}</p> ");
+        dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n    ");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("label");
         dom.setAttribute(el3,"for","menu-bars");
         dom.setAttribute(el3,"class","menu-toggle");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n    ");
+        var el3 = dom.createTextNode("\n\n\n\n");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    ");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("div");
         dom.setAttribute(el3,"class","header-logo");
         var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n  ");
+        var el3 = dom.createTextNode("\n\n  ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n\n  ");
@@ -1421,15 +1430,15 @@ define('barapp/templates/application', ['exports'], function (exports) {
         } else {
           fragment = this.build(dom);
         }
-        var element2 = dom.childAt(fragment, [0, 1]);
-        var element3 = dom.childAt(fragment, [3, 1, 1]);
-        var morph0 = dom.createMorphAt(dom.childAt(element2, [1]),-1,-1);
-        var morph1 = dom.createMorphAt(element2,4,5);
+        var element1 = dom.childAt(fragment, [0, 1]);
+        var element2 = dom.childAt(fragment, [3, 1, 1]);
+        var morph0 = dom.createMorphAt(dom.childAt(element1, [3]),-1,-1);
+        var morph1 = dom.createMorphAt(element1,4,5);
         var morph2 = dom.createMorphAt(fragment,1,2,contextualElement);
-        var morph3 = dom.createMorphAt(element3,0,1);
-        var morph4 = dom.createMorphAt(element3,1,2);
-        var morph5 = dom.createMorphAt(element3,2,3);
-        var morph6 = dom.createMorphAt(element3,3,4);
+        var morph3 = dom.createMorphAt(element2,0,1);
+        var morph4 = dom.createMorphAt(element2,1,2);
+        var morph5 = dom.createMorphAt(element2,2,3);
+        var morph6 = dom.createMorphAt(element2,3,4);
         inline(env, morph0, context, "fa-icon", ["bars"], {});
         block(env, morph1, context, "if", [get(env, context, "session.isAuthenticated")], {}, child0, child1);
         content(env, morph2, context, "outlet");
@@ -3742,19 +3751,6 @@ define('barapp/templates/cover-upload', ['exports'], function (exports) {
         dom.setAttribute(el2,"class","cover-upload-container");
         var el3 = dom.createTextNode("\n\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","cover-upload-heading");
-        var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("p");
-        var el5 = dom.createTextNode("My Cover Image");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n    ");
-        dom.appendChild(el3, el4);
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n    ");
-        dom.appendChild(el2, el3);
         var el3 = dom.createElement("form");
         dom.setAttribute(el3,"action","#");
         dom.setAttribute(el3,"id","cover-upload");
@@ -3892,165 +3888,168 @@ define('barapp/templates/index', ['exports'], function (exports) {
         var el1 = dom.createTextNode("\n\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
-        dom.setAttribute(el1,"class","homepage-container");
-        var el2 = dom.createTextNode("\n\n\n\n  ");
+        dom.setAttribute(el1,"class","login-wrap");
+        var el2 = dom.createTextNode("\n  ");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
-        dom.setAttribute(el2,"class","slider");
-        var el3 = dom.createTextNode("\n    ");
+        dom.setAttribute(el2,"class","login-header");
+        var el3 = dom.createTextNode("\n  ");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n\n");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","homepage-container");
+        var el3 = dom.createTextNode("\n\n\n\n  ");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","slider-wrap-back");
-        var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("div");
-        dom.setAttribute(el4,"class","slider-wrap");
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("div");
-        dom.setAttribute(el5,"class","slider-container");
-        var el6 = dom.createTextNode("\n          ");
-        dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n        ");
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n      ");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
+        dom.setAttribute(el3,"class","slider");
         var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n  ");
-        dom.appendChild(el2, el3);
-        dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n\n  ");
-        dom.appendChild(el1, el2);
-        var el2 = dom.createElement("div");
-        dom.setAttribute(el2,"class","slider-value");
-        var el3 = dom.createTextNode("\n    ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("p");
-        var el4 = dom.createElement("span");
-        var el5 = dom.createTextNode("0");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode(" ");
-        dom.appendChild(el3, el4);
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n  ");
-        dom.appendChild(el2, el3);
-        dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n\n  ");
-        dom.appendChild(el1, el2);
-        var el2 = dom.createElement("div");
-        dom.setAttribute(el2,"class","feed-search");
-        var el3 = dom.createTextNode("\n    ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("form");
-        var el4 = dom.createTextNode("\n\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n      ");
-        dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
-        dom.setAttribute(el4,"class","submit-status");
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("button");
-        dom.setAttribute(el5,"type","submit");
-        dom.setAttribute(el5,"class","post-status");
-        var el6 = dom.createTextNode("Filter");
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
+        dom.setAttribute(el4,"class","slider-wrap-back");
         var el5 = dom.createTextNode("\n      ");
         dom.appendChild(el4, el5);
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","slider-wrap");
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","slider-container");
+        var el7 = dom.createTextNode("\n          ");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createTextNode("\n        ");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n      ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n    ");
+        dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n    ");
+        var el4 = dom.createTextNode("\n  ");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n  ");
         dom.appendChild(el2, el3);
-        dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n\n\n\n\n  ");
-        dom.appendChild(el1, el2);
-        var el2 = dom.createComment(" <div class=\"feed-header\">\n    <p class=\"feed-heading\">Local scene</p>\n    <p class=\"feed-subheading\">Hear straight from your favorite bars</p>\n  </div> ");
-        dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n\n  ");
-        dom.appendChild(el1, el2);
-        var el2 = dom.createElement("div");
-        dom.setAttribute(el2,"class","feed-container");
-        var el3 = dom.createTextNode("\n    ");
-        dom.appendChild(el2, el3);
         var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","feed-post");
-        var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("ul");
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("div");
-        dom.setAttribute(el5,"class","feed-avatar-container");
-        var el6 = dom.createTextNode("\n          ");
-        dom.appendChild(el5, el6);
-        var el6 = dom.createElement("li");
-        dom.setAttribute(el6,"class","feed-avatar");
-        dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n        ");
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("div");
-        dom.setAttribute(el5,"class","feed-info-container");
-        var el6 = dom.createTextNode("\n          ");
-        dom.appendChild(el5, el6);
-        var el6 = dom.createElement("li");
-        dom.setAttribute(el6,"class","feed-name");
-        var el7 = dom.createTextNode("Henry's Bar and Grill ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode(" ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createElement("span");
-        dom.setAttribute(el7,"class","feed-time");
-        var el8 = dom.createTextNode("5 minutes ago");
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n          ");
-        dom.appendChild(el5, el6);
-        var el6 = dom.createComment(" <li><span class=\"feed-radius\">2 miles away</span></li> ");
-        dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n          ");
-        dom.appendChild(el5, el6);
-        var el6 = dom.createElement("li");
-        dom.setAttribute(el6,"class","feed-status");
-        var el7 = dom.createTextNode("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n          ");
-        dom.appendChild(el5, el6);
-        var el6 = dom.createElement("li");
-        dom.setAttribute(el6,"class","feed-social-buttons");
-        var el7 = dom.createElement("span");
-        dom.setAttribute(el7,"class","feed-likes");
-        var el8 = dom.createTextNode(" 24 people like this");
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        var el7 = dom.createElement("span");
-        dom.setAttribute(el7,"class","feed-addfavorite");
-        var el8 = dom.createTextNode(" Add to Favorites");
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n        ");
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n      ");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
+        dom.setAttribute(el3,"class","slider-value");
         var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
+        var el4 = dom.createElement("p");
+        var el5 = dom.createElement("span");
+        var el6 = dom.createTextNode("0");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode(" ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n  ");
+        dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n  ");
+        var el3 = dom.createTextNode("\n\n  ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","feed-search");
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("form");
+        var el5 = dom.createTextNode("\n\n      ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n\n      ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","submit-status");
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("button");
+        dom.setAttribute(el6,"type","submit");
+        dom.setAttribute(el6,"class","post-status");
+        var el7 = dom.createTextNode("Filter");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n      ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n\n    ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n\n  ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n\n\n\n\n  ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment(" <div class=\"feed-header\">\n    <p class=\"feed-heading\">Local scene</p>\n    <p class=\"feed-subheading\">Hear straight from your favorite bars</p>\n  </div> ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n\n  ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","feed-container");
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","feed-post");
+        var el5 = dom.createTextNode("\n      ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("ul");
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","feed-avatar-container");
+        var el7 = dom.createTextNode("\n          ");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createElement("li");
+        dom.setAttribute(el7,"class","feed-avatar");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createTextNode("\n        ");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","feed-info-container");
+        var el7 = dom.createTextNode("\n          ");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createElement("li");
+        dom.setAttribute(el7,"class","feed-name");
+        var el8 = dom.createTextNode("Henry's Bar and Grill ");
+        dom.appendChild(el7, el8);
+        var el8 = dom.createTextNode(" ");
+        dom.appendChild(el7, el8);
+        var el8 = dom.createElement("span");
+        dom.setAttribute(el8,"class","feed-time");
+        var el9 = dom.createTextNode("5 minutes ago");
+        dom.appendChild(el8, el9);
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        var el7 = dom.createTextNode("\n          ");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createComment(" <li><span class=\"feed-radius\">2 miles away</span></li> ");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createTextNode("\n          ");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createElement("li");
+        dom.setAttribute(el7,"class","feed-status");
+        var el8 = dom.createTextNode("Lorem text");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        var el7 = dom.createTextNode("\n          ");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createComment(" <li class=\"feed-social-buttons\"><span class=\"feed-likes\">{{fa-icon \"beer\"}} 24 people like this</span><span class=\"feed-addfavorite\">{{fa-icon \"plus\"}} Add to Favorites</span></li> ");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createTextNode("\n        ");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n      ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n    ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n  ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n\n  ");
@@ -4124,29 +4123,24 @@ define('barapp/templates/index', ['exports'], function (exports) {
         }
         if (this.cachedFragment) { dom.repairClonedNode(fragment,[0]); }
         var element0 = dom.childAt(fragment, [2]);
-        var element1 = dom.childAt(element0, [9, 1, 1, 3]);
-        var element2 = dom.childAt(element1, [7]);
-        var element3 = dom.childAt(element0, [11, 3]);
+        var element1 = dom.childAt(element0, [3]);
+        var element2 = dom.childAt(element0, [5, 3]);
         var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
-        var morph1 = dom.createMorphAt(dom.childAt(element0, [1, 1, 1, 1]),0,1);
-        var morph2 = dom.createMorphAt(dom.childAt(element0, [3, 1]),0,1);
-        var morph3 = dom.createMorphAt(dom.childAt(element0, [5, 1]),0,1);
-        var morph4 = dom.createMorphAt(dom.childAt(element1, [1]),0,1);
-        var morph5 = dom.createMorphAt(dom.childAt(element2, [0]),-1,0);
-        var morph6 = dom.createMorphAt(dom.childAt(element2, [1]),-1,0);
-        var morph7 = dom.createMorphAt(dom.childAt(element3, [1]),-1,-1);
-        var morph8 = dom.createMorphAt(dom.childAt(element3, [3]),-1,-1);
-        var morph9 = dom.createMorphAt(dom.childAt(element3, [5]),-1,-1);
+        var morph1 = dom.createMorphAt(dom.childAt(element1, [1, 1, 1, 1]),0,1);
+        var morph2 = dom.createMorphAt(dom.childAt(element1, [3, 1]),0,1);
+        var morph3 = dom.createMorphAt(dom.childAt(element1, [5, 1]),0,1);
+        var morph4 = dom.createMorphAt(dom.childAt(element1, [9, 1, 1, 3, 1]),0,1);
+        var morph5 = dom.createMorphAt(dom.childAt(element2, [1]),-1,-1);
+        var morph6 = dom.createMorphAt(dom.childAt(element2, [3]),-1,-1);
+        var morph7 = dom.createMorphAt(dom.childAt(element2, [5]),-1,-1);
         content(env, morph0, context, "outlet");
         inline(env, morph1, context, "jqui-slider", [], {"value": get(env, context, "num"), "min": 1, "max": 25, "step": 1, "slide": "slideAction", "id": "jquery-slider"});
         content(env, morph2, context, "num");
         inline(env, morph3, context, "input", [], {"placeholder": "Enter City or Zip", "type": "text"});
         inline(env, morph4, context, "fa-icon", ["check-circle"], {});
-        inline(env, morph5, context, "fa-icon", ["beer"], {});
-        inline(env, morph6, context, "fa-icon", ["plus"], {});
-        inline(env, morph7, context, "fa-icon", ["facebook"], {});
-        inline(env, morph8, context, "fa-icon", ["twitter"], {});
-        inline(env, morph9, context, "fa-icon", ["instagram"], {});
+        inline(env, morph5, context, "fa-icon", ["facebook"], {});
+        inline(env, morph6, context, "fa-icon", ["twitter"], {});
+        inline(env, morph7, context, "fa-icon", ["instagram"], {});
         return fragment;
       }
     };
@@ -4642,23 +4636,10 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         dom.appendChild(el6, el7);
         var el7 = dom.createElement("li");
         dom.setAttribute(el7,"class","feed-status");
-        var el8 = dom.createTextNode("Lorem and some more dummy text");
-        dom.appendChild(el7, el8);
         dom.appendChild(el6, el7);
         var el7 = dom.createTextNode("\n              ");
         dom.appendChild(el6, el7);
-        var el7 = dom.createElement("li");
-        dom.setAttribute(el7,"class","feed-social-buttons");
-        var el8 = dom.createElement("span");
-        dom.setAttribute(el8,"class","feed-likes");
-        var el9 = dom.createTextNode(" 24 people like this");
-        dom.appendChild(el8, el9);
-        dom.appendChild(el7, el8);
-        var el8 = dom.createElement("span");
-        dom.setAttribute(el8,"class","feed-addfavorite");
-        var el9 = dom.createTextNode(" Add to Favorites");
-        dom.appendChild(el8, el9);
-        dom.appendChild(el7, el8);
+        var el7 = dom.createComment(" <li class=\"feed-social-buttons\"><span class=\"feed-likes\">{{fa-icon \"beer\"}} 24 people like this</span><span class=\"feed-addfavorite\">{{fa-icon \"plus\"}} Add to Favorites</span></li> ");
         dom.appendChild(el6, el7);
         var el7 = dom.createTextNode("\n            ");
         dom.appendChild(el6, el7);
@@ -4754,8 +4735,7 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         var element6 = dom.childAt(element5, [1, 1]);
         var element7 = dom.childAt(element5, [3, 1, 1, 3]);
         var element8 = dom.childAt(element7, [1]);
-        var element9 = dom.childAt(element7, [7]);
-        var element10 = dom.childAt(element0, [7, 3]);
+        var element9 = dom.childAt(element0, [7, 3]);
         var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
         var morph1 = dom.createMorphAt(element3,-1,0);
         var morph2 = dom.createMorphAt(element3,0,1);
@@ -4771,11 +4751,10 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         var morph12 = dom.createMorphAt(element6,0,1);
         var morph13 = dom.createMorphAt(element8,-1,0);
         var morph14 = dom.createMorphAt(element8,0,1);
-        var morph15 = dom.createMorphAt(dom.childAt(element9, [0]),-1,0);
-        var morph16 = dom.createMorphAt(dom.childAt(element9, [1]),-1,0);
-        var morph17 = dom.createMorphAt(dom.childAt(element10, [1]),-1,-1);
-        var morph18 = dom.createMorphAt(dom.childAt(element10, [3]),-1,-1);
-        var morph19 = dom.createMorphAt(dom.childAt(element10, [5]),-1,-1);
+        var morph15 = dom.createMorphAt(dom.childAt(element7, [5]),-1,-1);
+        var morph16 = dom.createMorphAt(dom.childAt(element9, [1]),-1,-1);
+        var morph17 = dom.createMorphAt(dom.childAt(element9, [3]),-1,-1);
+        var morph18 = dom.createMorphAt(dom.childAt(element9, [5]),-1,-1);
         content(env, morph0, context, "outlet");
         content(env, morph1, context, "session.currentUser.businessName");
         inline(env, morph2, context, "fa-icon", ["check-circle"], {});
@@ -4792,11 +4771,10 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         inline(env, morph12, context, "textarea", [], {"id": "business-status", "value": get(env, context, "status"), "autoresize": true, "maxHeight": 200, "placeholder": "What's going on?"});
         content(env, morph13, context, "session.currentUser.businessName");
         inline(env, morph14, context, "fa-icon", ["check-circle"], {});
-        inline(env, morph15, context, "fa-icon", ["beer"], {});
-        inline(env, morph16, context, "fa-icon", ["plus"], {});
-        inline(env, morph17, context, "fa-icon", ["facebook"], {});
-        inline(env, morph18, context, "fa-icon", ["twitter"], {});
-        inline(env, morph19, context, "fa-icon", ["instagram"], {});
+        content(env, morph15, context, "session.currentUser.post.status");
+        inline(env, morph16, context, "fa-icon", ["facebook"], {});
+        inline(env, morph17, context, "fa-icon", ["twitter"], {});
+        inline(env, morph18, context, "fa-icon", ["instagram"], {});
         return fragment;
       }
     };
@@ -4879,14 +4857,7 @@ define('barapp/templates/register', ['exports'], function (exports) {
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("form");
         dom.setAttribute(el3,"id","business-signup-form");
-        var el4 = dom.createTextNode("\n\n    ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("div");
-        dom.setAttribute(el4,"class","business-signup-name");
-        var el5 = dom.createTextNode("\n    ");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n    ");
+        var el4 = dom.createTextNode("\n\n\n\n    ");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
         dom.setAttribute(el4,"class","business-signup-firstname");
@@ -4925,6 +4896,21 @@ define('barapp/templates/register', ['exports'], function (exports) {
         var el4 = dom.createTextNode("\n\n    ");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","business-signup-type");
+        var el5 = dom.createTextNode("\n      ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("p");
+        var el6 = dom.createTextNode("Select User Type:");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n      ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n    ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n\n    ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("div");
         dom.setAttribute(el4,"class","business-signup-submit");
         var el5 = dom.createTextNode("\n      ");
         dom.appendChild(el4, el5);
@@ -4936,7 +4922,7 @@ define('barapp/templates/register', ['exports'], function (exports) {
         var el5 = dom.createTextNode("\n    ");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n  ");
+        var el4 = dom.createTextNode("\n\n\n\n  ");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n");
@@ -5015,23 +5001,25 @@ define('barapp/templates/register', ['exports'], function (exports) {
         }
         var element0 = dom.childAt(fragment, [0, 3, 1]);
         var element1 = dom.childAt(fragment, [2, 3]);
-        var morph0 = dom.createMorphAt(dom.childAt(element0, [3]),0,1);
-        var morph1 = dom.createMorphAt(dom.childAt(element0, [5]),0,1);
-        var morph2 = dom.createMorphAt(dom.childAt(element0, [7]),0,1);
-        var morph3 = dom.createMorphAt(dom.childAt(element0, [9]),0,1);
-        var morph4 = dom.createMorphAt(dom.childAt(element1, [1]),-1,-1);
-        var morph5 = dom.createMorphAt(dom.childAt(element1, [3]),-1,-1);
-        var morph6 = dom.createMorphAt(dom.childAt(element1, [5]),-1,-1);
-        var morph7 = dom.createMorphAt(fragment,3,4,contextualElement);
+        var morph0 = dom.createMorphAt(dom.childAt(element0, [1]),0,1);
+        var morph1 = dom.createMorphAt(dom.childAt(element0, [3]),0,1);
+        var morph2 = dom.createMorphAt(dom.childAt(element0, [5]),0,1);
+        var morph3 = dom.createMorphAt(dom.childAt(element0, [7]),0,1);
+        var morph4 = dom.createMorphAt(dom.childAt(element0, [9]),2,3);
+        var morph5 = dom.createMorphAt(dom.childAt(element1, [1]),-1,-1);
+        var morph6 = dom.createMorphAt(dom.childAt(element1, [3]),-1,-1);
+        var morph7 = dom.createMorphAt(dom.childAt(element1, [5]),-1,-1);
+        var morph8 = dom.createMorphAt(fragment,3,4,contextualElement);
         element(env, element0, context, "action", ["register"], {"on": "submit"});
-        inline(env, morph0, context, "input", [], {"placeholder": "First Name", "value": get(env, context, "firstName")});
-        inline(env, morph1, context, "input", [], {"placeholder": "Last Name", "value": get(env, context, "lastName")});
-        inline(env, morph2, context, "input", [], {"placeholder": "email", "type": "email", "value": get(env, context, "username")});
-        inline(env, morph3, context, "input", [], {"placeholder": "password", "type": "password", "value": get(env, context, "password")});
-        inline(env, morph4, context, "fa-icon", ["facebook"], {});
-        inline(env, morph5, context, "fa-icon", ["twitter"], {});
-        inline(env, morph6, context, "fa-icon", ["instagram"], {});
-        content(env, morph7, context, "outlet");
+        inline(env, morph0, context, "input", [], {"placeholder": "First Name", "value": get(env, context, "firstName"), "required": true});
+        inline(env, morph1, context, "input", [], {"placeholder": "Last Name", "value": get(env, context, "lastName"), "required": true});
+        inline(env, morph2, context, "input", [], {"placeholder": "email", "type": "email", "value": get(env, context, "username"), "required": true});
+        inline(env, morph3, context, "input", [], {"placeholder": "password", "type": "password", "value": get(env, context, "password"), "required": true});
+        inline(env, morph4, context, "view", ["select"], {"class": "select-user-type", "value": get(env, context, "userType"), "content": get(env, context, "typeUser")});
+        inline(env, morph5, context, "fa-icon", ["facebook"], {});
+        inline(env, morph6, context, "fa-icon", ["twitter"], {});
+        inline(env, morph7, context, "fa-icon", ["instagram"], {});
+        content(env, morph8, context, "outlet");
         return fragment;
       }
     };
