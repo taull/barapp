@@ -15,7 +15,7 @@ export default Ember.Object.extend({
   //
   findAll: function(name) {
     /* jshint unused: false */
-    return ajax("https://api.parse.com/1/classes/Post").then(function(response){
+    return ajax("https://api.parse.com/1/classes/Post?include=creator,business").then(function(response){
       return response.results.map(function(post) {
         post.id = post.objectId;
         delete post.objectId;
@@ -23,8 +23,20 @@ export default Ember.Object.extend({
       });
     });
   },
-  //
-  // findQuery: function(name, query) {
+  // in routes/my-business-profile.js
+  // model: function(){
+  //   var businessId = this.get('session.currentUser.id');
+  //   return this.store.findQuery('status', {business: businessId});
+  // }
+
+  findQuery: function(name, query) {
+    if(query.business) {
+      return this.findByBusiness(name, query);
+    }
+  },
+
+  // https://parse.com/docs/rest#queries-relational
+  // findByBusiness: function(name, businessId) {
   //   /* jshint unused: false */
   //   return ajax("https://api.parse.com/1/classes/Status", {
   //     data: Ember.$.param({

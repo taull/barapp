@@ -18,6 +18,6 @@
     "foundation": "~5.5.1",
     "font-awesome": "~4.3.0",
     "dom-ruler": "0.1.4",
-    "ember-simple-auth": "0.7.3"
+    "ember-cli-moment-shim": "~0.0.3"
   }
 }

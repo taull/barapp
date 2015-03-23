@@ -46,15 +46,19 @@
   <div class="feed-container">
     <div class="feed-post">
       <ul>
-        <div class="feed-avatar-container">
-          <li class="feed-avatar"></li>
-        </div>
-        <div class="feed-info-container">
-          <li class="feed-name">Henry's Bar and Grill {{fa-icon "check-circle"}} <span class="feed-time">5 minutes ago</span></li>
-          <!-- <li><span class="feed-radius">2 miles away</span></li> -->
-          <li class="feed-status">Lorem text</li>
-          <!-- <li class="feed-social-buttons"><span class="feed-likes">{{fa-icon "beer"}} 24 people like this</span><span class="feed-addfavorite">{{fa-icon "plus"}} Add to Favorites</span></li> -->
-        </div>
+        {{#each status in model}}
+          <li class="single-post">
+            <div class="feed-avatar-container">
+              <li class="feed-avatar"></li>
+            </div>
+            <div class="feed-info-container">
+              <li class="feed-name">{{status.business.businessName}} {{fa-icon "check-circle"}} <span class="feed-time">{{ago status.createdAt}}</span></li>
+              <!-- <li><span class="feed-radius">2 miles away</span></li> -->
+              <li class="feed-status">{{status.status}}</li>
+              <!-- <li class="feed-social-buttons"><span class="feed-likes">{{fa-icon "beer"}} 24 people like this</span><span class="feed-addfavorite">{{fa-icon "plus"}} Add to Favorites</span></li> -->
+            </div>
+          </li>
+        {{/each}}
       </ul>
     </div>
   </div>

@@ -18,17 +18,28 @@ define('barapp/adapters/status', ['exports', 'ic-ajax', 'ember'], function (expo
     //
     findAll: function findAll(name) {
       /* jshint unused: false */
-      return ajax['default']("https://api.parse.com/1/classes/Post").then(function (response) {
+      return ajax['default']("https://api.parse.com/1/classes/Post?include=creator,business").then(function (response) {
         return response.results.map(function (post) {
           post.id = post.objectId;
           delete post.objectId;
           return post;
         });
       });
+    },
+    // in routes/my-business-profile.js
+    // model: function(){
+    //   var businessId = this.get('session.currentUser.id');
+    //   return this.store.findQuery('status', {business: businessId});
+    // }
+
+    findQuery: function findQuery(name, query) {
+      if (query.business) {
+        return this.findByBusiness(name, query);
+      }
     } });
 
-  //
-  // findQuery: function(name, query) {
+  // https://parse.com/docs/rest#queries-relational
+  // findByBusiness: function(name, businessId) {
   //   /* jshint unused: false */
   //   return ajax("https://api.parse.com/1/classes/Status", {
   //     data: Ember.$.param({
@@ -721,6 +732,36 @@ define('barapp/initializers/ember-magic-man', ['exports', 'ember-magic-man/store
     name: "ember-magic-man",
     initialize: initialize
   };
+
+});
+define('barapp/initializers/ember-moment', ['exports', 'ember-moment/helpers/moment', 'ember-moment/helpers/ago', 'ember-moment/helpers/duration', 'ember'], function (exports, moment, ago, duration, Ember) {
+
+  'use strict';
+
+  var initialize = function initialize() {
+    var registerHelper;
+
+    if (Ember['default'].HTMLBars) {
+      registerHelper = function (helperName, fn) {
+        Ember['default'].HTMLBars._registerHelper(helperName, Ember['default'].HTMLBars.makeBoundHelper(fn));
+      };
+    } else {
+      registerHelper = Ember['default'].Handlebars.helper;
+    };
+
+    registerHelper("moment", moment['default']);
+    registerHelper("ago", ago['default']);
+    registerHelper("duration", duration['default']);
+  };
+
+  exports['default'] = {
+    name: "ember-moment",
+
+    initialize: initialize
+  };
+  /* container, app */
+
+  exports.initialize = initialize;
 
 });
 define('barapp/initializers/export-application-global', ['exports', 'ember', 'barapp/config/environment'], function (exports, Ember, config) {
@@ -3876,6 +3917,103 @@ define('barapp/templates/index', ['exports'], function (exports) {
   'use strict';
 
   exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      return {
+        isHTMLBars: true,
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("          ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("li");
+          dom.setAttribute(el1,"class","single-post");
+          var el2 = dom.createTextNode("\n            ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("div");
+          dom.setAttribute(el2,"class","feed-avatar-container");
+          var el3 = dom.createTextNode("\n              ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("li");
+          dom.setAttribute(el3,"class","feed-avatar");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n            ");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n            ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("div");
+          dom.setAttribute(el2,"class","feed-info-container");
+          var el3 = dom.createTextNode("\n              ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("li");
+          dom.setAttribute(el3,"class","feed-name");
+          var el4 = dom.createTextNode(" ");
+          dom.appendChild(el3, el4);
+          var el4 = dom.createTextNode(" ");
+          dom.appendChild(el3, el4);
+          var el4 = dom.createElement("span");
+          dom.setAttribute(el4,"class","feed-time");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n              ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createComment(" <li><span class=\"feed-radius\">2 miles away</span></li> ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n              ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("li");
+          dom.setAttribute(el3,"class","feed-status");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n              ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createComment(" <li class=\"feed-social-buttons\"><span class=\"feed-likes\">{{fa-icon \"beer\"}} 24 people like this</span><span class=\"feed-addfavorite\">{{fa-icon \"plus\"}} Add to Favorites</span></li> ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n            ");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n          ");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          var hooks = env.hooks, content = hooks.content, inline = hooks.inline, get = hooks.get;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          var element0 = dom.childAt(fragment, [1, 3]);
+          var element1 = dom.childAt(element0, [1]);
+          var morph0 = dom.createMorphAt(element1,-1,0);
+          var morph1 = dom.createMorphAt(element1,0,1);
+          var morph2 = dom.createMorphAt(dom.childAt(element1, [2]),-1,-1);
+          var morph3 = dom.createMorphAt(dom.childAt(element0, [5]),-1,-1);
+          content(env, morph0, context, "status.business.businessName");
+          inline(env, morph1, context, "fa-icon", ["check-circle"], {});
+          inline(env, morph2, context, "ago", [get(env, context, "status.createdAt")], {});
+          content(env, morph3, context, "status.status");
+          return fragment;
+        }
+      };
+    }());
     return {
       isHTMLBars: true,
       blockParams: 0,
@@ -3992,55 +4130,9 @@ define('barapp/templates/index', ['exports'], function (exports) {
         var el5 = dom.createTextNode("\n      ");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("ul");
-        var el6 = dom.createTextNode("\n        ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","feed-avatar-container");
-        var el7 = dom.createTextNode("\n          ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createElement("li");
-        dom.setAttribute(el7,"class","feed-avatar");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n        ");
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n        ");
-        dom.appendChild(el5, el6);
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","feed-info-container");
-        var el7 = dom.createTextNode("\n          ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createElement("li");
-        dom.setAttribute(el7,"class","feed-name");
-        var el8 = dom.createTextNode("Henry's Bar and Grill ");
-        dom.appendChild(el7, el8);
-        var el8 = dom.createTextNode(" ");
-        dom.appendChild(el7, el8);
-        var el8 = dom.createElement("span");
-        dom.setAttribute(el8,"class","feed-time");
-        var el9 = dom.createTextNode("5 minutes ago");
-        dom.appendChild(el8, el9);
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n          ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createComment(" <li><span class=\"feed-radius\">2 miles away</span></li> ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n          ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createElement("li");
-        dom.setAttribute(el7,"class","feed-status");
-        var el8 = dom.createTextNode("Lorem text");
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n          ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createComment(" <li class=\"feed-social-buttons\"><span class=\"feed-likes\">{{fa-icon \"beer\"}} 24 people like this</span><span class=\"feed-addfavorite\">{{fa-icon \"plus\"}} Add to Favorites</span></li> ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n        ");
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n      ");
+        var el6 = dom.createTextNode("      ");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
         var el5 = dom.createTextNode("\n    ");
@@ -4103,7 +4195,7 @@ define('barapp/templates/index', ['exports'], function (exports) {
       },
       render: function render(context, env, contextualElement) {
         var dom = env.dom;
-        var hooks = env.hooks, content = hooks.content, get = hooks.get, inline = hooks.inline;
+        var hooks = env.hooks, content = hooks.content, get = hooks.get, inline = hooks.inline, block = hooks.block;
         dom.detectNamespace(contextualElement);
         var fragment;
         if (env.useFragmentCache && dom.canClone) {
@@ -4122,22 +4214,22 @@ define('barapp/templates/index', ['exports'], function (exports) {
           fragment = this.build(dom);
         }
         if (this.cachedFragment) { dom.repairClonedNode(fragment,[0]); }
-        var element0 = dom.childAt(fragment, [2]);
-        var element1 = dom.childAt(element0, [3]);
-        var element2 = dom.childAt(element0, [5, 3]);
+        var element2 = dom.childAt(fragment, [2]);
+        var element3 = dom.childAt(element2, [3]);
+        var element4 = dom.childAt(element2, [5, 3]);
         var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
-        var morph1 = dom.createMorphAt(dom.childAt(element1, [1, 1, 1, 1]),0,1);
-        var morph2 = dom.createMorphAt(dom.childAt(element1, [3, 1]),0,1);
-        var morph3 = dom.createMorphAt(dom.childAt(element1, [5, 1]),0,1);
-        var morph4 = dom.createMorphAt(dom.childAt(element1, [9, 1, 1, 3, 1]),0,1);
-        var morph5 = dom.createMorphAt(dom.childAt(element2, [1]),-1,-1);
-        var morph6 = dom.createMorphAt(dom.childAt(element2, [3]),-1,-1);
-        var morph7 = dom.createMorphAt(dom.childAt(element2, [5]),-1,-1);
+        var morph1 = dom.createMorphAt(dom.childAt(element3, [1, 1, 1, 1]),0,1);
+        var morph2 = dom.createMorphAt(dom.childAt(element3, [3, 1]),0,1);
+        var morph3 = dom.createMorphAt(dom.childAt(element3, [5, 1]),0,1);
+        var morph4 = dom.createMorphAt(dom.childAt(element3, [9, 1, 1]),0,1);
+        var morph5 = dom.createMorphAt(dom.childAt(element4, [1]),-1,-1);
+        var morph6 = dom.createMorphAt(dom.childAt(element4, [3]),-1,-1);
+        var morph7 = dom.createMorphAt(dom.childAt(element4, [5]),-1,-1);
         content(env, morph0, context, "outlet");
         inline(env, morph1, context, "jqui-slider", [], {"value": get(env, context, "num"), "min": 1, "max": 25, "step": 1, "slide": "slideAction", "id": "jquery-slider"});
         content(env, morph2, context, "num");
         inline(env, morph3, context, "input", [], {"placeholder": "Enter City or Zip", "type": "text"});
-        inline(env, morph4, context, "fa-icon", ["check-circle"], {});
+        block(env, morph4, context, "each", [get(env, context, "model")], {"keyword": "status"}, child0, null);
         inline(env, morph5, context, "fa-icon", ["facebook"], {});
         inline(env, morph6, context, "fa-icon", ["twitter"], {});
         inline(env, morph7, context, "fa-icon", ["instagram"], {});
@@ -6058,6 +6150,52 @@ define('barapp/tests/unit/controllers/status-test.jshint', function () {
   });
 
 });
+define('barapp/tests/unit/helpers/format-date-test', ['barapp/helpers/format-date', 'qunit'], function (format_date, qunit) {
+
+  'use strict';
+
+  qunit.module("FormatDateHelper");
+
+  // Replace this with your real tests.
+  qunit.test("it works", function (assert) {
+    var result = format_date.formatDate(42);
+    assert.ok(result);
+  });
+
+});
+define('barapp/tests/unit/helpers/format-date-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/helpers');
+  test('unit/helpers/format-date-test.js should pass jshint', function() { 
+    ok(true, 'unit/helpers/format-date-test.js should pass jshint.'); 
+  });
+
+});
+define('barapp/tests/unit/helpers/moment-test', ['barapp/helpers/moment', 'qunit'], function (moment, qunit) {
+
+  'use strict';
+
+  qunit.module("MomentHelper");
+
+  // Replace this with your real tests.
+  qunit.test("it works", function (assert) {
+    var result = moment.moment(42);
+    assert.ok(result);
+  });
+
+});
+define('barapp/tests/unit/helpers/moment-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/helpers');
+  test('unit/helpers/moment-test.js should pass jshint', function() { 
+    ok(true, 'unit/helpers/moment-test.js should pass jshint.'); 
+  });
+
+});
 define('barapp/tests/unit/initializers/current-user-test', ['ember', 'barapp/initializers/current-user', 'qunit'], function (Ember, current_user, qunit) {
 
   'use strict';
@@ -6563,7 +6701,7 @@ catch(err) {
 if (runningTests) {
   require("barapp/tests/test-helper");
 } else {
-  require("barapp/app")["default"].create({"name":"barapp","version":"0.0.0.6f8df5b9"});
+  require("barapp/app")["default"].create({"name":"barapp","version":"0.0.0.295f0387"});
 }
 
 /* jshint ignore:end */

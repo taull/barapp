@@ -21,7 +21,6 @@ var app = new EmberApp();
 app.import('bower_components/jquery-ui/jquery-ui.js');
 app.import('bower_components/jquery-ui/ui/tooltip.js');
 
-
 /*
 This example is more verbose than necessary for the sake of illustration.
 You could, for example, include the Font Awesome assets as a Broccoli tree.

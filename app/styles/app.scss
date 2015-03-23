@@ -1,13 +1,10 @@
 @import "bower_components/bourbon/app/assets/stylesheets/bourbon";
 @import "bower_components/neat/app/assets/stylesheets/neat";
-/* @import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300,700);*/
-@import url(http://fonts.googleapis.com/css?family=Roboto:400,300,700,500,300italic,400italic);
-
-
+@import url(http://fonts.googleapis.com/css?family=Lato:100,300,400,700,300italic,400italic);
 * {
   margin:0;
   /* box-sizing: box-sizing; */
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Lato', sans-serif;
 }
 
 body {
@@ -25,10 +22,10 @@ body {
 }
 
 input {
-    -webkit-appearance: none;
-    -webkit-border-radius:0;
-    -moz-appearance: none;
-    -moz-border-radius: 0;
+  -webkit-appearance: none;
+  -webkit-border-radius:0;
+  -moz-appearance: none;
+  -moz-border-radius: 0;
 }
 
 header {
@@ -303,13 +300,19 @@ select:focus {
   color: #999;
 }
 
+.single-post {
+  border-bottom: 1px solid #dfdfdf;
+  padding: 15px;
+  width: 100%;
+}
+
 .feed-post {
-  background: rgba(255,255,255,.9);
+  background: #f0f0f0;
 }
 
 .feed-post ul {
   list-style: none;
-  padding:15px;
+  padding:0;
 }
 
 .feed-post li {
@@ -317,23 +320,23 @@ select:focus {
 }
 
 .feed-avatar {
-  width: 50px;
-  height: 50px;
+  width: 30px;
+  height: 30px;
   background: url('/assets/images/henrysbar.jpg')  no-repeat center center;
   background-size: cover;
-  border-radius: 4px;
+  border-radius: 15px;
 }
 
 .feed-avatar-container {
   display: inline-block;
-  width: 15%;
+  width: 9%;
   margin-top: 3px;
 
 }
 
 .feed-info-container {
   display: inline-block;
-  width: 83%;
+  width: 89%;
   vertical-align: top;
   padding-left: 0px;
 }
