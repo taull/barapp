@@ -15,7 +15,10 @@ export default Ember.Controller.extend({
         data: JSON.stringify(data),
         contentType: 'application/json'
       }).then(function(response){
-        this.transitionToRoute('/', response);
+        Ember.$('.loader-container').removeClass('hidden');
+        Ember.run.later(this, function(){
+          this.transitionToRoute('/', response);
+        }, 2000);
         this.session.authenticate('authenticator:parse-email', {
           sessionToken: response.sessionToken,
         });

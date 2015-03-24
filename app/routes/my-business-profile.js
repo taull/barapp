@@ -6,29 +6,41 @@ import Ember from 'ember';
 // to check for business user, use `beforeModel` and check if currentUser is a business
 
 export default Ember.Route.extend({
-
-  beforeModel: function(){
-
-    Ember.$('body').addClass('loading');
-
-  },
+  //
+  // beforeModel: function(){
+  //
+  //   Ember.$('body').addClass('loading');
+  //
+  // },
 
   model: function() {
     // this is ok for the arbitrary user profile
     // return this.store.find("user", params.user_id);
-    return this.get('session.currentUser');
+    return Ember.RSVP.hash({
+      business: this.get('session.currentUser'),
+      posts: this.store.findQuery('status', {
+        business: this.get('session.currentUser')
+      })
+    });
+    // return this.get('session.currentUser');
   },
+
+  setupController: function(controller, model) {
+    controller.set('model', model.business);
+    controller.set('posts', model.posts);
+
+  }
 
     // function(params){
     //   return this.store.find("user", params.user_id);
     // },
 
 
-
-  afterModel: function() {
-    Ember.$('body').removeClass('loading');
-  }
-
+  //
+  // afterModel: function() {
+  //   Ember.$('body').removeClass('loading');
+  // }
+  //
 
 
 

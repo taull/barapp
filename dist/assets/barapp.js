@@ -36,23 +36,29 @@ define('barapp/adapters/status', ['exports', 'ic-ajax', 'ember'], function (expo
       if (query.business) {
         return this.findByBusiness(name, query);
       }
+    },
+
+    findByBusiness: function findByBusiness(name, query) {
+      /* jshint unused: false */
+      return ajax['default']("https://api.parse.com/1/classes/Post?include=creator,business", {
+        data: {
+          where: JSON.stringify({
+            business: {
+              __type: "Pointer",
+              className: "_User",
+              objectId: query.business.id
+            }
+          })
+        }
+      }).then(function (response) {
+        return response.results.map(function (post) {
+          post.id = post.objectId;
+          delete post.objectId;
+          return post;
+        });
+      });
     } });
 
-  // https://parse.com/docs/rest#queries-relational
-  // findByBusiness: function(name, businessId) {
-  //   /* jshint unused: false */
-  //   return ajax("https://api.parse.com/1/classes/Status", {
-  //     data: Ember.$.param({
-  //             where: JSON.stringify(query)
-  //           })
-  //   }).then(function(response){
-  //     return response.results.map(function(status) {
-  //       status.id = status.objectId;
-  //       delete status.objectId;
-  //       return status;
-  //     });
-  //   });
-  // },
   //
   // destroy: function(name, record) {
   //   /* jshint unused: false */
@@ -434,6 +440,68 @@ define('barapp/components/range-input', ['exports', 'ember', 'ember-cli-range-in
 	exports['default'] = RangeInputComponent['default'];
 
 });
+define('barapp/components/slide-show', ['exports', 'ember'], function (exports, Ember) {
+
+    'use strict';
+
+    var ARROWS = {
+        left: 37,
+        up: 38,
+        right: 39,
+        down: 40
+    };
+
+    exports['default'] = Ember['default'].Component.extend({
+
+        slideIndex: 0,
+
+        classNames: ["slide-show"],
+
+        slideTemplateDir: "slide-show",
+
+        onInsertion: (function () {
+            this._keyHandler = this.onKeyUp.bind(this);
+            this.$(document).on("keyup", this._keyHandler);
+        }).on("didInsertElement"),
+
+        onClearing: (function () {
+            this.$(document).off("keyup", this._keyHandler);
+        }).on("willClearRender"),
+
+        onKeyUp: function onKeyUp(e) {
+            if (e.which === ARROWS.right || e.which === ARROWS.down) {
+                this.send("next");
+            } else if (e.which === ARROWS.left || e.which === ARROWS.up) {
+                this.send("previous");
+            }
+        },
+
+        actions: {
+            next: function next() {
+                var slides = this.get("slides"),
+                    num = slides.get("length"),
+                    slideIndex = parseInt(this.get("slideIndex"));
+
+                if (slideIndex < num - 1) {
+                    this.set("slideIndex", slideIndex + 1);
+                }
+            },
+            previous: function previous() {
+                var slideIndex = parseInt(this.get("slideIndex"));
+
+                if (slideIndex > 0) {
+                    this.set("slideIndex", slideIndex - 1);
+                }
+            }
+        },
+
+        slideTemplate: (function () {
+            return this.get("slideTemplateDir") + "/" + this.get("slides").objectAt(parseInt(this.get("slideIndex")));
+        }).property("slides", "slideIndex")
+
+    });
+
+});
 define('barapp/controllers/business-edit', ['exports', 'ember'], function (exports, Ember) {
 
   'use strict';
@@ -442,7 +510,10 @@ define('barapp/controllers/business-edit', ['exports', 'ember'], function (expor
     actions: {
       saveProfile: function saveProfile() {
         this.get("session.currentUser").save();
-        this.transitionToRoute("my-business-profile");
+        Ember['default'].$(".loader-container").removeClass("hidden");
+        Ember['default'].run.later(this, function () {
+          this.transitionToRoute("my-business-profile");
+        }, 2000);
       }
     }
 
@@ -467,10 +538,9 @@ define('barapp/controllers/index', ['exports', 'ember'], function (exports, Embe
 
   'use strict';
 
-  exports['default'] = Ember['default'].Controller.extend({
-    statusCount: (function () {
-      return this.get("model.length");
-    }).property("model.@each")
+  exports['default'] = Ember['default'].ArrayController.extend({
+    sortProperties: ["createdAt"],
+    sortAscending: false
   });
 
 });
@@ -479,8 +549,14 @@ define('barapp/controllers/login', ['exports', 'simple-auth/mixins/login-control
   'use strict';
 
   exports['default'] = Ember['default'].Controller.extend(LoginControllerMixin['default'], {
-    authenticator: "authenticator:parse-email"
-  });
+    authenticator: "authenticator:parse-email" });
+
+  // function(){
+  //   Ember.$('.loader-container').removeClass('hidden');
+  //   Ember.run.later(this, function(){
+  //     this.transitionToRoute('index');
+  //   }, 2000);
+  // }
 
 });
 define('barapp/controllers/my-business-profile', ['exports', 'ic-ajax', 'ember'], function (exports, ajax, Ember) {
@@ -488,6 +564,7 @@ define('barapp/controllers/my-business-profile', ['exports', 'ic-ajax', 'ember']
   'use strict';
 
   exports['default'] = Ember['default'].Controller.extend({
+
     actions: {
       postStatus: function postStatus() {
         // var self = this;
@@ -507,8 +584,8 @@ define('barapp/controllers/my-business-profile', ['exports', 'ic-ajax', 'ember']
           type: "POST",
           data: JSON.stringify(data),
           contentType: "application/json"
-        }).then((function (response) {
-          this.transitionToRoute("my-business-profile", response);
+        }).then((function () {
+          this.transitionToRoute("my-business-profile");
         }).bind(this));
       } }
   });
@@ -532,13 +609,29 @@ define('barapp/controllers/register', ['exports', 'ic-ajax', 'ember'], function 
           data: JSON.stringify(data),
           contentType: "application/json"
         }).then((function (response) {
-          this.transitionToRoute("/", response);
+          Ember['default'].$(".loader-container").removeClass("hidden");
+          Ember['default'].run.later(this, function () {
+            this.transitionToRoute("/", response);
+          }, 2000);
           this.session.authenticate("authenticator:parse-email", {
             sessionToken: response.sessionToken });
         }).bind(this));
       } }
 
   });
+
+});
+define('barapp/controllers/slide-show', ['exports', 'ember', 'ember-slide-show/mixins/slide-show-controller'], function (exports, Ember, SlideShowController) {
+
+    'use strict';
+
+    exports['default'] = Ember['default'].Controller.extend(SlideShowController['default'], {
+
+        // the slides are the content in this simple app
+        slides: (function () {
+            return this.get("content");
+        }).property("content")
+    });
 
 });
 define('barapp/controllers/status', ['exports', 'ember'], function (exports, Ember) {
@@ -800,6 +893,48 @@ define('barapp/initializers/simple-auth', ['exports', 'simple-auth/configuration
   };
 
 });
+define('barapp/initializers/slide-lookup', ['exports'], function (exports) {
+
+    'use strict';
+
+    exports.initialize = initialize;
+
+    /**
+     * The idea here is to override the container lookup method and return an
+     * empty template if one of the slide templates is not found, rather than
+     * deal with a possible uncaught exception due to an Ember.assert.
+     * @param container
+     * @param application
+     */
+    var EMPTY_TEMPLATE = {
+        isHTMLBars: true,
+        render: function render() {
+            return "";
+        }
+    };
+    function initialize(container, application) {
+
+        var current = container.lookup;
+        container.lookup = function (fullName, options) {
+            var obj = current.call(this, fullName, options);
+
+            var regex = /template[:]slide-show\/([a-zA-Z]+\w*)/,
+                match = regex.exec(fullName);
+            if (!obj && match) {
+                // warn that the slide template doesn't exist
+                console.log("Could not find template: " + match[1] + "; skipping");
+                return EMPTY_TEMPLATE;
+            }
+            return obj;
+        };
+    }
+
+    exports['default'] = {
+        name: "error-handler",
+        initialize: initialize
+    };
+
+});
 define('barapp/models/status', ['exports', 'ember'], function (exports, Ember) {
 
   'use strict';
@@ -887,6 +1022,8 @@ define('barapp/router', ['exports', 'ember', 'barapp/config/environment'], funct
     this.route("new");
     this.route("register");
     this.route("cover-upload");
+    this.route("loading");
+    this.route("slide-show");
   });
 
   exports['default'] = Router;
@@ -934,8 +1071,14 @@ define('barapp/routes/index', ['exports', 'simple-auth/mixins/authenticated-rout
   exports['default'] = Ember['default'].Route.extend(AuthenticatedRouteMixin['default'], {
     model: function model() {
       return this.store.findAll("status");
-    }
-  });
+    } });
+
+});
+define('barapp/routes/loading', ['exports', 'ember'], function (exports, Ember) {
+
+	'use strict';
+
+	exports['default'] = Ember['default'].Route.extend({});
 
 });
 define('barapp/routes/login', ['exports', 'ember'], function (exports, Ember) {
@@ -951,25 +1094,39 @@ define('barapp/routes/my-business-profile', ['exports', 'ember'], function (expo
 
   // import ajax from 'ic-ajax';
   exports['default'] = Ember['default'].Route.extend({
-
-    beforeModel: function beforeModel() {
-
-      Ember['default'].$("body").addClass("loading");
-    },
+    //
+    // beforeModel: function(){
+    //
+    //   Ember.$('body').addClass('loading');
+    //
+    // },
 
     model: function model() {
       // this is ok for the arbitrary user profile
       // return this.store.find("user", params.user_id);
-      return this.get("session.currentUser");
+      return Ember['default'].RSVP.hash({
+        business: this.get("session.currentUser"),
+        posts: this.store.findQuery("status", {
+          business: this.get("session.currentUser")
+        })
+      });
+      // return this.get('session.currentUser');
     },
+
+    setupController: function setupController(controller, model) {
+      controller.set("model", model.business);
+      controller.set("posts", model.posts);
+    }
 
     // function(params){
     //   return this.store.find("user", params.user_id);
     // },
 
-    afterModel: function afterModel() {
-      Ember['default'].$("body").removeClass("loading");
-    }
+    //
+    // afterModel: function() {
+    //   Ember.$('body').removeClass('loading');
+    // }
+    //
 
     //   actions: {
     //     postStatus: function(){
@@ -1030,6 +1187,20 @@ define('barapp/routes/signup-type', ['exports', 'ember'], function (exports, Emb
 	exports['default'] = Ember['default'].Route.extend({});
 
 });
+define('barapp/routes/slide-show', ['exports', 'ember'], function (exports, Ember) {
+
+    'use strict';
+
+    var SLIDES = ["bartender1", "bartender2", "bartender3"];
+
+    exports['default'] = Ember['default'].Route.extend({
+
+        model: function model() {
+            return SLIDES;
+        }
+    });
+
+});
 define('barapp/routes/user-profile', ['exports', 'ember'], function (exports, Ember) {
 
 	'use strict';
@@ -1050,6 +1221,47 @@ define('barapp/templates/application', ['exports'], function (exports) {
 
   exports['default'] = Ember.HTMLBars.template((function() {
     var child0 = (function() {
+      return {
+        isHTMLBars: true,
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          var hooks = env.hooks, inline = hooks.inline;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          if (this.cachedFragment) { dom.repairClonedNode(fragment,[0,1]); }
+          var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
+          inline(env, morph0, context, "fa-icon", ["home"], {});
+          return fragment;
+        }
+      };
+    }());
+    var child1 = (function() {
       return {
         isHTMLBars: true,
         blockParams: 0,
@@ -1103,7 +1315,7 @@ define('barapp/templates/application', ['exports'], function (exports) {
         }
       };
     }());
-    var child1 = (function() {
+    var child2 = (function() {
       var child0 = (function() {
         return {
           isHTMLBars: true,
@@ -1183,7 +1395,49 @@ define('barapp/templates/application', ['exports'], function (exports) {
         }
       };
     }());
-    var child2 = (function() {
+    var child3 = (function() {
+      return {
+        isHTMLBars: true,
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("      ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("div");
+          dom.setAttribute(el1,"class","header-logo");
+          var el2 = dom.createTextNode("\n      ");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          return fragment;
+        }
+      };
+    }());
+    var child4 = (function() {
       return {
         isHTMLBars: true,
         blockParams: 0,
@@ -1227,7 +1481,7 @@ define('barapp/templates/application', ['exports'], function (exports) {
         }
       };
     }());
-    var child3 = (function() {
+    var child5 = (function() {
       return {
         isHTMLBars: true,
         blockParams: 0,
@@ -1271,7 +1525,7 @@ define('barapp/templates/application', ['exports'], function (exports) {
         }
       };
     }());
-    var child4 = (function() {
+    var child6 = (function() {
       return {
         isHTMLBars: true,
         blockParams: 0,
@@ -1315,7 +1569,7 @@ define('barapp/templates/application', ['exports'], function (exports) {
         }
       };
     }());
-    var child5 = (function() {
+    var child7 = (function() {
       return {
         isHTMLBars: true,
         blockParams: 0,
@@ -1381,16 +1635,16 @@ define('barapp/templates/application', ['exports'], function (exports) {
         dom.setAttribute(el3,"for","menu-bars");
         dom.setAttribute(el3,"class","menu-toggle");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n\n\n");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n\n    ");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","header-logo");
-        var el4 = dom.createTextNode("\n    ");
-        dom.appendChild(el3, el4);
+        dom.setAttribute(el3,"class","home-icon");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n  ");
+        var el3 = dom.createTextNode("\n\n");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n\n  ");
@@ -1453,7 +1707,7 @@ define('barapp/templates/application', ['exports'], function (exports) {
       },
       render: function render(context, env, contextualElement) {
         var dom = env.dom;
-        var hooks = env.hooks, inline = hooks.inline, get = hooks.get, block = hooks.block, content = hooks.content;
+        var hooks = env.hooks, inline = hooks.inline, block = hooks.block, get = hooks.get, content = hooks.content;
         dom.detectNamespace(contextualElement);
         var fragment;
         if (env.useFragmentCache && dom.canClone) {
@@ -1472,21 +1726,26 @@ define('barapp/templates/application', ['exports'], function (exports) {
           fragment = this.build(dom);
         }
         var element1 = dom.childAt(fragment, [0, 1]);
+        if (this.cachedFragment) { dom.repairClonedNode(element1,[6]); }
         var element2 = dom.childAt(fragment, [3, 1, 1]);
         var morph0 = dom.createMorphAt(dom.childAt(element1, [3]),-1,-1);
-        var morph1 = dom.createMorphAt(element1,4,5);
-        var morph2 = dom.createMorphAt(fragment,1,2,contextualElement);
-        var morph3 = dom.createMorphAt(element2,0,1);
-        var morph4 = dom.createMorphAt(element2,1,2);
-        var morph5 = dom.createMorphAt(element2,2,3);
-        var morph6 = dom.createMorphAt(element2,3,4);
+        var morph1 = dom.createMorphAt(dom.childAt(element1, [5]),-1,-1);
+        var morph2 = dom.createMorphAt(element1,6,7);
+        var morph3 = dom.createMorphAt(element1,7,8);
+        var morph4 = dom.createMorphAt(fragment,1,2,contextualElement);
+        var morph5 = dom.createMorphAt(element2,0,1);
+        var morph6 = dom.createMorphAt(element2,1,2);
+        var morph7 = dom.createMorphAt(element2,2,3);
+        var morph8 = dom.createMorphAt(element2,3,4);
         inline(env, morph0, context, "fa-icon", ["bars"], {});
-        block(env, morph1, context, "if", [get(env, context, "session.isAuthenticated")], {}, child0, child1);
-        content(env, morph2, context, "outlet");
-        block(env, morph3, context, "link-to", ["index"], {}, child2, null);
-        block(env, morph4, context, "link-to", ["index"], {}, child3, null);
-        block(env, morph5, context, "link-to", ["my-business-profile"], {}, child4, null);
+        block(env, morph1, context, "link-to", ["index"], {}, child0, null);
+        block(env, morph2, context, "if", [get(env, context, "session.isAuthenticated")], {}, child1, child2);
+        block(env, morph3, context, "link-to", ["index"], {}, child3, null);
+        content(env, morph4, context, "outlet");
+        block(env, morph5, context, "link-to", ["index"], {}, child4, null);
         block(env, morph6, context, "link-to", ["index"], {}, child5, null);
+        block(env, morph7, context, "link-to", ["my-business-profile"], {}, child6, null);
+        block(env, morph8, context, "link-to", ["index"], {}, child7, null);
         return fragment;
       }
     };
@@ -1515,6 +1774,27 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2,"class","business-edit-header");
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","bartender-info");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("p");
+        dom.setAttribute(el4,"class","bartender-info-name");
+        var el5 = dom.createTextNode("Jason");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("p");
+        dom.setAttribute(el4,"class","bartender-info-location");
+        var el5 = dom.createTextNode("Atlanta, GA");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
@@ -1624,6 +1904,65 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
         var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","loader-container hidden");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","loader");
+        dom.setAttribute(el4,"title","0");
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        dom.setNamespace("http://www.w3.org/2000/svg");
+        var el5 = dom.createElement("svg");
+        dom.setAttribute(el5,"version","1.1");
+        dom.setAttribute(el5,"id","loader-1");
+        dom.setAttribute(el5,"xmlns","http://www.w3.org/2000/svg");
+        dom.setAttribute(el5,"xmlns:xlink","http://www.w3.org/1999/xlink");
+        dom.setAttribute(el5,"x","0px");
+        dom.setAttribute(el5,"y","0px");
+        dom.setAttribute(el5,"width","50px");
+        dom.setAttribute(el5,"height","50px");
+        dom.setAttribute(el5,"viewBox","0 0 40 40");
+        dom.setAttribute(el5,"enable-background","new 0 0 40 40");
+        dom.setAttributeNS(el5,"http://www.w3.org/XML/1998/namespace","xml:space","preserve");
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("path");
+        dom.setAttribute(el6,"opacity","0.2");
+        dom.setAttribute(el6,"fill","#000");
+        dom.setAttribute(el6,"d","M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946\n          s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634\n          c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("path");
+        dom.setAttribute(el6,"fill","#000");
+        dom.setAttribute(el6,"d","M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0\n          C22.32,8.481,24.301,9.057,26.013,10.047z");
+        var el7 = dom.createTextNode("\n          ");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createElement("animateTransform");
+        dom.setAttribute(el7,"attributeType","xml");
+        dom.setAttribute(el7,"attributeName","transform");
+        dom.setAttribute(el7,"type","rotate");
+        dom.setAttribute(el7,"from","0 20 20");
+        dom.setAttribute(el7,"to","360 20 20");
+        dom.setAttribute(el7,"dur","1.0s");
+        dom.setAttribute(el7,"repeatCount","indefinite");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createTextNode("\n          ");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n      ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment(" <form id=\"fileupload\" name=\"fileupload\" enctype=\"multipart/form-data\" method=\"post\">\n    <input type=\"file\" name=\"fileselect\" id=\"fileselect\">\n    <input id=\"uploadbutton\" type=\"button\" value=\"Upload to Parse\"/>\n</form> ");
@@ -1634,8 +1973,9 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
         var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
-        var el1 = dom.createTextNode("\n\n");
+        var el1 = dom.createTextNode("\n\n\n");
         dom.appendChild(el0, el1);
+        dom.setNamespace(null);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1,"class","footer-container");
         var el2 = dom.createTextNode("\n\n  ");
@@ -3768,6 +4108,68 @@ define('barapp/templates/components/range-input', ['exports'], function (exports
   }()));
 
 });
+define('barapp/templates/components/slide-show', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      isHTMLBars: true,
+      blockParams: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      build: function build(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createTextNode("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"class","slide");
+        var el2 = dom.createTextNode("\n    ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      render: function render(context, env, contextualElement) {
+        var dom = env.dom;
+        var hooks = env.hooks, inline = hooks.inline, get = hooks.get;
+        dom.detectNamespace(contextualElement);
+        var fragment;
+        if (env.useFragmentCache && dom.canClone) {
+          if (this.cachedFragment === null) {
+            fragment = this.build(dom);
+            if (this.hasRendered) {
+              this.cachedFragment = fragment;
+            } else {
+              this.hasRendered = true;
+            }
+          }
+          if (this.cachedFragment) {
+            fragment = dom.cloneNode(this.cachedFragment, true);
+          }
+        } else {
+          fragment = this.build(dom);
+        }
+        if (this.cachedFragment) { dom.repairClonedNode(fragment,[0,4]); }
+        var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
+        var morph1 = dom.createMorphAt(dom.childAt(fragment, [2]),0,1);
+        var morph2 = dom.createMorphAt(fragment,3,4,contextualElement);
+        inline(env, morph0, context, "partial", ["slide-show/header"], {});
+        inline(env, morph1, context, "partial", [get(env, context, "slideTemplate")], {});
+        inline(env, morph2, context, "partial", ["slide-show/footer"], {});
+        return fragment;
+      }
+    };
+  }()));
+
+});
 define('barapp/templates/cover-upload', ['exports'], function (exports) {
 
   'use strict';
@@ -3951,11 +4353,14 @@ define('barapp/templates/index', ['exports'], function (exports) {
           dom.setAttribute(el3,"class","feed-name");
           var el4 = dom.createTextNode(" ");
           dom.appendChild(el3, el4);
-          var el4 = dom.createTextNode(" ");
-          dom.appendChild(el3, el4);
           var el4 = dom.createElement("span");
           dom.setAttribute(el4,"class","feed-time");
           dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n              ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("li");
+          dom.setAttribute(el3,"class","feed-address");
           dom.appendChild(el2, el3);
           var el3 = dom.createTextNode("\n              ");
           dom.appendChild(el2, el3);
@@ -3982,7 +4387,7 @@ define('barapp/templates/index', ['exports'], function (exports) {
         },
         render: function render(context, env, contextualElement) {
           var dom = env.dom;
-          var hooks = env.hooks, content = hooks.content, inline = hooks.inline, get = hooks.get;
+          var hooks = env.hooks, content = hooks.content, get = hooks.get, inline = hooks.inline;
           dom.detectNamespace(contextualElement);
           var fragment;
           if (env.useFragmentCache && dom.canClone) {
@@ -4003,12 +4408,12 @@ define('barapp/templates/index', ['exports'], function (exports) {
           var element0 = dom.childAt(fragment, [1, 3]);
           var element1 = dom.childAt(element0, [1]);
           var morph0 = dom.createMorphAt(element1,-1,0);
-          var morph1 = dom.createMorphAt(element1,0,1);
-          var morph2 = dom.createMorphAt(dom.childAt(element1, [2]),-1,-1);
-          var morph3 = dom.createMorphAt(dom.childAt(element0, [5]),-1,-1);
+          var morph1 = dom.createMorphAt(dom.childAt(element1, [1]),-1,-1);
+          var morph2 = dom.createMorphAt(dom.childAt(element0, [3]),-1,-1);
+          var morph3 = dom.createMorphAt(dom.childAt(element0, [7]),-1,-1);
           content(env, morph0, context, "status.business.businessName");
-          inline(env, morph1, context, "fa-icon", ["check-circle"], {});
-          inline(env, morph2, context, "ago", [get(env, context, "status.createdAt")], {});
+          inline(env, morph1, context, "ago", [get(env, context, "status.createdAt")], {});
+          content(env, morph2, context, "status.business.address");
           content(env, morph3, context, "status.status");
           return fragment;
         }
@@ -4031,6 +4436,27 @@ define('barapp/templates/index', ['exports'], function (exports) {
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2,"class","login-header");
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","bartender-info");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("p");
+        dom.setAttribute(el4,"class","bartender-info-name");
+        var el5 = dom.createTextNode("Patrick");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("p");
+        dom.setAttribute(el4,"class","bartender-info-location");
+        var el5 = dom.createTextNode("Greenville, SC");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
@@ -4155,7 +4581,7 @@ define('barapp/templates/index', ['exports'], function (exports) {
         var el4 = dom.createTextNode("\n      ");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("p");
-        var el5 = dom.createTextNode("Keith® 2015 All Rights Reserved");
+        var el5 = dom.createTextNode("Barkeep® 2015 All Rights Reserved");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n    ");
@@ -4229,7 +4655,7 @@ define('barapp/templates/index', ['exports'], function (exports) {
         inline(env, morph1, context, "jqui-slider", [], {"value": get(env, context, "num"), "min": 1, "max": 25, "step": 1, "slide": "slideAction", "id": "jquery-slider"});
         content(env, morph2, context, "num");
         inline(env, morph3, context, "input", [], {"placeholder": "Enter City or Zip", "type": "text"});
-        block(env, morph4, context, "each", [get(env, context, "model")], {"keyword": "status"}, child0, null);
+        block(env, morph4, context, "each", [get(env, context, "arrangedContent")], {"keyword": "status"}, child0, null);
         inline(env, morph5, context, "fa-icon", ["facebook"], {});
         inline(env, morph6, context, "fa-icon", ["twitter"], {});
         inline(env, morph7, context, "fa-icon", ["instagram"], {});
@@ -4302,6 +4728,27 @@ define('barapp/templates/login', ['exports'], function (exports) {
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2,"class","login-header");
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","bartender-info");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("p");
+        dom.setAttribute(el4,"class","bartender-info-name");
+        var el5 = dom.createTextNode("Patrick");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("p");
+        dom.setAttribute(el4,"class","bartender-info-location");
+        var el5 = dom.createTextNode("Greenville, SC");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
@@ -4356,7 +4803,7 @@ define('barapp/templates/login', ['exports'], function (exports) {
         var el4 = dom.createTextNode("    ");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n  ");
+        var el3 = dom.createTextNode("\n\n\n\n  ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -4538,6 +4985,104 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         }
       };
     }());
+    var child2 = (function() {
+      return {
+        isHTMLBars: true,
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("            ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("li");
+          dom.setAttribute(el1,"class","single-post");
+          var el2 = dom.createTextNode("\n\n              ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("div");
+          dom.setAttribute(el2,"class","feed-avatar-container");
+          var el3 = dom.createTextNode("\n                ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("li");
+          dom.setAttribute(el3,"class","feed-avatar");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n              ");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n              ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("div");
+          dom.setAttribute(el2,"class","feed-info-container");
+          var el3 = dom.createTextNode("\n                ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("li");
+          dom.setAttribute(el3,"class","feed-name");
+          var el4 = dom.createElement("span");
+          dom.setAttribute(el4,"class","feed-time");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n                ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("li");
+          dom.setAttribute(el3,"class","feed-address");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n                ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createComment(" <li class=\"feed-dynamic\"><span class=\"feed-radius\">2 miles away</span></li> ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n                ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("li");
+          dom.setAttribute(el3,"class","feed-status");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n                ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createComment(" <li class=\"feed-social-buttons\"><span class=\"feed-likes\">{{fa-icon \"beer\"}} 24 people like this</span><span class=\"feed-addfavorite\">{{fa-icon \"plus\"}} Add to Favorites</span></li> ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n              ");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n            ");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          var hooks = env.hooks, content = hooks.content, get = hooks.get, inline = hooks.inline;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          var element0 = dom.childAt(fragment, [1, 3]);
+          var element1 = dom.childAt(element0, [1]);
+          var morph0 = dom.createMorphAt(element1,-1,0);
+          var morph1 = dom.createMorphAt(dom.childAt(element1, [0]),-1,-1);
+          var morph2 = dom.createMorphAt(dom.childAt(element0, [3]),-1,-1);
+          var morph3 = dom.createMorphAt(dom.childAt(element0, [7]),-1,-1);
+          content(env, morph0, context, "post.business.businessName");
+          inline(env, morph1, context, "ago", [get(env, context, "post.createdAt")], {});
+          content(env, morph2, context, "post.business.address");
+          content(env, morph3, context, "post.status");
+          return fragment;
+        }
+      };
+    }());
     return {
       isHTMLBars: true,
       blockParams: 0,
@@ -4578,16 +5123,6 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         var el4 = dom.createTextNode("\n        ");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("li");
-        dom.setAttribute(el4,"class","business-profile-username");
-        var el5 = dom.createElement("div");
-        dom.setAttribute(el5,"class","profile-span-name profile-span-username");
-        var el6 = dom.createTextNode("@");
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("li");
         dom.setAttribute(el4,"class","business-profile-address1");
         var el5 = dom.createElement("div");
         dom.setAttribute(el5,"class","profile-span-name profile-span-address");
@@ -4617,7 +5152,6 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         var el5 = dom.createElement("div");
         dom.setAttribute(el5,"class","profile-span-name");
         var el6 = dom.createElement("a");
-        dom.setAttribute(el6,"href","/");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
@@ -4690,53 +5224,9 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         var el5 = dom.createTextNode("\n          ");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("ul");
-        var el6 = dom.createTextNode("\n            ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","feed-avatar-container");
-        var el7 = dom.createTextNode("\n              ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createElement("li");
-        dom.setAttribute(el7,"class","feed-avatar");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n            ");
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n            ");
-        dom.appendChild(el5, el6);
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","feed-info-container");
-        var el7 = dom.createTextNode("\n              ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createElement("li");
-        dom.setAttribute(el7,"class","feed-name");
-        var el8 = dom.createTextNode(" ");
-        dom.appendChild(el7, el8);
-        var el8 = dom.createTextNode(" ");
-        dom.appendChild(el7, el8);
-        var el8 = dom.createElement("span");
-        dom.setAttribute(el8,"class","feed-time");
-        var el9 = dom.createTextNode("5 minutes ago");
-        dom.appendChild(el8, el9);
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n              ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createComment(" <li class=\"feed-dynamic\"><span class=\"feed-radius\">2 miles away</span></li> ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n              ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createElement("li");
-        dom.setAttribute(el7,"class","feed-status");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n              ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createComment(" <li class=\"feed-social-buttons\"><span class=\"feed-likes\">{{fa-icon \"beer\"}} 24 people like this</span><span class=\"feed-addfavorite\">{{fa-icon \"plus\"}} Add to Favorites</span></li> ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n            ");
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n          ");
+        var el6 = dom.createTextNode("          ");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
         var el5 = dom.createTextNode("\n      ");
@@ -4747,6 +5237,14 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n\n");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createComment(" Put this line in the #each over ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createComment(" <li><button {{action 'destroyStatus' post}}>Destroy</button></li> ");
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n\n\n    ");
         dom.appendChild(el1, el2);
@@ -4799,7 +5297,7 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
       },
       render: function render(context, env, contextualElement) {
         var dom = env.dom;
-        var hooks = env.hooks, content = hooks.content, inline = hooks.inline, block = hooks.block, element = hooks.element, get = hooks.get;
+        var hooks = env.hooks, content = hooks.content, inline = hooks.inline, element = hooks.element, block = hooks.block, get = hooks.get;
         dom.detectNamespace(contextualElement);
         var fragment;
         if (env.useFragmentCache && dom.canClone) {
@@ -4818,55 +5316,49 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
           fragment = this.build(dom);
         }
         if (this.cachedFragment) { dom.repairClonedNode(fragment,[0]); }
-        var element0 = dom.childAt(fragment, [2]);
-        var element1 = dom.childAt(element0, [3]);
-        var element2 = dom.childAt(element1, [1]);
-        var element3 = dom.childAt(element2, [1, 0]);
-        var element4 = dom.childAt(element2, [5, 0]);
-        var element5 = dom.childAt(element0, [5]);
-        var element6 = dom.childAt(element5, [1, 1]);
-        var element7 = dom.childAt(element5, [3, 1, 1, 3]);
-        var element8 = dom.childAt(element7, [1]);
-        var element9 = dom.childAt(element0, [7, 3]);
+        var element2 = dom.childAt(fragment, [2]);
+        var element3 = dom.childAt(element2, [3]);
+        var element4 = dom.childAt(element3, [1]);
+        var element5 = dom.childAt(element4, [1, 0]);
+        var element6 = dom.childAt(element4, [3, 0]);
+        var element7 = dom.childAt(element4, [7, 0, 0]);
+        var element8 = dom.childAt(element2, [5]);
+        var element9 = dom.childAt(element8, [1, 1]);
+        var element10 = dom.childAt(element2, [11, 3]);
         var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
-        var morph1 = dom.createMorphAt(element3,-1,0);
-        var morph2 = dom.createMorphAt(element3,0,1);
-        var morph3 = dom.createMorphAt(dom.childAt(element2, [3, 0]),0,-1);
-        var morph4 = dom.createMorphAt(dom.childAt(element4, [0]),-1,-1);
-        var morph5 = dom.createMorphAt(element4,1,2);
-        var morph6 = dom.createMorphAt(element4,2,3);
-        var morph7 = dom.createMorphAt(element4,3,-1);
-        var morph8 = dom.createMorphAt(dom.childAt(element2, [7, 0]),-1,-1);
-        var morph9 = dom.createMorphAt(dom.childAt(element2, [9, 0, 0]),-1,-1);
-        var morph10 = dom.createMorphAt(dom.childAt(element1, [3]),0,1);
-        var morph11 = dom.createMorphAt(dom.childAt(element1, [5]),0,1);
-        var morph12 = dom.createMorphAt(element6,0,1);
-        var morph13 = dom.createMorphAt(element8,-1,0);
-        var morph14 = dom.createMorphAt(element8,0,1);
-        var morph15 = dom.createMorphAt(dom.childAt(element7, [5]),-1,-1);
-        var morph16 = dom.createMorphAt(dom.childAt(element9, [1]),-1,-1);
-        var morph17 = dom.createMorphAt(dom.childAt(element9, [3]),-1,-1);
-        var morph18 = dom.createMorphAt(dom.childAt(element9, [5]),-1,-1);
+        var morph1 = dom.createMorphAt(element5,-1,0);
+        var morph2 = dom.createMorphAt(element5,0,1);
+        var morph3 = dom.createMorphAt(dom.childAt(element6, [0]),-1,-1);
+        var morph4 = dom.createMorphAt(element6,1,2);
+        var morph5 = dom.createMorphAt(element6,2,3);
+        var morph6 = dom.createMorphAt(element6,3,-1);
+        var morph7 = dom.createMorphAt(dom.childAt(element4, [5, 0]),-1,-1);
+        var morph8 = dom.createMorphAt(element7,-1,-1);
+        var morph9 = dom.createMorphAt(dom.childAt(element3, [3]),0,1);
+        var morph10 = dom.createMorphAt(dom.childAt(element3, [5]),0,1);
+        var morph11 = dom.createMorphAt(element9,0,1);
+        var morph12 = dom.createMorphAt(dom.childAt(element8, [3, 1, 1]),0,1);
+        var morph13 = dom.createMorphAt(dom.childAt(element10, [1]),-1,-1);
+        var morph14 = dom.createMorphAt(dom.childAt(element10, [3]),-1,-1);
+        var morph15 = dom.createMorphAt(dom.childAt(element10, [5]),-1,-1);
         content(env, morph0, context, "outlet");
         content(env, morph1, context, "session.currentUser.businessName");
         inline(env, morph2, context, "fa-icon", ["check-circle"], {});
-        content(env, morph3, context, "session.currentUser.handle");
-        content(env, morph4, context, "session.currentUser.address");
-        content(env, morph5, context, "session.currentUser.city");
-        content(env, morph6, context, "session.currentUser.state");
-        content(env, morph7, context, "session.currentUser.zip");
-        content(env, morph8, context, "session.currentUser.businessHours");
-        content(env, morph9, context, "session.currentUser.website");
-        block(env, morph10, context, "link-to", ["business-edit"], {}, child0, null);
-        block(env, morph11, context, "link-to", ["cover-upload"], {}, child1, null);
-        element(env, element6, context, "action", ["postStatus"], {"on": "submit"});
-        inline(env, morph12, context, "textarea", [], {"id": "business-status", "value": get(env, context, "status"), "autoresize": true, "maxHeight": 200, "placeholder": "What's going on?"});
-        content(env, morph13, context, "session.currentUser.businessName");
-        inline(env, morph14, context, "fa-icon", ["check-circle"], {});
-        content(env, morph15, context, "session.currentUser.post.status");
-        inline(env, morph16, context, "fa-icon", ["facebook"], {});
-        inline(env, morph17, context, "fa-icon", ["twitter"], {});
-        inline(env, morph18, context, "fa-icon", ["instagram"], {});
+        content(env, morph3, context, "session.currentUser.address");
+        content(env, morph4, context, "session.currentUser.city");
+        content(env, morph5, context, "session.currentUser.state");
+        content(env, morph6, context, "session.currentUser.zip");
+        content(env, morph7, context, "session.currentUser.businessHours");
+        element(env, element7, context, "bind-attr", [], {"href": "session.currentUser.website"});
+        content(env, morph8, context, "session.currentUser.website");
+        block(env, morph9, context, "link-to", ["business-edit"], {}, child0, null);
+        block(env, morph10, context, "link-to", ["cover-upload"], {}, child1, null);
+        element(env, element9, context, "action", ["postStatus"], {"on": "submit"});
+        inline(env, morph11, context, "textarea", [], {"id": "business-status", "value": get(env, context, "status"), "autoresize": true, "maxHeight": 200, "placeholder": "What's going on?"});
+        block(env, morph12, context, "each", [get(env, context, "posts")], {"keyword": "post"}, child2, null);
+        inline(env, morph13, context, "fa-icon", ["facebook"], {});
+        inline(env, morph14, context, "fa-icon", ["twitter"], {});
+        inline(env, morph15, context, "fa-icon", ["instagram"], {});
         return fragment;
       }
     };
@@ -4938,6 +5430,27 @@ define('barapp/templates/register', ['exports'], function (exports) {
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2,"class","register-header");
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","bartender-info");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("p");
+        dom.setAttribute(el4,"class","bartender-info-name");
+        var el5 = dom.createTextNode("Eliza");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("p");
+        dom.setAttribute(el4,"class","bartender-info-location");
+        var el5 = dom.createTextNode("San Antonio, TX");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
@@ -5014,7 +5527,66 @@ define('barapp/templates/register', ['exports'], function (exports) {
         var el5 = dom.createTextNode("\n    ");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n\n\n  ");
+        var el4 = dom.createTextNode("\n\n    ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","loader-container hidden");
+        var el5 = dom.createTextNode("\n      ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","loader");
+        dom.setAttribute(el5,"title","0");
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.setNamespace("http://www.w3.org/2000/svg");
+        var el6 = dom.createElement("svg");
+        dom.setAttribute(el6,"version","1.1");
+        dom.setAttribute(el6,"id","loader-1");
+        dom.setAttribute(el6,"xmlns","http://www.w3.org/2000/svg");
+        dom.setAttribute(el6,"xmlns:xlink","http://www.w3.org/1999/xlink");
+        dom.setAttribute(el6,"x","0px");
+        dom.setAttribute(el6,"y","0px");
+        dom.setAttribute(el6,"width","50px");
+        dom.setAttribute(el6,"height","50px");
+        dom.setAttribute(el6,"viewBox","0 0 40 40");
+        dom.setAttribute(el6,"enable-background","new 0 0 40 40");
+        dom.setAttributeNS(el6,"http://www.w3.org/XML/1998/namespace","xml:space","preserve");
+        var el7 = dom.createTextNode("\n        ");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createElement("path");
+        dom.setAttribute(el7,"opacity","0.2");
+        dom.setAttribute(el7,"fill","#000");
+        dom.setAttribute(el7,"d","M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946\n          s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634\n          c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createTextNode("\n        ");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createElement("path");
+        dom.setAttribute(el7,"fill","#000");
+        dom.setAttribute(el7,"d","M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0\n          C22.32,8.481,24.301,9.057,26.013,10.047z");
+        var el8 = dom.createTextNode("\n          ");
+        dom.appendChild(el7, el8);
+        var el8 = dom.createElement("animateTransform");
+        dom.setAttribute(el8,"attributeType","xml");
+        dom.setAttribute(el8,"attributeName","transform");
+        dom.setAttribute(el8,"type","rotate");
+        dom.setAttribute(el8,"from","0 20 20");
+        dom.setAttribute(el8,"to","360 20 20");
+        dom.setAttribute(el8,"dur","1.0s");
+        dom.setAttribute(el8,"repeatCount","indefinite");
+        dom.appendChild(el7, el8);
+        var el8 = dom.createTextNode("\n          ");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        var el7 = dom.createTextNode("\n        ");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n      ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n    ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n\n\n  ");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n");
@@ -5025,6 +5597,7 @@ define('barapp/templates/register', ['exports'], function (exports) {
         dom.appendChild(el0, el1);
         var el1 = dom.createTextNode("\n\n");
         dom.appendChild(el0, el1);
+        dom.setNamespace(null);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1,"class","footer-container");
         var el2 = dom.createTextNode("\n\n  ");
@@ -5284,6 +5857,135 @@ define('barapp/templates/signup-type', ['exports'], function (exports) {
         if (this.cachedFragment) { dom.repairClonedNode(fragment,[0]); }
         var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
         content(env, morph0, context, "outlet");
+        return fragment;
+      }
+    };
+  }()));
+
+});
+define('barapp/templates/slide-show', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      isHTMLBars: true,
+      blockParams: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      build: function build(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createTextNode("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      render: function render(context, env, contextualElement) {
+        var dom = env.dom;
+        var hooks = env.hooks, content = hooks.content;
+        dom.detectNamespace(contextualElement);
+        var fragment;
+        if (env.useFragmentCache && dom.canClone) {
+          if (this.cachedFragment === null) {
+            fragment = this.build(dom);
+            if (this.hasRendered) {
+              this.cachedFragment = fragment;
+            } else {
+              this.hasRendered = true;
+            }
+          }
+          if (this.cachedFragment) {
+            fragment = dom.cloneNode(this.cachedFragment, true);
+          }
+        } else {
+          fragment = this.build(dom);
+        }
+        if (this.cachedFragment) { dom.repairClonedNode(fragment,[0]); }
+        var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
+        content(env, morph0, context, "outlet");
+        return fragment;
+      }
+    };
+  }()));
+
+});
+define('barapp/templates/slide-show/bartender1', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      isHTMLBars: true,
+      blockParams: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      build: function build(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"class","title");
+        var el2 = dom.createTextNode("Title");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"class","subtitle");
+        var el2 = dom.createTextNode("Sub Title");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n\n");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"class","content");
+        var el2 = dom.createTextNode("\n    ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("img");
+        dom.setAttribute(el2,"class","center");
+        dom.setAttribute(el2,"src","http://www.gravatar.com/avatar/0cf15665a9146ba852bf042b0652780a?s=200");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n    ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("ul");
+        var el3 = dom.createTextNode("\n        ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("li");
+        var el4 = dom.createTextNode("Ember is fun!");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n        ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("li");
+        var el4 = dom.createTextNode("If Darrel dies, we riot");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      render: function render(context, env, contextualElement) {
+        var dom = env.dom;
+        dom.detectNamespace(contextualElement);
+        var fragment;
+        if (env.useFragmentCache && dom.canClone) {
+          if (this.cachedFragment === null) {
+            fragment = this.build(dom);
+            if (this.hasRendered) {
+              this.cachedFragment = fragment;
+            } else {
+              this.hasRendered = true;
+            }
+          }
+          if (this.cachedFragment) {
+            fragment = dom.cloneNode(this.cachedFragment, true);
+          }
+        } else {
+          fragment = this.build(dom);
+        }
         return fragment;
       }
     };
@@ -5594,6 +6296,16 @@ define('barapp/tests/controllers/register.jshint', function () {
   });
 
 });
+define('barapp/tests/controllers/slide-show.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - controllers');
+  test('controllers/slide-show.js should pass jshint', function() { 
+    ok(true, 'controllers/slide-show.js should pass jshint.'); 
+  });
+
+});
 define('barapp/tests/controllers/status.jshint', function () {
 
   'use strict';
@@ -5761,6 +6473,16 @@ define('barapp/tests/routes/index.jshint', function () {
   });
 
 });
+define('barapp/tests/routes/loading.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - routes');
+  test('routes/loading.js should pass jshint', function() { 
+    ok(true, 'routes/loading.js should pass jshint.'); 
+  });
+
+});
 define('barapp/tests/routes/login.jshint', function () {
 
   'use strict';
@@ -5818,6 +6540,16 @@ define('barapp/tests/routes/signup-type.jshint', function () {
   module('JSHint - routes');
   test('routes/signup-type.js should pass jshint', function() { 
     ok(true, 'routes/signup-type.js should pass jshint.'); 
+  });
+
+});
+define('barapp/tests/routes/slide-show.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - routes');
+  test('routes/slide-show.js should pass jshint', function() { 
+    ok(true, 'routes/slide-show.js should pass jshint.'); 
   });
 
 });
@@ -6121,6 +6853,32 @@ define('barapp/tests/unit/controllers/register-test.jshint', function () {
   module('JSHint - unit/controllers');
   test('unit/controllers/register-test.js should pass jshint', function() { 
     ok(true, 'unit/controllers/register-test.js should pass jshint.'); 
+  });
+
+});
+define('barapp/tests/unit/controllers/slide-show-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleFor("controller:slide-show", {});
+
+  // Replace this with your real tests.
+  ember_qunit.test("it exists", function (assert) {
+    var controller = this.subject();
+    assert.ok(controller);
+  });
+
+  // Specify the other units that are required for this test.
+  // needs: ['controller:foo']
+
+});
+define('barapp/tests/unit/controllers/slide-show-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/controllers');
+  test('unit/controllers/slide-show-test.js should pass jshint', function() { 
+    ok(true, 'unit/controllers/slide-show-test.js should pass jshint.'); 
   });
 
 });
@@ -6433,6 +7191,31 @@ define('barapp/tests/unit/routes/index-test.jshint', function () {
   });
 
 });
+define('barapp/tests/unit/routes/loading-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleFor("route:loading", {});
+
+  ember_qunit.test("it exists", function (assert) {
+    var route = this.subject();
+    assert.ok(route);
+  });
+
+  // Specify the other units that are required for this test.
+  // needs: ['controller:foo']
+
+});
+define('barapp/tests/unit/routes/loading-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/routes');
+  test('unit/routes/loading-test.js should pass jshint', function() { 
+    ok(true, 'unit/routes/loading-test.js should pass jshint.'); 
+  });
+
+});
 define('barapp/tests/unit/routes/login-test', ['ember-qunit'], function (ember_qunit) {
 
   'use strict';
@@ -6583,6 +7366,31 @@ define('barapp/tests/unit/routes/signup-type-test.jshint', function () {
   });
 
 });
+define('barapp/tests/unit/routes/slide-show-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleFor("route:slide-show", {});
+
+  ember_qunit.test("it exists", function (assert) {
+    var route = this.subject();
+    assert.ok(route);
+  });
+
+  // Specify the other units that are required for this test.
+  // needs: ['controller:foo']
+
+});
+define('barapp/tests/unit/routes/slide-show-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/routes');
+  test('unit/routes/slide-show-test.js should pass jshint', function() { 
+    ok(true, 'unit/routes/slide-show-test.js should pass jshint.'); 
+  });
+
+});
 define('barapp/tests/unit/routes/user-profile-test', ['ember-qunit'], function (ember_qunit) {
 
   'use strict';
@@ -6701,7 +7509,7 @@ catch(err) {
 if (runningTests) {
   require("barapp/tests/test-helper");
 } else {
-  require("barapp/app")["default"].create({"name":"barapp","version":"0.0.0.295f0387"});
+  require("barapp/app")["default"].create({"name":"barapp","version":"0.0.0.9be10029"});
 }
 
 /* jshint ignore:end */

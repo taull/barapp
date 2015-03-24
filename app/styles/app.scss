@@ -64,6 +64,24 @@ header {
   margin-top:5px;
 }
 
+.bartender-info {
+  color: #dfdfdf;
+  font-size: 12px;
+  position: absolute;
+  padding-top: 156px;
+  padding-left: 70px;
+  text-shadow: 1px 1px 5px #000;
+  text-align: right;
+}
+
+.bartender-info-name {
+  color: #fff;
+}
+
+.bartender-info-location {
+  font-size: 8px
+}
+
 .footer-container {
   width:960px;
   margin: 50px auto 0;
@@ -172,6 +190,31 @@ header {
 
 #menu-bars:checked + .header-nav-wrap .menu-toggle {
   color:#fff;
+}
+
+/* Loading */
+
+.loader-container {
+  width: 100%;
+  text-align: center;
+  height: 30px;
+  padding-top: 10px;
+}
+
+.hidden {
+  display:none;
+}
+
+.loader{
+
+}
+
+/*
+  Set the color of the icon
+*/
+svg path,
+svg rect{
+  fill: rgba(83, 133, 214, 1.0);
 }
 
 /* SELECT INPUT */
@@ -302,7 +345,7 @@ select:focus {
 
 .single-post {
   border-bottom: 1px solid #dfdfdf;
-  padding: 15px;
+  padding: 20px;
   width: 100%;
 }
 
@@ -316,11 +359,11 @@ select:focus {
 }
 
 .feed-post li {
-  display: inline-block;
+  display: block;
 }
 
 .feed-avatar {
-  width: 30px;
+  width: 0px;
   height: 30px;
   background: url('/assets/images/henrysbar.jpg')  no-repeat center center;
   background-size: cover;
@@ -329,14 +372,14 @@ select:focus {
 
 .feed-avatar-container {
   display: inline-block;
-  width: 9%;
+  width: 0%;
   margin-top: 3px;
 
 }
 
 .feed-info-container {
   display: inline-block;
-  width: 89%;
+  width: 99%;
   vertical-align: top;
   padding-left: 0px;
 }
@@ -372,6 +415,13 @@ select:focus {
   padding-right: 5px;
   height: 20px;
   padding-top: 2px;
+}
+
+.feed-address {
+  font-size: 10px;
+  margin: 0;
+  padding-top: 3px;
+  font-weight: 300;
 }
 
 .feed-dynamic {
@@ -426,7 +476,7 @@ select:focus {
   width: 414px;
   background-size: cover;
   margin-top: 75px;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.8);
   margin: 75px auto 0 auto;
 }
 
@@ -999,6 +1049,17 @@ label#largeFile input#file {
   text-shadow: 1px 1px 6px #0A4590;
 }
 
+.home-icon {
+  font-size: 30px;
+  color: #dfdfdf;
+  padding-left: 15px;
+  position: absolute;
+  padding-top: 10px;
+}
+
+.home-icon a {
+  color: #dfdfdf;
+}
 
 /* Footer */
 
@@ -1016,7 +1077,7 @@ footer {
   width: 414px;
   margin:0 auto;
   border-top: 0px solid #dfdfdf;
-  background: rgba(0,0,0,.8);
+  background: rgba(0,0,0,.7);
   height: 40px;
 }
 
@@ -1131,7 +1192,6 @@ and (orientation : portrait) {
   }
 
   .sign-out {
-    margin-top: -27px;
   }
 
   .business-profile-container,
@@ -1148,11 +1208,20 @@ and (orientation : portrait) {
     height: 150px;
   }
 
+  .bartender-info {
+    padding-top: 100px;
+    padding-left: 50px;
+  }
+
   .register-header {
     height: 150px;
   }
   .business-edit-header {
     height: 150px;
+  }
+
+  .single-post {
+    padding:10px;
   }
 }
 

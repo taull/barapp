@@ -64,6 +64,21 @@ header {
   margin: 0 auto;
   margin-top: 5px; }
 
+.bartender-info {
+  color: #dfdfdf;
+  font-size: 12px;
+  position: absolute;
+  padding-top: 156px;
+  padding-left: 70px;
+  text-shadow: 1px 1px 5px #000;
+  text-align: right; }
+
+.bartender-info-name {
+  color: #fff; }
+
+.bartender-info-location {
+  font-size: 8px; }
+
 .footer-container {
   width: 960px;
   margin: 50px auto 0; }
@@ -153,6 +168,22 @@ header {
 
 #menu-bars:checked + .header-nav-wrap .menu-toggle {
   color: #fff; }
+
+/* Loading */
+.loader-container {
+  width: 100%;
+  text-align: center;
+  height: 30px;
+  padding-top: 10px; }
+
+.hidden {
+  display: none; }
+
+/*
+  Set the color of the icon
+*/
+svg path, svg rect {
+  fill: #5385d6; }
 
 /* SELECT INPUT */
 select {
@@ -260,7 +291,7 @@ select:focus {
 
 .single-post {
   border-bottom: 1px solid #dfdfdf;
-  padding: 15px;
+  padding: 20px;
   width: 100%; }
 
 .feed-post {
@@ -271,10 +302,10 @@ select:focus {
   padding: 0; }
 
 .feed-post li {
-  display: inline-block; }
+  display: block; }
 
 .feed-avatar {
-  width: 30px;
+  width: 0px;
   height: 30px;
   background: url('/assets/images/henrysbar.jpg') no-repeat center center;
   background-size: cover;
@@ -282,12 +313,12 @@ select:focus {
 
 .feed-avatar-container {
   display: inline-block;
-  width: 9%;
+  width: 0%;
   margin-top: 3px; }
 
 .feed-info-container {
   display: inline-block;
-  width: 89%;
+  width: 99%;
   vertical-align: top;
   padding-left: 0px; }
 
@@ -319,6 +350,12 @@ select:focus {
   padding-right: 5px;
   height: 20px;
   padding-top: 2px; }
+
+.feed-address {
+  font-size: 10px;
+  margin: 0;
+  padding-top: 3px;
+  font-weight: 300; }
 
 .feed-dynamic {
   padding-top: 0px;
@@ -361,7 +398,7 @@ select:focus {
   width: 414px;
   background-size: cover;
   margin-top: 75px;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.8);
   margin: 75px auto 0 auto; }
 
 .login-email input, .login-password input, .user-signup-firstname input, .user-signup-lastname input, .user-signup-email input, .user-signup-confirm input, .user-signup-password input, .business-signup-name input, .business-signup-firstname input, .business-signup-lastname input, .business-signup-email input, .business-signup-confirm input, .business-signup-password input, .business-edit-name input, .business-edit-firstname input, .business-edit-lastname input, .business-edit-email input, .business-edit-address input, .business-edit-city input, .business-edit-state input, .business-edit-zip input, .business-edit-website input, .business-edit-hours input {
@@ -802,6 +839,16 @@ label#largeFile input#file {
 .fa-bars {
   text-shadow: 1px 1px 6px #0A4590; }
 
+.home-icon {
+  font-size: 30px;
+  color: #dfdfdf;
+  padding-left: 15px;
+  position: absolute;
+  padding-top: 10px; }
+
+.home-icon a {
+  color: #dfdfdf; }
+
 /* Footer */
 footer {
   background: #f8f8f8;
@@ -816,7 +863,7 @@ footer {
   width: 414px;
   margin: 0 auto;
   border-top: 0px solid #dfdfdf;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.7);
   height: 40px; }
 
 .footer-copyright {
@@ -888,16 +935,19 @@ footer {
     width: 320px; }
   .slider-container {
     width: 220px; }
-  .sign-out {
-    margin-top: -27px; }
   .business-profile-container, .business-profile-background, .business-profile-info, .business-profile-feed, .business-edit-container, .business-signup-container, .login-wrap {
     width: 320px; }
   .login-header {
     height: 150px; }
+  .bartender-info {
+    padding-top: 100px;
+    padding-left: 50px; }
   .register-header {
     height: 150px; }
   .business-edit-header {
-    height: 150px; } }
+    height: 150px; }
+  .single-post {
+    padding: 10px; } }
 
 @media only screen and (min-device-width: 668px) {
   .login-wrap {

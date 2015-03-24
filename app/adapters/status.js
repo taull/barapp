@@ -35,21 +35,27 @@ export default Ember.Object.extend({
     }
   },
 
-  // https://parse.com/docs/rest#queries-relational
-  // findByBusiness: function(name, businessId) {
-  //   /* jshint unused: false */
-  //   return ajax("https://api.parse.com/1/classes/Status", {
-  //     data: Ember.$.param({
-  //             where: JSON.stringify(query)
-  //           })
-  //   }).then(function(response){
-  //     return response.results.map(function(status) {
-  //       status.id = status.objectId;
-  //       delete status.objectId;
-  //       return status;
-  //     });
-  //   });
-  // },
+  findByBusiness: function(name, query) {
+    /* jshint unused: false */
+    return ajax("https://api.parse.com/1/classes/Post?include=creator,business", {
+      data: {
+        where: JSON.stringify({
+          "business":{
+            "__type":"Pointer",
+            "className":"_User",
+            "objectId": query.business.id
+          }
+        })
+      }
+    }).then(function(response){
+      return response.results.map(function(post) {
+        post.id = post.objectId;
+        delete post.objectId;
+        return post;
+      });
+    });
+  },
+
   //
   // destroy: function(name, record) {
   //   /* jshint unused: false */

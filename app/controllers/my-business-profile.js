@@ -2,6 +2,7 @@ import ajax from 'ic-ajax';
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
+
   actions: {
     postStatus: function(){
       // var self = this;
@@ -21,8 +22,8 @@ export default Ember.Controller.extend({
         type: "POST",
         data: JSON.stringify(data),
         contentType: 'application/json'
-      }).then(function(response){
-        this.transitionToRoute('my-business-profile', response);
+      }).then(function(){
+        this.transitionToRoute('my-business-profile');
       }.bind(this));
   },
 }

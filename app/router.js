@@ -18,6 +18,8 @@ Router.map(function() {
   this.route('new');
   this.route('register');
   this.route('cover-upload');
+  this.route('loading');
+  this.route('slide-show');
 });
 
 export default Router;

@@ -41,6 +41,7 @@
     "ember-foundation": "^0.3.0",
     "ember-magic-man": "0.0.7",
     "ember-moment": "1.1.1",
+    "ember-slide-show": "0.0.3",
     "express": "^4.8.5",
     "glob": "^4.0.5"
   }

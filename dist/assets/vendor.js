@@ -94606,6 +94606,27 @@ define('ember-moment/helpers/moment', ['exports', 'ember', 'moment'], function (
   exports['default'] = moment;
 
 });
+define("ember-slide-show", ["ember-slide-show/index","exports"], function(__index__, __exports__) {
+  "use strict";
+  Object.keys(__index__).forEach(function(key){
+    __exports__[key] = __index__[key];
+  });
+});
+
+define('ember-slide-show/mixins/slide-show-controller', ['exports', 'ember'], function (exports, Ember) {
+
+    'use strict';
+
+    exports['default'] = Ember['default'].Mixin.create({
+
+        queryParams: {
+            slideIndex: "slide"
+        },
+
+        slideIndex: "0"
+    });
+
+});
 ;/* jshint ignore:start */
 
 
