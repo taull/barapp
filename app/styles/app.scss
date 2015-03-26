@@ -201,6 +201,16 @@ header {
   padding-top: 10px;
 }
 
+.post-loader-container {
+  width: 414px;
+  text-align: center;
+  height: 75px;
+  padding-top: 27px;
+  position: absolute;
+  margin: 0 auto;
+  margin-top: -70px;
+}
+
 .hidden {
   display:none;
 }
@@ -215,6 +225,11 @@ header {
 svg path,
 svg rect{
   fill: rgba(83, 133, 214, 1.0);
+}
+
+.post-loader-container svg path,
+.post-loader-container svg rect {
+  fill: #fff;
 }
 
 /* SELECT INPUT */
@@ -551,6 +566,14 @@ select:focus {
   height:196px;
 }
 
+.index-header {
+  width: 100%;
+  background: url('/assets/images/bartender-shots.png');
+  background-size: cover;
+  background-position: 0px -6px;
+  height:207px;
+}
+
 .login-email input::-webkit-input-placeholder,
 .login-password input::-webkit-input-placeholder {
   font-size:14px;
@@ -814,7 +837,6 @@ label#largeFile input#file {
 
 .business-profile-container {
   position: relative;
-  top: 75px;
   width: 414px;
   margin:0px auto;
   padding-top:0px;
@@ -852,13 +874,15 @@ label#largeFile input#file {
   text-align: center;
   font-size: 12px;
   font-weight: normal;
-  color: #f8f8f8;
+  color: #f0f0f0;
   padding-top: 5px;
+  font-weight: 300;
+  text-shadow: 1px 1px 5px #000;
 }
 
 .profile-span-name a {
   text-decoration: none;
-  color: #f8f8f8;
+  color: #f0f0f0;
 }
 
 .profile-span-name a:hover {
@@ -882,7 +906,7 @@ label#largeFile input#file {
   color: #000;
   font-size: 12px;
   font-weight: normal;
-  padding-top: 20px;
+  padding-top: 50px;
   height: 200px;
 }
 
@@ -892,6 +916,7 @@ label#largeFile input#file {
   width: 414px;
   height: 200px;
   position: relative;
+  box-shadow: 0 0 100px 3px inset;
 }
 
 .business-profile-background::after {
@@ -914,9 +939,7 @@ label#largeFile input#file {
 }
 
 .business-profile-span-name {
-  font-size:16px;
-  font-weight:bold;
-  color:#ff0000;
+  font-size:18px;
 }
 
 .business-profile-feed {
@@ -929,7 +952,9 @@ label#largeFile input#file {
 
 .business-profile-info-wrap {
   width: 100%;
-  height: 275px;
+  height: 225px;
+  position: absolute;
+  top: 75px;
 }
 
 .business-profile-feed-wrap {
@@ -977,19 +1002,23 @@ label#largeFile input#file {
 /* MY BUSINESS PROFILE */
 
 .business-profile-info-edit {
-  padding-top: 10px;
-  text-align:center;
+  padding-top: 35px;
+  text-align: center;
+  position: absolute;
+  padding-left: 15px;
 }
 
 .business-profile-info-edit a {
-  color: #ff0000;;
+  color: #f0f0f0;
   text-decoration: none;
+  font-weight: 300;
 }
 
 .business-profile-background-edit {
   padding-top: 10px;
   padding-left:15px;
   text-align:left;
+  display: none;
 }
 
 .business-profile-background-edit a {
@@ -1001,8 +1030,8 @@ label#largeFile input#file {
 
 .business-profile-status {
   width: 100%;
-  padding: 50px 0px 0px 0px;
-  background: rgba(0,0,0,.6);
+  padding: 40px 0px 0px 0px;
+  background: rgba(255,255,255,.1);
 }
 
 #business-status {
@@ -1026,12 +1055,13 @@ label#largeFile input#file {
   outline: none;
   border: none;
   border-radius: 0;
-  background: rgba(0,0,0,.2);
+  background: transparent;
   color: #fff;
   display: inline-block;
-  float: right;
   padding-top: 5px;
-  font-size: 12px;
+  font-size: 16px;
+  font-weight: 300;
+  text-shadow: 1px 1px 5px #555;
 
 }
 
@@ -1040,7 +1070,17 @@ label#largeFile input#file {
   padding: 0 0px;
   background: rgba(83,133,214,.8);
   height: 50px;
+  margin-top: 5px;
+  text-align:center;
+}
+
+.submit-zip {
+  width: 100%;
+  padding: 0 0px;
+  background: rgba(83,133,214,.8);
+  height: 50px;
   margin-top: 0px;
+  text-align: center;
 }
 
 /* Font Awesome Icons */
@@ -1057,9 +1097,23 @@ label#largeFile input#file {
   padding-top: 10px;
 }
 
-.home-icon a {
+.user-icon {
+  font-size: 30px;
   color: #dfdfdf;
+  float: right;
+  margin-top: -38px;
+  padding-right: 15px;
 }
+
+.home-icon a,
+.user-icon a {
+  color: #dfdfdf;
+
+  &:hover {
+    color: rgba(83,133,214,1.0);
+  }
+}
+
 
 /* Footer */
 
@@ -1078,7 +1132,7 @@ footer {
   margin:0 auto;
   border-top: 0px solid #dfdfdf;
   background: rgba(0,0,0,.7);
-  height: 40px;
+  height: 45px;
 }
 
 .footer-copyright {
@@ -1229,14 +1283,14 @@ and (orientation : portrait) {
 and (min-device-width : 668px) {
 
   .login-wrap {
-    margin-top: 100px;
+    margin-top: 75px;
   }
 
   .homepage-container {
   }
 
   .footer-container {
-    margin-bottom: 50px;
+    margin-bottom: 0px;
   }
 
 }

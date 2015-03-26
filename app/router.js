@@ -19,7 +19,9 @@ Router.map(function() {
   this.route('register');
   this.route('cover-upload');
   this.route('loading');
-  this.route('slide-show');
+  this.route('slide-show', function() {
+    this.route('slide-show');
+  });
 });
 
 export default Router;

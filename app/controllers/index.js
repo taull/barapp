@@ -16,5 +16,17 @@ import Ember from 'ember';
 
 export default Ember.ArrayController.extend ({
   sortProperties: ['createdAt'],
-  sortAscending: false
+  sortAscending: false,
+
+  filterBy: 'business.zip',
+
+  filteredPosts: function(){
+    var filterText = this.get('filterText');
+    var filterBy = this.get('filterBy');
+    if(filterText) {
+      return this.get('arrangedContent').filterBy(filterBy, filterText);
+    } else {
+      return this.get('arrangedContent');
+    }
+  }.property('arrangedContent.@each', 'filterText')
 });

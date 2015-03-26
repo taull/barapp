@@ -176,6 +176,15 @@ header {
   height: 30px;
   padding-top: 10px; }
 
+.post-loader-container {
+  width: 414px;
+  text-align: center;
+  height: 75px;
+  padding-top: 27px;
+  position: absolute;
+  margin: 0 auto;
+  margin-top: -70px; }
+
 .hidden {
   display: none; }
 
@@ -184,6 +193,9 @@ header {
 */
 svg path, svg rect {
   fill: #5385d6; }
+
+.post-loader-container svg path, .post-loader-container svg rect {
+  fill: #fff; }
 
 /* SELECT INPUT */
 select {
@@ -440,6 +452,13 @@ select:focus {
   background-size: cover;
   height: 196px; }
 
+.index-header {
+  width: 100%;
+  background: url('/assets/images/bartender-shots.png');
+  background-size: cover;
+  background-position: 0px -6px;
+  height: 207px; }
+
 .login-email input::-webkit-input-placeholder, .login-password input::-webkit-input-placeholder {
   font-size: 14px;
   font-weight: lighter; }
@@ -642,7 +661,6 @@ label#largeFile input#file {
 /* Business Profile */
 .business-profile-container {
   position: relative;
-  top: 75px;
   width: 414px;
   margin: 0px auto;
   padding-top: 0px;
@@ -676,12 +694,14 @@ label#largeFile input#file {
   text-align: center;
   font-size: 12px;
   font-weight: normal;
-  color: #f8f8f8;
-  padding-top: 5px; }
+  color: #f0f0f0;
+  padding-top: 5px;
+  font-weight: 300;
+  text-shadow: 1px 1px 5px #000; }
 
 .profile-span-name a {
   text-decoration: none;
-  color: #f8f8f8; }
+  color: #f0f0f0; }
 
 .profile-span-name a:hover {
   color: #FFF; }
@@ -701,7 +721,7 @@ label#largeFile input#file {
   color: #000;
   font-size: 12px;
   font-weight: normal;
-  padding-top: 20px;
+  padding-top: 50px;
   height: 200px; }
 
 .business-profile-background {
@@ -709,7 +729,8 @@ label#largeFile input#file {
   background-size: cover;
   width: 414px;
   height: 200px;
-  position: relative; }
+  position: relative;
+  box-shadow: 0 0 100px 3px inset; }
 
 .business-profile-background::after {
   position: absolute;
@@ -728,9 +749,7 @@ label#largeFile input#file {
   padding-top: 0px; }
 
 .business-profile-span-name {
-  font-size: 16px;
-  font-weight: bold;
-  color: #ff0000; }
+  font-size: 18px; }
 
 .business-profile-feed {
   display: block;
@@ -741,7 +760,9 @@ label#largeFile input#file {
 
 .business-profile-info-wrap {
   width: 100%;
-  height: 275px; }
+  height: 225px;
+  position: absolute;
+  top: 75px; }
 
 .business-profile-feed-wrap {
   width: 100%; }
@@ -780,17 +801,21 @@ label#largeFile input#file {
 
 /* MY BUSINESS PROFILE */
 .business-profile-info-edit {
-  padding-top: 10px;
-  text-align: center; }
+  padding-top: 35px;
+  text-align: center;
+  position: absolute;
+  padding-left: 15px; }
 
 .business-profile-info-edit a {
-  color: #ff0000;
-  text-decoration: none; }
+  color: #f0f0f0;
+  text-decoration: none;
+  font-weight: 300; }
 
 .business-profile-background-edit {
   padding-top: 10px;
   padding-left: 15px;
-  text-align: left; }
+  text-align: left;
+  display: none; }
 
 .business-profile-background-edit a {
   color: #f0f0f0;
@@ -799,8 +824,8 @@ label#largeFile input#file {
 /* STATUS UPDATE */
 .business-profile-status {
   width: 100%;
-  padding: 50px 0px 0px 0px;
-  background: rgba(0, 0, 0, 0.6); }
+  padding: 40px 0px 0px 0px;
+  background: rgba(255, 255, 255, 0.1); }
 
 #business-status {
   width: 100%;
@@ -821,19 +846,29 @@ label#largeFile input#file {
   outline: none;
   border: none;
   border-radius: 0;
-  background: rgba(0, 0, 0, 0.2);
+  background: transparent;
   color: #fff;
   display: inline-block;
-  float: right;
   padding-top: 5px;
-  font-size: 12px; }
+  font-size: 16px;
+  font-weight: 300;
+  text-shadow: 1px 1px 5px #555; }
 
 .submit-status {
   width: 100%;
   padding: 0 0px;
   background: rgba(83, 133, 214, 0.8);
   height: 50px;
-  margin-top: 0px; }
+  margin-top: 5px;
+  text-align: center; }
+
+.submit-zip {
+  width: 100%;
+  padding: 0 0px;
+  background: rgba(83, 133, 214, 0.8);
+  height: 50px;
+  margin-top: 0px;
+  text-align: center; }
 
 /* Font Awesome Icons */
 .fa-bars {
@@ -846,8 +881,17 @@ label#largeFile input#file {
   position: absolute;
   padding-top: 10px; }
 
-.home-icon a {
+.user-icon {
+  font-size: 30px;
+  color: #dfdfdf;
+  float: right;
+  margin-top: -38px;
+  padding-right: 15px; }
+
+.home-icon a, .user-icon a {
   color: #dfdfdf; }
+  .home-icon a:hover, .user-icon a:hover {
+    color: #5385d6; }
 
 /* Footer */
 footer {
@@ -864,7 +908,7 @@ footer {
   margin: 0 auto;
   border-top: 0px solid #dfdfdf;
   background: rgba(0, 0, 0, 0.7);
-  height: 40px; }
+  height: 45px; }
 
 .footer-copyright {
   padding: 15px;
@@ -951,8 +995,8 @@ footer {
 
 @media only screen and (min-device-width: 668px) {
   .login-wrap {
-    margin-top: 100px; }
+    margin-top: 75px; }
   .footer-container {
-    margin-bottom: 50px; } }
+    margin-bottom: 0px; } }
 
 /*# sourceMappingURL=barapp.css.map */

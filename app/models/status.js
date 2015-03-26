@@ -1,25 +1,20 @@
-import Ember from 'ember';
+import Model from 'ember-magic-man/model';
 
-export default Ember.Object.extend({
-  // destroy: function(){
-  //   return this.store.destroy('status', this);
-  // },
-  //
-  // save: function(){
-  //   return this.store.save('status', this);
-  // },
+export default Model.extend({
 
   toJSON: function(){
-    var data = Ember.Object.create(this);
+    var data = this._super();
 
-    var userId = this.get('status.id');
-    if(userId) {
-      data.set('status', {
-        __type: 'Pointer',
-        className: '_User',
-        objectId: userId
-      });
-    }
+    data.creator = {
+      __type: "Pointer",
+      className: "_User",
+      objectId: this.get('creator.id')
+    };
+    data.business = {
+      __type: "Pointer",
+      className: "_User",
+      objectId: this.get('business.id')
+    };
 
     return data;
   }

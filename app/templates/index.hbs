@@ -1,10 +1,10 @@
 {{outlet}}
 
 <div class="login-wrap">
-  <div class="login-header">
+  <div class="index-header">
     <div class="bartender-info">
-      <p class="bartender-info-name">Patrick</p>
-      <p class="bartender-info-location">Greenville, SC</p>
+      <p class="bartender-info-name">Milltown Tavern</p>
+      <p class="bartender-info-location">Atlanta, GA</p>
     </div>
   </div>
 
@@ -29,11 +29,11 @@
   <div class="feed-search">
     <form>
 
-      {{input placeholder="Enter City or Zip" type='text'}}
+      {{input placeholder="Filter by Zip Code" type='text' value=filterText}}
 
-      <div class="submit-status">
+      <!-- <div class="submit-zip">
         <button type="submit" class="post-status">Filter</button>
-      </div>
+      </div> -->
 
     </form>
 
@@ -50,7 +50,7 @@
   <div class="feed-container">
     <div class="feed-post">
       <ul>
-        {{#each status in arrangedContent}}
+        {{#each status in filteredPosts}}
           <li class="single-post">
             <div class="feed-avatar-container">
               <li class="feed-avatar"></li>
