@@ -14,19 +14,39 @@ import Ember from 'ember';
 // });
 
 
-export default Ember.ArrayController.extend ({
-  sortProperties: ['createdAt'],
+export default Ember.Controller.extend ({
   sortAscending: false,
 
-  filterBy: 'business.zip',
-
-  filteredPosts: function(){
-    var filterText = this.get('filterText');
-    var filterBy = this.get('filterBy');
-    if(filterText) {
-      return this.get('arrangedContent').filterBy(filterBy, filterText);
+  sortedPosts: function(){
+    var sorted = this.get('model').sortBy('createdAt');
+    if( ! this.get('sortAscending')) {
+      return sorted.reverse();
     } else {
-      return this.get('arrangedContent');
+      return sorted;
     }
-  }.property('arrangedContent.@each', 'filterText')
+  }.property('model.@each', 'sortAscending'),
+
+  filteredCityPosts: function(){
+    var filterText = this.get('filterText');
+    var sorted = this.get('sortedPosts');
+    if(filterText) {
+      return sorted.filterBy('business.city', filterText);
+    } else {
+      return sorted;
+    }
+  }.property('sortedPosts.@each', 'filterText'),
+
+  filteredZipPosts: function(){
+    var filterText = this.get('filterText');
+    var sorted = this.get('sortedPosts');
+    if(filterText) {
+      return sorted.filterBy('business.zip', filterText);
+    } else {
+      return sorted;
+    }
+  }.property('sortedPosts.@each', 'filterText'),
+
+  filteredPosts: Ember.computed.union('filteredCityPosts', 'filteredZipPosts')
+
+
 });

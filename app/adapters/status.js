@@ -56,15 +56,6 @@ export default Ember.Object.extend({
     });
   },
 
-  //
-  // destroy: function(name, record) {
-  //   /* jshint unused: false */
-  //   return ajax({
-  //     url: "https://api.parse.com/1/classes/Status/" + record.id,
-  //     type: "DELETE"
-  //   });
-  // },
-  //
   save: function(name, record) {
     /* jshint unused: false */
     if(record.id) {
