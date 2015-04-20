@@ -31,14 +31,21 @@ export default Ember.Controller.extend({
 
       editDestroy: function(){
         Ember.$('.feed-avatar').removeClass('hidden');
+        Ember.$('.edit-feed').addClass('hidden');
         Ember.$('.edit-destroy').addClass('hidden');
+
+        Ember.$('.cancel-edit').removeClass('hidden');
         Ember.$('.cancel-destroy').removeClass('hidden');
         Ember.$('.feed-info-container').addClass('feed-info-editing');
+
     },
 
       cancelDestroy: function(){
         Ember.$('.feed-avatar').addClass('hidden');
+        Ember.$('.edit-feed').removeClass('hidden');
         Ember.$('.edit-destroy').removeClass('hidden');
+
+        Ember.$('.cancel-edit').addClass('hidden');
         Ember.$('.cancel-destroy').addClass('hidden');
         Ember.$('.feed-info-container').removeClass('feed-info-editing');
 

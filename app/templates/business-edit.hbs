@@ -1,78 +1,151 @@
 {{outlet}}
 
-<div class="login-wrap">
 
-  <div class="business-edit-header">
-    <div class="bartender-info">
-      <p class="bartender-info-name">Jason</p>
-      <p class="bartender-info-location">Atlanta, GA</p>
+
+<div class="body-container">
+  <div class="my-sidebar-left">
+
+    <div class="search">
+      {{input type=search placeholder="Search..." value=search required=true}}
     </div>
+
+    <div class="index-header">
+      <div class="bartender-info">
+        <p class="bartender-info-name">{{session.currentUser.businessName}}</p>
+        <p class="bartender-info-location">{{session.currentUser.address}}</p>
+        <p class="bartender-info-location">{{session.currentUser.city}}, {{session.currentUser.state}} {{session.currentUser.zip}}</p>
+      </div>
+    </div>
+
+    <div class="business-numbers">
+      <ul>
+        <li><div class="numbers">340</div><div class="numbers-label"><p>Followers</p></div></li>
+        <li><div class="numbers">126</div><div class="numbers-label"><p>Posts</p></div></li>
+        <li><div class="numbers">4</div><div class="numbers-label"><p>Bartenders</p></div></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-photos">
+      <ul>
+        <li><div class="photo-container"><img src="/assets/images/henrysbar.jpg" class="photo-thumbnail"></div></li>
+        <li><div class="photo-container"><img src="/assets/images/nightlife.jpg" class="photo-thumbnail"></div></li>
+        <li><div class="photo-container"><img src="/assets/images/barscene.jpg" class="photo-thumbnail"></div></li>
+
+      </ul>
+    </div>
+
+    <div class="business-tools">
+      <ul>
+        <li><div class="tools-icon">{{fa-icon "pencil-square-o"}}</div><div class="tools-label"><p>Edit Profile</p></div></li>
+        <li><div class="tools-icon">{{fa-icon "glass"}}</div><div class="tools-label"><p>Edit Specials</p></div></li>
+        <li><div class="tools-icon">{{fa-icon "star-o"}}</div><div class="tools-label"><p>Edit Profile</p></div></li>
+      </ul>
+    </div>
+
+    <div class="business-tools2">
+      <ul>
+        <li><div class="tools-icon">{{fa-icon "check-circle"}}</div><div class="tools-label"><p>Edit Profile</p></div></li>
+        <li><div class="tools-icon">{{fa-icon "check-circle"}}</div><div class="tools-label"><p>Edit Specials</p></div></li>
+        <li><div class="tools-icon">{{fa-icon "check-circle"}}</div><div class="tools-label"><p>Edit Profile</p></div></li>
+      </ul>
+    </div>
+
+
+
+
+    <div class="business-profile-info">
+      <ul>
+        <li class="business-profile-name"><div class="profile-span-name business-profile-span-name">{{session.currentUser.businessName}} {{fa-icon "check-circle"}} </div></li>
+        <li class="business-profile-address1"><div class="profile-span-name profile-span-address"><a href="/">{{session.currentUser.address}}</a> • {{session.currentUser.city}}, {{session.currentUser.state}} {{session.currentUser.zip}}</div></li>
+        <li class="business-profile-hours"><div class="profile-span-name">{{session.currentUser.businessHours}}</div></li>
+        <li class="business-profile-website"><div class="profile-span-name"><a {{bind-attr href="session.currentUser.website"}}>{{session.currentUser.website}}</a></div></li>
+      </ul>
+        <div class="business-profile-info-edit">
+          {{#link-to 'business-edit'}}
+            {{fa-icon "magic"}} Edit Info
+          {{/link-to}}
+        </div>
+      <div class="business-profile-background-edit">
+        {{#link-to 'cover-upload'}}
+          {{fa-icon "file-image-o"}} Upload Cover Image
+        {{/link-to}}
+      </div>
+    </div>
+
+
+
+
+
   </div>
+  <div class="business-profile-info-wrap">
+  </div>
+  <div class="login-wrap">
 
-  <div class="business-edit-container">
 
-    <form id="business-edit-form" {{action 'saveProfile' on='submit'}}>
+    <div class="business-edit-container">
 
-      <div class="business-edit-name">
-        {{input placeholder="Business Name" value=session.currentUser.businessName}}
+      <form id="business-edit-form" {{action 'saveProfile' on='submit'}}>
+
+        <div class="business-edit-name">
+          {{input placeholder="Business Name" value=session.currentUser.businessName}}
+        </div>
+
+        <div class="business-edit-firstname">
+          {{input placeholder="First Name" value=session.currentUser.firstName}}
+        </div>
+        <div class="business-edit-lastname">
+          {{input placeholder="Last Name" value=session.currentUser.lastName}}
+        </div>
+        <div class="business-edit-address">
+          {{input placeholder="Address" value=session.currentUser.address}}
+        </div>
+        <div class="business-edit-city">
+          {{input placeholder="City" value=session.currentUser.city}}
+        </div>
+        <div class="business-edit-state">
+          {{input placeholder="State" value=session.currentUser.state}}
+        </div>
+        <div class="business-edit-zip">
+          {{input placeholder="Zip" value=session.currentUser.zip}}
+        </div>
+        <div class="business-edit-website">
+          {{input placeholder="Website" value=session.currentUser.website}}
+        </div>
+        <div class="business-edit-hours">
+          {{input placeholder="Business Hours" value=session.currentUser.businessHours}}
+        </div>
+
+        <div class="business-edit-submit">
+          <button type="businessEditSubmit">Save</button>
+        </div>
+      </form>
+      <div class="loader-container hidden">
+        <div class="loader" title="0">
+          <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           width="50px" height="50px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
+          <path opacity="0.2" fill="#000" d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
+            s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
+            c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z"/>
+          <path fill="#000" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
+            C22.32,8.481,24.301,9.057,26.013,10.047z">
+            <animateTransform attributeType="xml"
+              attributeName="transform"
+              type="rotate"
+              from="0 20 20"
+              to="360 20 20"
+              dur="1.0s"
+              repeatCount="indefinite"/>
+            </path>
+          </svg>
+        </div>
       </div>
 
-      <div class="business-edit-firstname">
-        {{input placeholder="First Name" value=session.currentUser.firstName}}
-      </div>
-      <div class="business-edit-lastname">
-        {{input placeholder="Last Name" value=session.currentUser.lastName}}
-      </div>
-      <div class="business-edit-address">
-        {{input placeholder="Address" value=session.currentUser.address}}
-      </div>
-      <div class="business-edit-city">
-        {{input placeholder="City" value=session.currentUser.city}}
-      </div>
-      <div class="business-edit-state">
-        {{input placeholder="State" value=session.currentUser.state}}
-      </div>
-      <div class="business-edit-zip">
-        {{input placeholder="Zip" value=session.currentUser.zip}}
-      </div>
-      <div class="business-edit-website">
-        {{input placeholder="Website" value=session.currentUser.website}}
-      </div>
-      <div class="business-edit-hours">
-        {{input placeholder="Business Hours" value=session.currentUser.businessHours}}
-      </div>
+<!-- Put this line in the #each over -->
+<!-- <li><button {{action 'destroyStatus' post}}>Destroy</button></li> -->
 
-      <div class="business-edit-submit">
-        <button type="businessEditSubmit">Save</button>
-      </div>
-    </form>
-    <div class="loader-container hidden">
-      <div class="loader" title="0">
-        <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-         width="50px" height="50px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
-        <path opacity="0.2" fill="#000" d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
-          s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
-          c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z"/>
-        <path fill="#000" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
-          C22.32,8.481,24.301,9.057,26.013,10.047z">
-          <animateTransform attributeType="xml"
-            attributeName="transform"
-            type="rotate"
-            from="0 20 20"
-            to="360 20 20"
-            dur="1.0s"
-            repeatCount="indefinite"/>
-          </path>
-        </svg>
-      </div>
-    </div>
-
-<!-- <form id="fileupload" name="fileupload" enctype="multipart/form-data" method="post">
-    <input type="file" name="fileselect" id="fileselect">
-    <input id="uploadbutton" type="button" value="Upload to Parse"/>
-</form> -->
-
+  </div>
 </div>
+
 </div>
 
 

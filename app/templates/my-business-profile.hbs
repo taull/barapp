@@ -1,17 +1,58 @@
 {{outlet}}
 <div class="body-container">
   <div class="my-sidebar-left">
-    <div class="search">
-      {{input type=search placeholder="Search..." value=search required=true}}
 
-    </div>
-    <div class="index-header">
+
+    <!-- <div class="index-header">
       <div class="bartender-info">
         <p class="bartender-info-name">{{session.currentUser.businessName}}</p>
         <p class="bartender-info-location">{{session.currentUser.address}}</p>
         <p class="bartender-info-location">{{session.currentUser.city}}, {{session.currentUser.state}} {{session.currentUser.zip}}</p>
       </div>
+    </div> -->
+
+    <div class="business-tools">
+      <ul>
+        {{#link-to 'business-edit'}}<li><div class="tools-icon">{{fa-icon "pencil-square-o"}}</div><div class="tools-label"><p>Edit Profile</p></div></li>{{/link-to}}
+        <li><div class="tools-icon">{{fa-icon "glass"}}</div><div class="tools-label"><p>Edit Specials</p></div></li>
+        <button {{action 'editDestroy'}} class="edit-destroy"><li class="edit-feed"><div class="tools-icon">{{fa-icon "star-o"}}</div><div class="tools-label"><p>Edit Posts</p></div></li></button>
+        <button {{action 'cancelDestroy'}} class="cancel-destroy hidden"><li class="cancel-edit hidden"><div class="tools-icon">{{fa-icon "minus-circle"}}</div><div class="tools-label"><p>Cancel</p></div></li></button>
+
+      </ul>
     </div>
+
+    <!-- <div class="business-tools2">
+      <ul>
+        <li><div class="tools-icon">{{fa-icon "check-circle"}}</div><div class="tools-label"><p>Edit Profile</p></div></li>
+        <li><div class="tools-icon">{{fa-icon "check-circle"}}</div><div class="tools-label"><p>Edit Specials</p></div></li>
+        <li><div class="tools-icon">{{fa-icon "check-circle"}}</div><div class="tools-label"><p>Edit Profile</p></div></li>
+      </ul>
+    </div> -->
+
+
+<!--
+    <div class="sidebar-photos">
+      <ul>
+        <li><div class="photo-container"><img src="/assets/images/henrysbar.jpg" class="photo-thumbnail"></div></li>
+        <li><div class="photo-container"><img src="/assets/images/nightlife.jpg" class="photo-thumbnail"></div></li>
+        <li><div class="photo-container"><img src="/assets/images/barscene.jpg" class="photo-thumbnail"></div></li>
+
+      </ul>
+    </div> -->
+
+    <div class="business-numbers">
+      <ul>
+        <li><div class="numbers">340</div><div class="numbers-label"><p>Followers</p></div></li>
+        <li><div class="numbers">126</div><div class="numbers-label"><p>Posts</p></div></li>
+        <li><div class="numbers">4</div><div class="numbers-label"><p>Bartenders</p></div></li>
+      </ul>
+    </div>
+
+
+
+
+
+
     <div class="business-profile-info">
       <ul>
         <li class="business-profile-name"><div class="profile-span-name business-profile-span-name">{{session.currentUser.businessName}} {{fa-icon "check-circle"}} </div></li>
@@ -32,6 +73,9 @@
     </div>
 
 
+
+
+
   </div>
   <div class="business-profile-info-wrap">
   </div>
@@ -46,17 +90,17 @@
           <div class="post-loader" title="0">
             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                  width="24px" height="30px" viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;" xml:space="preserve">
-                <rect x="0" y="10" width="4" height="10" fill="#333" opacity="0.2">
+                <rect x="0" y="10" width="4" height="10" fill="#333" opacity="0.9">
                   <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0s" dur="1s" repeatCount="indefinite" />
                   <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0s" dur="1s" repeatCount="indefinite" />
                   <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0s" dur="1s" repeatCount="indefinite" />
                 </rect>
-                <rect x="8" y="10" width="4" height="10" fill="#333"  opacity="0.2">
+                <rect x="8" y="10" width="4" height="10" fill="#333"  opacity="0.9">
                   <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0.15s" dur="1s" repeatCount="indefinite" />
                   <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0.15s" dur="1s" repeatCount="indefinite" />
                   <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0.15s" dur="1s" repeatCount="indefinite" />
                 </rect>
-                <rect x="16" y="10" width="4" height="10" fill="#333"  opacity="0.2">
+                <rect x="16" y="10" width="4" height="10" fill="#333"  opacity="0.9">
                   <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0.3s" dur="1s" repeatCount="indefinite" />
                   <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0.3s" dur="1s" repeatCount="indefinite" />
                   <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0.3s" dur="1s" repeatCount="indefinite" />
@@ -90,7 +134,7 @@
 
             <li class="single-post">
               <div class="feed-avatar hidden">
-                  <button class="destroy-button" {{action 'destroy'}}><span class="destroy">{{fa-icon "times"}}</span></button>
+                  <button class="destroy-button" {{action 'minus-circle'}}><span class="destroy">{{fa-icon "times"}}</span></button>
               </div>
 
               <div class="feed-info-container">
@@ -101,7 +145,13 @@
                 <li class="feed-status">{{post.status}}</li>
                 <!-- <li class="feed-social-buttons"><span class="feed-addfavorite">{{fa-icon "plus"}} Add to Favorites</span></li> -->
               </div>
+              <div class="interaction-container">
+                <li class="interaction-like">Like</li>
+                <li class="interaction-follow">Follow</li>
+                <li class="interaction-hide">Hide</li>
+              </div>
             </li>
+
             {{/each}}
           </ul>
       </div>
@@ -111,24 +161,34 @@
 <!-- Put this line in the #each over -->
 <!-- <li><button {{action 'destroyStatus' post}}>Destroy</button></li> -->
 
-
-    <div class="footer-container">
-
-      <div class="footer-copyright">
-        <p>Barkeep® 2015 All Rights Reserved</p>
-      </div>
-
-      <div class="footer-social-icons">
-        <a href="/">{{fa-icon "facebook"}}</a>
-        <a href="/">{{fa-icon "twitter"}}</a>
-        <a href="/">{{fa-icon "instagram"}}</a>
-      </div>
-
-    </div>
-
   </div>
 
-  <div class="my-sidebar-right">
+
+</div>
+
+
+<!-- <div class="weekly-calendar">
+  <ul>
+    <li><p class="calendar-day">Sunday</p><div class="calendar-hours">Closed{{session.currentUser.sundayHours}}</div><div class="business-specials">{{session.currentUser.sundaySpecial}}</div></li>
+    <li><p class="calendar-day">Monday</p><div class="calendar-hours">2:30pm – 12:00am{{session.currentUser.mondayHours}}</div><div class="business-specials">{{session.currentUser.mondaySpecial}}</div></li>
+    <li><p class="calendar-day">Tuesday</p><div class="calendar-hours">2:30pm – 12:00am{{session.currentUser.tuesdayHours}}</div><div class="business-specials">{{session.currentUser.tuesdaySpecial}}</div></li>
+    <li><p class="calendar-day">Wednesday</p><div class="calendar-hours">2:30pm – 12:00am{{session.currentUser.wednesdayHours}}</div><div class="business-specials">{{session.currentUser.wednesdaySpecial}}</div></li>
+    <li><p class="calendar-day">Thursday</p><div class="calendar-hours">2:30pm – 12:00am{{session.currentUser.thursdayHours}}</div><div class="business-specials">{{session.currentUser.thursdaySpecial}}</div></li>
+    <li><p class="calendar-day">Friday</p><div class="calendar-hours">2:30pm – 2:00am{{session.currentUser.fridayHours}}</div><div class="business-specials">{{session.currentUser.fridaySpecial}}</div></li>
+    <li><p class="calendar-day">Saturday</p><div class="calendar-hours">2:30pm – 2:00am{{session.currentUser.saturdayHours}}</div><div class="business-specials">{{session.currentUser.saturdaySpecial}}</div></li>
+  </ul>
+</div> -->
+
+<div class="footer-container">
+
+  <div class="footer-copyright">
+    <p>Barkeep® 2015 All Rights Reserved</p>
+  </div>
+
+  <div class="footer-social-icons">
+    <a href="/">{{fa-icon "facebook"}}</a>
+    <a href="/">{{fa-icon "twitter"}}</a>
+    <a href="/">{{fa-icon "instagram"}}</a>
   </div>
 
 </div>

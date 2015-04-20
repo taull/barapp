@@ -7,7 +7,7 @@ var Router = Ember.Router.extend({
 
 Router.map(function() {
   this.route('business-edit');
-  this.route('business-profile');
+  this.route('business-profile', { path: '/business-profile/:post_id' });
   this.route('user-profile');
   this.route('user-signup');
   this.route('business-signup');

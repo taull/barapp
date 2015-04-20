@@ -46,7 +46,15 @@ export default Ember.Controller.extend ({
     }
   }.property('sortedPosts.@each', 'filterText'),
 
-  filteredPosts: Ember.computed.union('filteredCityPosts', 'filteredZipPosts')
+  filteredPosts: Ember.computed.union('filteredCityPosts', 'filteredZipPosts'),
+
+  actions: {
+      viewProfile: function() {
+        var model = this.get('model');
+        console.log(model);
+        this.transitionToRoute('business-profile', model);
+      },
+    }
 
 
 });

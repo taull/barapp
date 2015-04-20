@@ -1,7 +1,8 @@
 {{outlet}}
 
 
-<div class="login-wrap">
+<div class="login">
+
   <div class="login-header">
     <div class="bartender-info">
       <p class="bartender-info-name">Charles J.</p>
@@ -18,19 +19,17 @@
       <div class="login-password">
         {{input value=password placeholder='Enter Password' type='password'}}
       </div>
+
+        {{#link-to 'register'}}
+        <div class="new-user-link">Register</div>
+        {{/link-to}}
+        
       <div class="login-submit">
-
         <button type="submit">Login</button>
-
       </div>
     </form>
 
-    <div class="new-user-link">
 
-      {{#link-to 'register'}}
-        <p>New User? Sign up here</p>
-      {{/link-to}}
-    </div>
 
 
 

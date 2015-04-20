@@ -10,8 +10,14 @@
     {{#if session.isAuthenticated}}
 
       <div class="sign-out">
-        <a {{ action 'invalidateSession' }} href="javascript:void(0)">Sign out {{fa-icon "sign-out"}}</a>
+        <a {{ action 'invalidateSession' }} href="javascript:void(0)">Sign out</a>
       </div>
+
+      {{#link-to 'my-business-profile'}}
+      <div class="welcome">{{session.currentUser.firstName}}
+      </div>
+      {{/link-to}}
+
 
       {{else}}
 
@@ -20,12 +26,12 @@
       </div>
 
     {{/if}}
-    {{#link-to 'index'}}
-      <div class="header-logo">
-      </div>
-    {{/link-to}}
 
-    <div class="user-icon">{{#link-to 'my-business-profile'}}{{fa-icon "user"}}{{/link-to}}</div>
+<!-- 
+    <div class="search">
+      {{input type=search placeholder="Search..." value=search required=true}}
+    </div> -->
+
 
   </div>
 
@@ -39,6 +45,7 @@
   </div> -->
 
 </header>
+
 {{outlet}}
 
 
