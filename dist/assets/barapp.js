@@ -510,6 +510,29 @@ define('barapp/components/slide-show', ['exports', 'ember'], function (exports, 
     });
 
 });
+define('barapp/controllers/application', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Controller.extend({
+
+    actions: {
+
+      openNav: function openNav() {
+        Ember['default'].$(".navigation").addClass("open-nav");
+        Ember['default'].$(".navigation-open").addClass("hidden");
+        Ember['default'].$(".navigation-close").removeClass("hidden");
+      },
+
+      closeNav: function closeNav() {
+        Ember['default'].$(".navigation").removeClass("open-nav");
+        Ember['default'].$(".navigation-open").removeClass("hidden");
+        Ember['default'].$(".navigation-close").addClass("hidden");
+      } }
+
+  });
+
+});
 define('barapp/controllers/business-edit', ['exports', 'ember'], function (exports, Ember) {
 
   'use strict';
@@ -666,6 +689,24 @@ define('barapp/controllers/my-business-profile', ['exports', 'ember'], function 
         Ember['default'].$(".cancel-destroy").addClass("hidden");
         Ember['default'].$(".feed-info-container").removeClass("feed-info-editing");
       } }
+
+  });
+
+});
+define('barapp/controllers/my-business-profile/edit', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Controller.extend({
+    actions: {
+      saveProfile: function saveProfile() {
+        this.get("session.currentUser").save();
+        Ember['default'].$(".loader-container").removeClass("hidden");
+        Ember['default'].run.later(this, function () {
+          this.transitionToRoute("my-business-profile");
+        }, 2000);
+      }
+    }
 
   });
 
@@ -1095,7 +1136,9 @@ define('barapp/router', ['exports', 'ember', 'barapp/config/environment'], funct
     this.route("user-profile");
     this.route("user-signup");
     this.route("business-signup");
-    this.route("my-business-profile");
+    this.route("my-business-profile", function () {
+      this.route("edit");
+    });
     this.route("signin");
     this.route("signup-type");
     this.route("login");
@@ -1242,6 +1285,13 @@ define('barapp/routes/my-business-profile', ['exports', 'ember'], function (expo
     //   },
     // }
   });
+
+});
+define('barapp/routes/my-business-profile/edit', ['exports', 'ember'], function (exports, Ember) {
+
+	'use strict';
+
+	exports['default'] = Ember['default'].Route.extend({});
 
 });
 define('barapp/routes/new', ['exports', 'ember'], function (exports, Ember) {
@@ -1738,6 +1788,63 @@ define('barapp/templates/application', ['exports'], function (exports) {
       hasRendered: false,
       build: function build(dom) {
         var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("ul");
+        dom.setAttribute(el1,"class","navigation");
+        var el2 = dom.createTextNode("\n    ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        dom.setAttribute(el2,"class","nav-item");
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","#");
+        var el4 = dom.createTextNode("Home");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n    ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        dom.setAttribute(el2,"class","nav-item");
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","#");
+        var el4 = dom.createTextNode("Portfolio");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n    ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        dom.setAttribute(el2,"class","nav-item");
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","#");
+        var el4 = dom.createTextNode("About");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n    ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        dom.setAttribute(el2,"class","nav-item");
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","#");
+        var el4 = dom.createTextNode("Blog");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n    ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        dom.setAttribute(el2,"class","nav-item");
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","#");
+        var el4 = dom.createTextNode("Contact");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n\n");
+        dom.appendChild(el0, el1);
         var el1 = dom.createElement("header");
         var el2 = dom.createTextNode("\n\n  ");
         dom.appendChild(el1, el2);
@@ -1749,11 +1856,15 @@ define('barapp/templates/application', ['exports'], function (exports) {
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createElement("label");
-        dom.setAttribute(el3,"for","menu-bars");
-        dom.setAttribute(el3,"class","menu-toggle");
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","navigation-open");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n    ");
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","navigation-close hidden");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n\n\n    ");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("div");
         dom.setAttribute(el3,"class","home-icon");
@@ -1762,7 +1873,7 @@ define('barapp/templates/application', ['exports'], function (exports) {
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
-        var el3 = dom.createComment(" \n    <div class=\"search\">\n      {{input type=search placeholder=\"Search...\" value=search required=true}}\n    </div> ");
+        var el3 = dom.createComment("\n    <div class=\"search\">\n      {{input type=search placeholder=\"Search...\" value=search required=true}}\n    </div> ");
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n\n  ");
         dom.appendChild(el2, el3);
@@ -1817,7 +1928,7 @@ define('barapp/templates/application', ['exports'], function (exports) {
       },
       render: function render(context, env, contextualElement) {
         var dom = env.dom;
-        var hooks = env.hooks, inline = hooks.inline, block = hooks.block, get = hooks.get, content = hooks.content;
+        var hooks = env.hooks, element = hooks.element, inline = hooks.inline, block = hooks.block, get = hooks.get, content = hooks.content;
         dom.detectNamespace(contextualElement);
         var fragment;
         if (env.useFragmentCache && dom.canClone) {
@@ -1835,24 +1946,30 @@ define('barapp/templates/application', ['exports'], function (exports) {
         } else {
           fragment = this.build(dom);
         }
-        var element1 = dom.childAt(fragment, [0, 1]);
-        var element2 = dom.childAt(fragment, [3, 1, 1]);
-        var morph0 = dom.createMorphAt(dom.childAt(element1, [3]),-1,-1);
-        var morph1 = dom.createMorphAt(dom.childAt(element1, [5]),-1,-1);
-        var morph2 = dom.createMorphAt(element1,6,7);
-        var morph3 = dom.createMorphAt(fragment,1,2,contextualElement);
-        var morph4 = dom.createMorphAt(element2,0,1);
-        var morph5 = dom.createMorphAt(element2,1,2);
-        var morph6 = dom.createMorphAt(element2,2,3);
-        var morph7 = dom.createMorphAt(element2,3,4);
+        var element1 = dom.childAt(fragment, [2, 1]);
+        var element2 = dom.childAt(element1, [3]);
+        var element3 = dom.childAt(element1, [5]);
+        var element4 = dom.childAt(fragment, [5, 1, 1]);
+        var morph0 = dom.createMorphAt(element2,-1,-1);
+        var morph1 = dom.createMorphAt(element3,-1,-1);
+        var morph2 = dom.createMorphAt(dom.childAt(element1, [7]),-1,-1);
+        var morph3 = dom.createMorphAt(element1,8,9);
+        var morph4 = dom.createMorphAt(fragment,3,4,contextualElement);
+        var morph5 = dom.createMorphAt(element4,0,1);
+        var morph6 = dom.createMorphAt(element4,1,2);
+        var morph7 = dom.createMorphAt(element4,2,3);
+        var morph8 = dom.createMorphAt(element4,3,4);
+        element(env, element2, context, "action", ["openNav"], {});
         inline(env, morph0, context, "fa-icon", ["bars"], {});
-        block(env, morph1, context, "link-to", ["index"], {}, child0, null);
-        block(env, morph2, context, "if", [get(env, context, "session.isAuthenticated")], {}, child1, child2);
-        content(env, morph3, context, "outlet");
-        block(env, morph4, context, "link-to", ["index"], {}, child3, null);
-        block(env, morph5, context, "link-to", ["index"], {}, child4, null);
-        block(env, morph6, context, "link-to", ["my-business-profile"], {}, child5, null);
-        block(env, morph7, context, "link-to", ["index"], {}, child6, null);
+        element(env, element3, context, "action", ["closeNav"], {});
+        inline(env, morph1, context, "fa-icon", ["close"], {});
+        block(env, morph2, context, "link-to", ["index"], {}, child0, null);
+        block(env, morph3, context, "if", [get(env, context, "session.isAuthenticated")], {}, child1, child2);
+        content(env, morph4, context, "outlet");
+        block(env, morph5, context, "link-to", ["index"], {}, child3, null);
+        block(env, morph6, context, "link-to", ["index"], {}, child4, null);
+        block(env, morph7, context, "link-to", ["my-business-profile"], {}, child5, null);
+        block(env, morph8, context, "link-to", ["index"], {}, child6, null);
         return fragment;
       }
     };
@@ -1864,86 +1981,6 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
   'use strict';
 
   exports['default'] = Ember.HTMLBars.template((function() {
-    var child0 = (function() {
-      return {
-        isHTMLBars: true,
-        blockParams: 0,
-        cachedFragment: null,
-        hasRendered: false,
-        build: function build(dom) {
-          var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("            ");
-          dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode(" Edit Info\n");
-          dom.appendChild(el0, el1);
-          return el0;
-        },
-        render: function render(context, env, contextualElement) {
-          var dom = env.dom;
-          var hooks = env.hooks, inline = hooks.inline;
-          dom.detectNamespace(contextualElement);
-          var fragment;
-          if (env.useFragmentCache && dom.canClone) {
-            if (this.cachedFragment === null) {
-              fragment = this.build(dom);
-              if (this.hasRendered) {
-                this.cachedFragment = fragment;
-              } else {
-                this.hasRendered = true;
-              }
-            }
-            if (this.cachedFragment) {
-              fragment = dom.cloneNode(this.cachedFragment, true);
-            }
-          } else {
-            fragment = this.build(dom);
-          }
-          var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
-          inline(env, morph0, context, "fa-icon", ["magic"], {});
-          return fragment;
-        }
-      };
-    }());
-    var child1 = (function() {
-      return {
-        isHTMLBars: true,
-        blockParams: 0,
-        cachedFragment: null,
-        hasRendered: false,
-        build: function build(dom) {
-          var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("          ");
-          dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode(" Upload Cover Image\n");
-          dom.appendChild(el0, el1);
-          return el0;
-        },
-        render: function render(context, env, contextualElement) {
-          var dom = env.dom;
-          var hooks = env.hooks, inline = hooks.inline;
-          dom.detectNamespace(contextualElement);
-          var fragment;
-          if (env.useFragmentCache && dom.canClone) {
-            if (this.cachedFragment === null) {
-              fragment = this.build(dom);
-              if (this.hasRendered) {
-                this.cachedFragment = fragment;
-              } else {
-                this.hasRendered = true;
-              }
-            }
-            if (this.cachedFragment) {
-              fragment = dom.cloneNode(this.cachedFragment, true);
-            }
-          } else {
-            fragment = this.build(dom);
-          }
-          var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
-          inline(env, morph0, context, "fa-icon", ["file-image-o"], {});
-          return fragment;
-        }
-      };
-    }());
     return {
       isHTMLBars: true,
       blockParams: 0,
@@ -1963,152 +2000,19 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
         dom.setAttribute(el2,"class","my-sidebar-left");
         var el3 = dom.createTextNode("\n\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","search");
-        var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n    ");
-        dom.appendChild(el3, el4);
+        var el3 = dom.createComment(" <div class=\"search\">\n      {{input type=search placeholder=\"Search...\" value=search required=true}}\n    </div> ");
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","index-header");
-        var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("div");
-        dom.setAttribute(el4,"class","bartender-info");
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("p");
-        dom.setAttribute(el5,"class","bartender-info-name");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("p");
-        dom.setAttribute(el5,"class","bartender-info-location");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("p");
-        dom.setAttribute(el5,"class","bartender-info-location");
-        var el6 = dom.createTextNode(", ");
-        dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode(" ");
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n      ");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n    ");
-        dom.appendChild(el3, el4);
+        var el3 = dom.createComment(" <div class=\"index-header\">\n      <div class=\"bartender-info\">\n        <p class=\"bartender-info-name\">{{session.currentUser.businessName}}</p>\n        <p class=\"bartender-info-location\">{{session.currentUser.address}}</p>\n        <p class=\"bartender-info-location\">{{session.currentUser.city}}, {{session.currentUser.state}} {{session.currentUser.zip}}</p>\n      </div>\n    </div> ");
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","business-numbers");
-        var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("ul");
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("li");
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","numbers");
-        var el7 = dom.createTextNode("340");
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","numbers-label");
-        var el7 = dom.createElement("p");
-        var el8 = dom.createTextNode("Followers");
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("li");
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","numbers");
-        var el7 = dom.createTextNode("126");
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","numbers-label");
-        var el7 = dom.createElement("p");
-        var el8 = dom.createTextNode("Posts");
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("li");
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","numbers");
-        var el7 = dom.createTextNode("4");
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","numbers-label");
-        var el7 = dom.createElement("p");
-        var el8 = dom.createTextNode("Bartenders");
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n      ");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n    ");
-        dom.appendChild(el3, el4);
+        var el3 = dom.createComment(" <div class=\"business-numbers\">\n      <ul>\n        <li><div class=\"numbers\">340</div><div class=\"numbers-label\"><p>Followers</p></div></li>\n        <li><div class=\"numbers\">126</div><div class=\"numbers-label\"><p>Posts</p></div></li>\n        <li><div class=\"numbers\">4</div><div class=\"numbers-label\"><p>Bartenders</p></div></li>\n      </ul>\n    </div> ");
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","sidebar-photos");
-        var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("ul");
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("li");
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","photo-container");
-        var el7 = dom.createElement("img");
-        dom.setAttribute(el7,"src","/assets/images/henrysbar.jpg");
-        dom.setAttribute(el7,"class","photo-thumbnail");
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("li");
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","photo-container");
-        var el7 = dom.createElement("img");
-        dom.setAttribute(el7,"src","/assets/images/nightlife.jpg");
-        dom.setAttribute(el7,"class","photo-thumbnail");
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("li");
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","photo-container");
-        var el7 = dom.createElement("img");
-        dom.setAttribute(el7,"src","/assets/images/barscene.jpg");
-        dom.setAttribute(el7,"class","photo-thumbnail");
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n\n      ");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n    ");
-        dom.appendChild(el3, el4);
+        var el3 = dom.createComment(" <div class=\"sidebar-photos\">\n      <ul>\n        <li><div class=\"photo-container\"><img src=\"/assets/images/henrysbar.jpg\" class=\"photo-thumbnail\"></div></li>\n        <li><div class=\"photo-container\"><img src=\"/assets/images/nightlife.jpg\" class=\"photo-thumbnail\"></div></li>\n        <li><div class=\"photo-container\"><img src=\"/assets/images/barscene.jpg\" class=\"photo-thumbnail\"></div></li>\n\n      </ul>\n    </div> ");
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n    ");
         dom.appendChild(el2, el3);
@@ -2165,138 +2069,9 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
         var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
-        var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","business-tools2");
-        var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("ul");
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("li");
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","tools-icon");
-        dom.appendChild(el5, el6);
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","tools-label");
-        var el7 = dom.createElement("p");
-        var el8 = dom.createTextNode("Edit Profile");
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("li");
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","tools-icon");
-        dom.appendChild(el5, el6);
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","tools-label");
-        var el7 = dom.createElement("p");
-        var el8 = dom.createTextNode("Edit Specials");
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("li");
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","tools-icon");
-        dom.appendChild(el5, el6);
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","tools-label");
-        var el7 = dom.createElement("p");
-        var el8 = dom.createTextNode("Edit Profile");
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n      ");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n    ");
-        dom.appendChild(el3, el4);
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n\n\n\n    ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","business-profile-info");
-        var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("ul");
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("li");
-        dom.setAttribute(el5,"class","business-profile-name");
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","profile-span-name business-profile-span-name");
-        var el7 = dom.createTextNode(" ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode(" ");
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("li");
-        dom.setAttribute(el5,"class","business-profile-address1");
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","profile-span-name profile-span-address");
-        var el7 = dom.createElement("a");
-        dom.setAttribute(el7,"href","/");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode(" • ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode(", ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode(" ");
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("li");
-        dom.setAttribute(el5,"class","business-profile-hours");
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","profile-span-name");
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("li");
-        dom.setAttribute(el5,"class","business-profile-website");
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","profile-span-name");
-        var el7 = dom.createElement("a");
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n      ");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("div");
-        dom.setAttribute(el4,"class","business-profile-info-edit");
-        var el5 = dom.createTextNode("\n");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("        ");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("div");
-        dom.setAttribute(el4,"class","business-profile-background-edit");
-        var el5 = dom.createTextNode("\n");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("      ");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n    ");
-        dom.appendChild(el3, el4);
+        var el3 = dom.createComment("\n    <div class=\"business-profile-info\">\n      <ul>\n        <li class=\"business-profile-name\"><div class=\"profile-span-name business-profile-span-name\">{{session.currentUser.businessName}} {{fa-icon \"check-circle\"}} </div></li>\n        <li class=\"business-profile-address1\"><div class=\"profile-span-name profile-span-address\"><a href=\"/\">{{session.currentUser.address}}</a> • {{session.currentUser.city}}, {{session.currentUser.state}} {{session.currentUser.zip}}</div></li>\n        <li class=\"business-profile-hours\"><div class=\"profile-span-name\">{{session.currentUser.businessHours}}</div></li>\n        <li class=\"business-profile-website\"><div class=\"profile-span-name\"><a {{bind-attr href=\"session.currentUser.website\"}}>{{session.currentUser.website}}</a></div></li>\n      </ul>\n        <div class=\"business-profile-info-edit\">\n{{#link-to 'business-edit'}}\n            {{fa-icon \"magic\"}} Edit Info\n          {{/link-to}}        </div>\n      <div class=\"business-profile-background-edit\">\n{{#link-to 'cover-upload'}}\n          {{fa-icon \"file-image-o\"}} Upload Cover Image\n        {{/link-to}}      </div>\n    </div> ");
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n\n\n\n\n  ");
         dom.appendChild(el2, el3);
@@ -2320,10 +2095,53 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("form");
         dom.setAttribute(el4,"id","business-edit-form");
-        var el5 = dom.createTextNode("\n\n        ");
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","business-edit-CS");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","business-edit-cancel");
+        var el7 = dom.createTextNode("\n            ");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createElement("button");
+        var el8 = dom.createTextNode("Cancel");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        var el7 = dom.createTextNode("\n          ");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","business-edit-submit");
+        var el7 = dom.createTextNode("\n            ");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createElement("button");
+        dom.setAttribute(el7,"type","submit");
+        var el8 = dom.createTextNode("Save");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        var el7 = dom.createTextNode("\n          ");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("div");
         dom.setAttribute(el5,"class","business-edit-name");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("B");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
         var el6 = dom.createTextNode("\n          ");
         dom.appendChild(el5, el6);
         var el6 = dom.createTextNode("\n        ");
@@ -2335,49 +2153,103 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
         dom.setAttribute(el5,"class","business-edit-firstname");
         var el6 = dom.createTextNode("\n          ");
         dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("F");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
         var el6 = dom.createTextNode("\n        ");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
+        var el5 = dom.createTextNode("\n\n        ");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("div");
         dom.setAttribute(el5,"class","business-edit-lastname");
         var el6 = dom.createTextNode("\n          ");
         dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("L");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
         var el6 = dom.createTextNode("\n        ");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
+        var el5 = dom.createTextNode("\n\n        ");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("div");
         dom.setAttribute(el5,"class","business-edit-address");
         var el6 = dom.createTextNode("\n          ");
         dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("A");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
         var el6 = dom.createTextNode("\n        ");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
+        var el5 = dom.createTextNode("\n\n        ");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("div");
         dom.setAttribute(el5,"class","business-edit-city");
         var el6 = dom.createTextNode("\n          ");
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n        ");
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("C");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("div");
-        dom.setAttribute(el5,"class","business-edit-state");
         var el6 = dom.createTextNode("\n          ");
         dom.appendChild(el5, el6);
         var el6 = dom.createTextNode("\n        ");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
+        var el5 = dom.createTextNode("\n\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","business-edit-state");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("S");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n\n        ");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("div");
         dom.setAttribute(el5,"class","business-edit-zip");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("Z");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
         var el6 = dom.createTextNode("\n          ");
         dom.appendChild(el5, el6);
         var el6 = dom.createTextNode("\n        ");
@@ -2389,6 +2261,15 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
         dom.setAttribute(el5,"class","business-edit-website");
         var el6 = dom.createTextNode("\n          ");
         dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("W");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
         var el6 = dom.createTextNode("\n        ");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
@@ -2398,24 +2279,19 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
         dom.setAttribute(el5,"class","business-edit-hours");
         var el6 = dom.createTextNode("\n          ");
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n        ");
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("div");
-        dom.setAttribute(el5,"class","business-edit-submit");
-        var el6 = dom.createTextNode("\n          ");
-        dom.appendChild(el5, el6);
-        var el6 = dom.createElement("button");
-        dom.setAttribute(el6,"type","businessEditSubmit");
-        var el7 = dom.createTextNode("Save");
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("H");
+        dom.appendChild(el7, el8);
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n\n          ");
+        dom.appendChild(el5, el6);
         var el6 = dom.createTextNode("\n        ");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n      ");
+        var el5 = dom.createTextNode("\n\n\n      ");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n      ");
@@ -2477,18 +2353,18 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
         var el5 = dom.createTextNode("\n      ");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n");
+        var el4 = dom.createTextNode("\n\n    ");
         dom.appendChild(el3, el4);
         var el4 = dom.createComment(" Put this line in the #each over ");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n");
+        var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
         var el4 = dom.createComment(" <li><button {{action 'destroyStatus' post}}>Destroy</button></li> ");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n  ");
+        var el4 = dom.createTextNode("\n\n    ");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n");
+        var el3 = dom.createTextNode("\n\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n\n");
@@ -2543,7 +2419,7 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
       },
       render: function render(context, env, contextualElement) {
         var dom = env.dom;
-        var hooks = env.hooks, content = hooks.content, get = hooks.get, inline = hooks.inline, element = hooks.element, block = hooks.block;
+        var hooks = env.hooks, content = hooks.content, inline = hooks.inline, element = hooks.element, get = hooks.get;
         dom.detectNamespace(contextualElement);
         var fragment;
         if (env.useFragmentCache && dom.canClone) {
@@ -2563,90 +2439,42 @@ define('barapp/templates/business-edit', ['exports'], function (exports) {
         }
         if (this.cachedFragment) { dom.repairClonedNode(fragment,[0]); }
         var element0 = dom.childAt(fragment, [2]);
-        var element1 = dom.childAt(element0, [1]);
-        var element2 = dom.childAt(element1, [3, 1]);
-        var element3 = dom.childAt(element2, [5]);
-        var element4 = dom.childAt(element1, [9, 1]);
-        var element5 = dom.childAt(element1, [11, 1]);
-        var element6 = dom.childAt(element1, [13]);
-        var element7 = dom.childAt(element6, [1]);
-        var element8 = dom.childAt(element7, [1, 0]);
-        var element9 = dom.childAt(element7, [3, 0]);
-        var element10 = dom.childAt(element7, [7, 0, 0]);
-        var element11 = dom.childAt(element0, [5, 1, 1]);
-        var element12 = dom.childAt(fragment, [4, 3]);
+        var element1 = dom.childAt(element0, [1, 9, 1]);
+        var element2 = dom.childAt(element0, [5, 1, 1]);
+        var element3 = dom.childAt(fragment, [4, 3]);
         var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
-        var morph1 = dom.createMorphAt(dom.childAt(element1, [1]),0,1);
-        var morph2 = dom.createMorphAt(dom.childAt(element2, [1]),-1,-1);
-        var morph3 = dom.createMorphAt(dom.childAt(element2, [3]),-1,-1);
-        var morph4 = dom.createMorphAt(element3,-1,0);
-        var morph5 = dom.createMorphAt(element3,0,1);
-        var morph6 = dom.createMorphAt(element3,1,-1);
-        var morph7 = dom.createMorphAt(dom.childAt(element4, [1, 0]),-1,-1);
-        var morph8 = dom.createMorphAt(dom.childAt(element4, [3, 0]),-1,-1);
-        var morph9 = dom.createMorphAt(dom.childAt(element4, [5, 0]),-1,-1);
-        var morph10 = dom.createMorphAt(dom.childAt(element5, [1, 0]),-1,-1);
-        var morph11 = dom.createMorphAt(dom.childAt(element5, [3, 0]),-1,-1);
-        var morph12 = dom.createMorphAt(dom.childAt(element5, [5, 0]),-1,-1);
-        var morph13 = dom.createMorphAt(element8,-1,0);
-        var morph14 = dom.createMorphAt(element8,0,1);
-        var morph15 = dom.createMorphAt(dom.childAt(element9, [0]),-1,-1);
-        var morph16 = dom.createMorphAt(element9,1,2);
-        var morph17 = dom.createMorphAt(element9,2,3);
-        var morph18 = dom.createMorphAt(element9,3,-1);
-        var morph19 = dom.createMorphAt(dom.childAt(element7, [5, 0]),-1,-1);
-        var morph20 = dom.createMorphAt(element10,-1,-1);
-        var morph21 = dom.createMorphAt(dom.childAt(element6, [3]),0,1);
-        var morph22 = dom.createMorphAt(dom.childAt(element6, [5]),0,1);
-        var morph23 = dom.createMorphAt(dom.childAt(element11, [1]),0,1);
-        var morph24 = dom.createMorphAt(dom.childAt(element11, [3]),0,1);
-        var morph25 = dom.createMorphAt(dom.childAt(element11, [5]),0,1);
-        var morph26 = dom.createMorphAt(dom.childAt(element11, [7]),0,1);
-        var morph27 = dom.createMorphAt(dom.childAt(element11, [9]),0,1);
-        var morph28 = dom.createMorphAt(dom.childAt(element11, [11]),0,1);
-        var morph29 = dom.createMorphAt(dom.childAt(element11, [13]),0,1);
-        var morph30 = dom.createMorphAt(dom.childAt(element11, [15]),0,1);
-        var morph31 = dom.createMorphAt(dom.childAt(element11, [17]),0,1);
-        var morph32 = dom.createMorphAt(dom.childAt(element12, [1]),-1,-1);
-        var morph33 = dom.createMorphAt(dom.childAt(element12, [3]),-1,-1);
-        var morph34 = dom.createMorphAt(dom.childAt(element12, [5]),-1,-1);
+        var morph1 = dom.createMorphAt(dom.childAt(element1, [1, 0]),-1,-1);
+        var morph2 = dom.createMorphAt(dom.childAt(element1, [3, 0]),-1,-1);
+        var morph3 = dom.createMorphAt(dom.childAt(element1, [5, 0]),-1,-1);
+        var morph4 = dom.createMorphAt(dom.childAt(element2, [3]),2,3);
+        var morph5 = dom.createMorphAt(dom.childAt(element2, [5]),2,3);
+        var morph6 = dom.createMorphAt(dom.childAt(element2, [7]),2,3);
+        var morph7 = dom.createMorphAt(dom.childAt(element2, [9]),2,3);
+        var morph8 = dom.createMorphAt(dom.childAt(element2, [11]),2,3);
+        var morph9 = dom.createMorphAt(dom.childAt(element2, [13]),2,3);
+        var morph10 = dom.createMorphAt(dom.childAt(element2, [15]),2,3);
+        var morph11 = dom.createMorphAt(dom.childAt(element2, [17]),2,3);
+        var morph12 = dom.createMorphAt(dom.childAt(element2, [19]),2,3);
+        var morph13 = dom.createMorphAt(dom.childAt(element3, [1]),-1,-1);
+        var morph14 = dom.createMorphAt(dom.childAt(element3, [3]),-1,-1);
+        var morph15 = dom.createMorphAt(dom.childAt(element3, [5]),-1,-1);
         content(env, morph0, context, "outlet");
-        inline(env, morph1, context, "input", [], {"type": get(env, context, "search"), "placeholder": "Search...", "value": get(env, context, "search"), "required": true});
-        content(env, morph2, context, "session.currentUser.businessName");
-        content(env, morph3, context, "session.currentUser.address");
-        content(env, morph4, context, "session.currentUser.city");
-        content(env, morph5, context, "session.currentUser.state");
-        content(env, morph6, context, "session.currentUser.zip");
-        inline(env, morph7, context, "fa-icon", ["pencil-square-o"], {});
-        inline(env, morph8, context, "fa-icon", ["glass"], {});
-        inline(env, morph9, context, "fa-icon", ["star-o"], {});
-        inline(env, morph10, context, "fa-icon", ["check-circle"], {});
-        inline(env, morph11, context, "fa-icon", ["check-circle"], {});
-        inline(env, morph12, context, "fa-icon", ["check-circle"], {});
-        content(env, morph13, context, "session.currentUser.businessName");
-        inline(env, morph14, context, "fa-icon", ["check-circle"], {});
-        content(env, morph15, context, "session.currentUser.address");
-        content(env, morph16, context, "session.currentUser.city");
-        content(env, morph17, context, "session.currentUser.state");
-        content(env, morph18, context, "session.currentUser.zip");
-        content(env, morph19, context, "session.currentUser.businessHours");
-        element(env, element10, context, "bind-attr", [], {"href": "session.currentUser.website"});
-        content(env, morph20, context, "session.currentUser.website");
-        block(env, morph21, context, "link-to", ["business-edit"], {}, child0, null);
-        block(env, morph22, context, "link-to", ["cover-upload"], {}, child1, null);
-        element(env, element11, context, "action", ["saveProfile"], {"on": "submit"});
-        inline(env, morph23, context, "input", [], {"placeholder": "Business Name", "value": get(env, context, "session.currentUser.businessName")});
-        inline(env, morph24, context, "input", [], {"placeholder": "First Name", "value": get(env, context, "session.currentUser.firstName")});
-        inline(env, morph25, context, "input", [], {"placeholder": "Last Name", "value": get(env, context, "session.currentUser.lastName")});
-        inline(env, morph26, context, "input", [], {"placeholder": "Address", "value": get(env, context, "session.currentUser.address")});
-        inline(env, morph27, context, "input", [], {"placeholder": "City", "value": get(env, context, "session.currentUser.city")});
-        inline(env, morph28, context, "input", [], {"placeholder": "State", "value": get(env, context, "session.currentUser.state")});
-        inline(env, morph29, context, "input", [], {"placeholder": "Zip", "value": get(env, context, "session.currentUser.zip")});
-        inline(env, morph30, context, "input", [], {"placeholder": "Website", "value": get(env, context, "session.currentUser.website")});
-        inline(env, morph31, context, "input", [], {"placeholder": "Business Hours", "value": get(env, context, "session.currentUser.businessHours")});
-        inline(env, morph32, context, "fa-icon", ["facebook"], {});
-        inline(env, morph33, context, "fa-icon", ["twitter"], {});
-        inline(env, morph34, context, "fa-icon", ["instagram"], {});
+        inline(env, morph1, context, "fa-icon", ["pencil-square-o"], {});
+        inline(env, morph2, context, "fa-icon", ["glass"], {});
+        inline(env, morph3, context, "fa-icon", ["star-o"], {});
+        element(env, element2, context, "action", ["saveProfile"], {"on": "submit"});
+        inline(env, morph4, context, "input", [], {"placeholder": "Business Name", "value": get(env, context, "session.currentUser.businessName")});
+        inline(env, morph5, context, "input", [], {"placeholder": "First Name", "value": get(env, context, "session.currentUser.firstName")});
+        inline(env, morph6, context, "input", [], {"placeholder": "Last Name", "value": get(env, context, "session.currentUser.lastName")});
+        inline(env, morph7, context, "input", [], {"placeholder": "Address", "value": get(env, context, "session.currentUser.address")});
+        inline(env, morph8, context, "input", [], {"placeholder": "City", "value": get(env, context, "session.currentUser.city")});
+        inline(env, morph9, context, "input", [], {"placeholder": "State", "value": get(env, context, "session.currentUser.state")});
+        inline(env, morph10, context, "input", [], {"placeholder": "Zip", "value": get(env, context, "session.currentUser.zip")});
+        inline(env, morph11, context, "input", [], {"placeholder": "Website", "value": get(env, context, "session.currentUser.website")});
+        inline(env, morph12, context, "input", [], {"placeholder": "Business Hours", "value": get(env, context, "session.currentUser.businessHours")});
+        inline(env, morph13, context, "fa-icon", ["facebook"], {});
+        inline(env, morph14, context, "fa-icon", ["twitter"], {});
+        inline(env, morph15, context, "fa-icon", ["instagram"], {});
         return fragment;
       }
     };
@@ -5328,94 +5156,6 @@ define('barapp/templates/index', ['exports'], function (exports) {
           var el1 = dom.createTextNode("            ");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("li");
-          dom.setAttribute(el1,"class","single-post-dark");
-          var el2 = dom.createTextNode("\n              ");
-          dom.appendChild(el1, el2);
-          var el2 = dom.createElement("div");
-          dom.setAttribute(el2,"class","feed-info-container");
-          var el3 = dom.createTextNode("\n                ");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("li");
-          dom.setAttribute(el3,"class","feed-name-dark");
-          var el4 = dom.createTextNode(" ");
-          dom.appendChild(el3, el4);
-          var el4 = dom.createElement("span");
-          dom.setAttribute(el4,"class","feed-time-dark");
-          dom.appendChild(el3, el4);
-          dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n                ");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("li");
-          dom.setAttribute(el3,"class","feed-address-dark");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n                ");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createComment(" <li><span class=\"feed-radius\">2 miles away</span></li> ");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n                ");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("li");
-          dom.setAttribute(el3,"class","feed-status-dark");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n                ");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createComment(" <li class=\"feed-social-buttons\"><span class=\"feed-likes\">{{fa-icon \"beer\"}} 24 people like this</span><span class=\"feed-addfavorite\">{{fa-icon \"plus\"}} Add to Favorites</span></li> ");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n              ");
-          dom.appendChild(el2, el3);
-          dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n            ");
-          dom.appendChild(el1, el2);
-          dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n");
-          dom.appendChild(el0, el1);
-          return el0;
-        },
-        render: function render(context, env, contextualElement) {
-          var dom = env.dom;
-          var hooks = env.hooks, content = hooks.content, get = hooks.get, inline = hooks.inline;
-          dom.detectNamespace(contextualElement);
-          var fragment;
-          if (env.useFragmentCache && dom.canClone) {
-            if (this.cachedFragment === null) {
-              fragment = this.build(dom);
-              if (this.hasRendered) {
-                this.cachedFragment = fragment;
-              } else {
-                this.hasRendered = true;
-              }
-            }
-            if (this.cachedFragment) {
-              fragment = dom.cloneNode(this.cachedFragment, true);
-            }
-          } else {
-            fragment = this.build(dom);
-          }
-          var element3 = dom.childAt(fragment, [1, 1]);
-          var element4 = dom.childAt(element3, [1]);
-          var morph0 = dom.createMorphAt(element4,-1,0);
-          var morph1 = dom.createMorphAt(dom.childAt(element4, [1]),-1,-1);
-          var morph2 = dom.createMorphAt(dom.childAt(element3, [3]),-1,-1);
-          var morph3 = dom.createMorphAt(dom.childAt(element3, [7]),-1,-1);
-          content(env, morph0, context, "status.business.businessName");
-          inline(env, morph1, context, "ago", [get(env, context, "status.createdAt")], {});
-          content(env, morph2, context, "status.business.address");
-          content(env, morph3, context, "status.status");
-          return fragment;
-        }
-      };
-    }());
-    var child1 = (function() {
-      return {
-        isHTMLBars: true,
-        blockParams: 0,
-        cachedFragment: null,
-        hasRendered: false,
-        build: function build(dom) {
-          var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("            ");
-          dom.appendChild(el0, el1);
-          var el1 = dom.createElement("li");
           dom.setAttribute(el1,"class","single-post");
           var el2 = dom.createTextNode("\n\n              ");
           dom.appendChild(el1, el2);
@@ -5514,18 +5254,9 @@ define('barapp/templates/index', ['exports'], function (exports) {
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2,"class","my-sidebar-left");
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n\n\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createComment(" <div class=\"index-header\">\n      <div class=\"bartender-info\">\n        <p class=\"bartender-info-name\">Milltown Tavern</p>\n        <p class=\"bartender-info-location\">Atlanta, GA</p>\n      </div>\n    </div> ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n    ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","search");
-        var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n    ");
-        dom.appendChild(el3, el4);
+        var el3 = dom.createComment(" <div class=\"search\">\n      {{input type=search placeholder=\"Search...\" value=search required=true}}\n    </div> ");
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n    ");
         dom.appendChild(el2, el3);
@@ -5584,80 +5315,11 @@ define('barapp/templates/index', ['exports'], function (exports) {
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","business-tools2");
-        var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("ul");
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("li");
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","tools-icon");
-        dom.appendChild(el5, el6);
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","tools-label");
-        var el7 = dom.createElement("p");
-        var el8 = dom.createTextNode("Edit Profile");
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("li");
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","tools-icon");
-        dom.appendChild(el5, el6);
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","tools-label");
-        var el7 = dom.createElement("p");
-        var el8 = dom.createTextNode("Edit Specials");
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("li");
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","tools-icon");
-        dom.appendChild(el5, el6);
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","tools-label");
-        var el7 = dom.createElement("p");
-        var el8 = dom.createTextNode("Edit Profile");
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n      ");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n    ");
-        dom.appendChild(el3, el4);
+        var el3 = dom.createComment(" <div class=\"business-tools2\">\n      <ul>\n        <li><div class=\"tools-icon\">{{fa-icon \"check-circle\"}}</div><div class=\"tools-label\"><p>Edit Profile</p></div></li>\n        <li><div class=\"tools-icon\">{{fa-icon \"check-circle\"}}</div><div class=\"tools-label\"><p>Edit Specials</p></div></li>\n        <li><div class=\"tools-icon\">{{fa-icon \"check-circle\"}}</div><div class=\"tools-label\"><p>Edit Profile</p></div></li>\n      </ul>\n    </div> ");
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","feed-container-dark");
-        var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("div");
-        dom.setAttribute(el4,"class","feed-post-dark");
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("ul");
-        var el6 = dom.createTextNode("\n");
-        dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("        ");
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n      ");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n    ");
-        dom.appendChild(el3, el4);
+        var el3 = dom.createComment(" <div class=\"feed-container-dark\">\n      <div class=\"feed-post-dark\">\n        <ul>\n{{#each status in filteredPosts}}\n            <li class=\"single-post-dark\">\n              <div class=\"feed-info-container\">\n                <li class=\"feed-name-dark\">{{status.business.businessName}} <span class=\"feed-time-dark\">{{ago status.createdAt}}</span></li>\n                <li class=\"feed-address-dark\">{{status.business.address}}</li>\n                <li class=\"feed-status-dark\">{{status.status}}</li>\n              </div>\n            </li>\n          {{/each}}        </ul>\n      </div>\n    </div> ");
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n  ");
         dom.appendChild(el2, el3);
@@ -5670,6 +5332,10 @@ define('barapp/templates/index', ['exports'], function (exports) {
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("div");
         dom.setAttribute(el3,"class","homepage-container");
+        var el4 = dom.createTextNode("\n\n    ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createComment(" <div class=\"index-header\">\n      <div class=\"bartender-info\">\n        <p class=\"bartender-info-name\">Milltown Tavern</p>\n        <p class=\"bartender-info-location\">Atlanta, GA</p>\n      </div>\n    </div> ");
+        dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n\n    ");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
@@ -5764,7 +5430,7 @@ define('barapp/templates/index', ['exports'], function (exports) {
       },
       render: function render(context, env, contextualElement) {
         var dom = env.dom;
-        var hooks = env.hooks, content = hooks.content, get = hooks.get, inline = hooks.inline, block = hooks.block;
+        var hooks = env.hooks, content = hooks.content, inline = hooks.inline, get = hooks.get, block = hooks.block;
         dom.detectNamespace(contextualElement);
         var fragment;
         if (env.useFragmentCache && dom.canClone) {
@@ -5783,40 +5449,28 @@ define('barapp/templates/index', ['exports'], function (exports) {
           fragment = this.build(dom);
         }
         if (this.cachedFragment) { dom.repairClonedNode(fragment,[0]); }
-        var element5 = dom.childAt(fragment, [2]);
-        var element6 = dom.childAt(element5, [1]);
-        var element7 = dom.childAt(element6, [5, 1]);
-        var element8 = dom.childAt(element6, [7, 1]);
-        var element9 = dom.childAt(element5, [3, 1]);
-        var element10 = dom.childAt(fragment, [4, 3]);
+        var element3 = dom.childAt(fragment, [2]);
+        var element4 = dom.childAt(element3, [1, 3, 1]);
+        var element5 = dom.childAt(element3, [3, 1]);
+        var element6 = dom.childAt(fragment, [4, 3]);
         var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
-        var morph1 = dom.createMorphAt(dom.childAt(element6, [3]),0,1);
-        var morph2 = dom.createMorphAt(dom.childAt(element7, [1, 0]),-1,-1);
-        var morph3 = dom.createMorphAt(dom.childAt(element7, [3, 0]),-1,-1);
-        var morph4 = dom.createMorphAt(dom.childAt(element7, [5, 0]),-1,-1);
-        var morph5 = dom.createMorphAt(dom.childAt(element8, [1, 0]),-1,-1);
-        var morph6 = dom.createMorphAt(dom.childAt(element8, [3, 0]),-1,-1);
-        var morph7 = dom.createMorphAt(dom.childAt(element8, [5, 0]),-1,-1);
-        var morph8 = dom.createMorphAt(dom.childAt(element6, [9, 1, 1]),0,1);
-        var morph9 = dom.createMorphAt(dom.childAt(element9, [1, 1]),0,1);
-        var morph10 = dom.createMorphAt(dom.childAt(element9, [3, 1, 1]),0,1);
-        var morph11 = dom.createMorphAt(dom.childAt(element10, [1]),-1,-1);
-        var morph12 = dom.createMorphAt(dom.childAt(element10, [3]),-1,-1);
-        var morph13 = dom.createMorphAt(dom.childAt(element10, [5]),-1,-1);
+        var morph1 = dom.createMorphAt(dom.childAt(element4, [1, 0]),-1,-1);
+        var morph2 = dom.createMorphAt(dom.childAt(element4, [3, 0]),-1,-1);
+        var morph3 = dom.createMorphAt(dom.childAt(element4, [5, 0]),-1,-1);
+        var morph4 = dom.createMorphAt(dom.childAt(element5, [3, 1]),0,1);
+        var morph5 = dom.createMorphAt(dom.childAt(element5, [5, 1, 1]),0,1);
+        var morph6 = dom.createMorphAt(dom.childAt(element6, [1]),-1,-1);
+        var morph7 = dom.createMorphAt(dom.childAt(element6, [3]),-1,-1);
+        var morph8 = dom.createMorphAt(dom.childAt(element6, [5]),-1,-1);
         content(env, morph0, context, "outlet");
-        inline(env, morph1, context, "input", [], {"type": get(env, context, "search"), "placeholder": "Search...", "value": get(env, context, "search"), "required": true});
-        inline(env, morph2, context, "fa-icon", ["pencil-square-o"], {});
-        inline(env, morph3, context, "fa-icon", ["glass"], {});
-        inline(env, morph4, context, "fa-icon", ["star-o"], {});
-        inline(env, morph5, context, "fa-icon", ["check-circle"], {});
-        inline(env, morph6, context, "fa-icon", ["check-circle"], {});
-        inline(env, morph7, context, "fa-icon", ["check-circle"], {});
-        block(env, morph8, context, "each", [get(env, context, "filteredPosts")], {"keyword": "status"}, child0, null);
-        inline(env, morph9, context, "input", [], {"placeholder": "Filter by Zip Code", "type": "text", "value": get(env, context, "filterText")});
-        block(env, morph10, context, "each", [get(env, context, "filteredPosts")], {"keyword": "status"}, child1, null);
-        inline(env, morph11, context, "fa-icon", ["facebook"], {});
-        inline(env, morph12, context, "fa-icon", ["twitter"], {});
-        inline(env, morph13, context, "fa-icon", ["instagram"], {});
+        inline(env, morph1, context, "fa-icon", ["pencil-square-o"], {});
+        inline(env, morph2, context, "fa-icon", ["glass"], {});
+        inline(env, morph3, context, "fa-icon", ["star-o"], {});
+        inline(env, morph4, context, "input", [], {"placeholder": "Filter by Zip Code", "type": "text", "value": get(env, context, "filterText")});
+        block(env, morph5, context, "each", [get(env, context, "filteredPosts")], {"keyword": "status"}, child0, null);
+        inline(env, morph6, context, "fa-icon", ["facebook"], {});
+        inline(env, morph7, context, "fa-icon", ["twitter"], {});
+        inline(env, morph8, context, "fa-icon", ["instagram"], {});
         return fragment;
       }
     };
@@ -5879,7 +5533,14 @@ define('barapp/templates/login', ['exports'], function (exports) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createTextNode("");
         dom.appendChild(el0, el1);
-        var el1 = dom.createTextNode("\n\n\n");
+        var el1 = dom.createTextNode("\n\n");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"class","login-body");
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1,"class","login");
@@ -5938,7 +5599,7 @@ define('barapp/templates/login', ['exports'], function (exports) {
         dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n\n");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("        \n      ");
+        var el4 = dom.createTextNode("\n      ");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
         dom.setAttribute(el4,"class","login-submit");
@@ -6028,8 +5689,8 @@ define('barapp/templates/login', ['exports'], function (exports) {
           fragment = this.build(dom);
         }
         if (this.cachedFragment) { dom.repairClonedNode(fragment,[0]); }
-        var element0 = dom.childAt(fragment, [2, 3, 1]);
-        var element1 = dom.childAt(fragment, [4, 3]);
+        var element0 = dom.childAt(fragment, [4, 3, 1]);
+        var element1 = dom.childAt(fragment, [6, 3]);
         var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
         var morph1 = dom.createMorphAt(dom.childAt(element0, [1]),0,1);
         var morph2 = dom.createMorphAt(dom.childAt(element0, [3]),0,1);
@@ -6110,86 +5771,6 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         hasRendered: false,
         build: function build(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("            ");
-          dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode(" Edit Info\n");
-          dom.appendChild(el0, el1);
-          return el0;
-        },
-        render: function render(context, env, contextualElement) {
-          var dom = env.dom;
-          var hooks = env.hooks, inline = hooks.inline;
-          dom.detectNamespace(contextualElement);
-          var fragment;
-          if (env.useFragmentCache && dom.canClone) {
-            if (this.cachedFragment === null) {
-              fragment = this.build(dom);
-              if (this.hasRendered) {
-                this.cachedFragment = fragment;
-              } else {
-                this.hasRendered = true;
-              }
-            }
-            if (this.cachedFragment) {
-              fragment = dom.cloneNode(this.cachedFragment, true);
-            }
-          } else {
-            fragment = this.build(dom);
-          }
-          var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
-          inline(env, morph0, context, "fa-icon", ["magic"], {});
-          return fragment;
-        }
-      };
-    }());
-    var child2 = (function() {
-      return {
-        isHTMLBars: true,
-        blockParams: 0,
-        cachedFragment: null,
-        hasRendered: false,
-        build: function build(dom) {
-          var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("          ");
-          dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode(" Upload Cover Image\n");
-          dom.appendChild(el0, el1);
-          return el0;
-        },
-        render: function render(context, env, contextualElement) {
-          var dom = env.dom;
-          var hooks = env.hooks, inline = hooks.inline;
-          dom.detectNamespace(contextualElement);
-          var fragment;
-          if (env.useFragmentCache && dom.canClone) {
-            if (this.cachedFragment === null) {
-              fragment = this.build(dom);
-              if (this.hasRendered) {
-                this.cachedFragment = fragment;
-              } else {
-                this.hasRendered = true;
-              }
-            }
-            if (this.cachedFragment) {
-              fragment = dom.cloneNode(this.cachedFragment, true);
-            }
-          } else {
-            fragment = this.build(dom);
-          }
-          var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
-          inline(env, morph0, context, "fa-icon", ["file-image-o"], {});
-          return fragment;
-        }
-      };
-    }());
-    var child3 = (function() {
-      return {
-        isHTMLBars: true,
-        blockParams: 0,
-        cachedFragment: null,
-        hasRendered: false,
-        build: function build(dom) {
-          var el0 = dom.createDocumentFragment();
           var el1 = dom.createTextNode("\n            ");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("li");
@@ -6246,31 +5827,7 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
           dom.appendChild(el1, el2);
           var el2 = dom.createTextNode("\n              ");
           dom.appendChild(el1, el2);
-          var el2 = dom.createElement("div");
-          dom.setAttribute(el2,"class","interaction-container");
-          var el3 = dom.createTextNode("\n                ");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("li");
-          dom.setAttribute(el3,"class","interaction-like");
-          var el4 = dom.createTextNode("Like");
-          dom.appendChild(el3, el4);
-          dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n                ");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("li");
-          dom.setAttribute(el3,"class","interaction-follow");
-          var el4 = dom.createTextNode("Follow");
-          dom.appendChild(el3, el4);
-          dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n                ");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("li");
-          dom.setAttribute(el3,"class","interaction-hide");
-          var el4 = dom.createTextNode("Hide");
-          dom.appendChild(el3, el4);
-          dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n              ");
-          dom.appendChild(el2, el3);
+          var el2 = dom.createComment(" <div class=\"interaction-container\">\n                <li class=\"interaction-like\">Like</li>\n                <li class=\"interaction-follow\">Follow</li>\n                <li class=\"interaction-hide\">Hide</li>\n              </div> ");
           dom.appendChild(el1, el2);
           var el2 = dom.createTextNode("\n            ");
           dom.appendChild(el1, el2);
@@ -6414,64 +5971,7 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","business-numbers");
-        var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("ul");
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("li");
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","numbers");
-        var el7 = dom.createTextNode("340");
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","numbers-label");
-        var el7 = dom.createElement("p");
-        var el8 = dom.createTextNode("Followers");
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("li");
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","numbers");
-        var el7 = dom.createTextNode("126");
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","numbers-label");
-        var el7 = dom.createElement("p");
-        var el8 = dom.createTextNode("Posts");
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createElement("li");
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","numbers");
-        var el7 = dom.createTextNode("4");
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","numbers-label");
-        var el7 = dom.createElement("p");
-        var el8 = dom.createTextNode("Bartenders");
-        dom.appendChild(el7, el8);
-        dom.appendChild(el6, el7);
-        dom.appendChild(el5, el6);
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n      ");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n    ");
-        dom.appendChild(el3, el4);
+        var el3 = dom.createComment(" <div class=\"business-numbers\">\n      <ul>\n        <li><div class=\"numbers\">340</div><div class=\"numbers-label\"><p>Followers</p></div></li>\n        <li><div class=\"numbers\">126</div><div class=\"numbers-label\"><p>Posts</p></div></li>\n        <li><div class=\"numbers\">4</div><div class=\"numbers-label\"><p>Bartenders</p></div></li>\n      </ul>\n    </div> ");
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n\n\n\n\n\n    ");
         dom.appendChild(el2, el3);
@@ -6484,47 +5984,107 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("li");
         dom.setAttribute(el5,"class","business-profile-name");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
         var el6 = dom.createElement("div");
         dom.setAttribute(el6,"class","profile-span-name business-profile-span-name");
-        var el7 = dom.createTextNode(" ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode(" ");
-        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
         var el5 = dom.createTextNode("\n        ");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("li");
         dom.setAttribute(el5,"class","business-profile-address1");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
         var el6 = dom.createElement("div");
         dom.setAttribute(el6,"class","profile-span-name profile-span-address");
         var el7 = dom.createElement("a");
         dom.setAttribute(el7,"href","/");
         dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode(" • ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode(", ");
-        dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode(" ");
-        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
         var el5 = dom.createTextNode("\n        ");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("li");
-        dom.setAttribute(el5,"class","business-profile-hours");
+        dom.setAttribute(el5,"class","business-profile-address1");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
         var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","profile-span-name");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","profile-span-name profile-span-address");
+        var el7 = dom.createElement("a");
+        dom.setAttribute(el7,"href","/");
+        var el8 = dom.createTextNode(", ");
+        dom.appendChild(el7, el8);
+        var el8 = dom.createTextNode(" ");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
         var el5 = dom.createTextNode("\n        ");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("li");
         dom.setAttribute(el5,"class","business-profile-website");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
         var el6 = dom.createElement("div");
         dom.setAttribute(el6,"class","profile-span-name");
         var el7 = dom.createElement("a");
         dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("li");
+        dom.setAttribute(el5,"class","business-profile-hours");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","profile-span-name");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
         var el5 = dom.createTextNode("\n      ");
@@ -6532,21 +6092,11 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n        ");
         dom.appendChild(el3, el4);
-        var el4 = dom.createElement("div");
-        dom.setAttribute(el4,"class","business-profile-info-edit");
-        var el5 = dom.createTextNode("\n");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("        ");
-        dom.appendChild(el4, el5);
+        var el4 = dom.createComment(" <div class=\"business-profile-info-edit\">\n{{#link-to 'business-edit'}}\n            {{fa-icon \"magic\"}} Edit Info\n          {{/link-to}}        </div> ");
         dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n      ");
         dom.appendChild(el3, el4);
-        var el4 = dom.createElement("div");
-        dom.setAttribute(el4,"class","business-profile-background-edit");
-        var el5 = dom.createTextNode("\n");
-        dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("      ");
-        dom.appendChild(el4, el5);
+        var el4 = dom.createComment(" <div class=\"business-profile-background-edit\">\n{{#link-to 'cover-upload'}}\n          {{fa-icon \"file-image-o\"}} Upload Cover Image\n        {{/link-to}}      </div> ");
         dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
@@ -6895,37 +6445,42 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         var element6 = dom.childAt(element5, [3, 1]);
         var element7 = dom.childAt(element6, [4]);
         var element8 = dom.childAt(element6, [6]);
-        var element9 = dom.childAt(element5, [11]);
+        var element9 = dom.childAt(element5, [11, 1]);
         var element10 = dom.childAt(element9, [1]);
-        var element11 = dom.childAt(element10, [1, 0]);
-        var element12 = dom.childAt(element10, [3, 0]);
-        var element13 = dom.childAt(element10, [7, 0, 0]);
-        var element14 = dom.childAt(element4, [5]);
-        var element15 = dom.childAt(element14, [1, 1]);
-        var element16 = dom.childAt(element15, [4]);
-        var element17 = dom.childAt(element16, [1]);
-        var element18 = dom.childAt(element16, [3]);
-        var element19 = dom.childAt(fragment, [6, 3]);
+        var element11 = dom.childAt(element9, [3]);
+        var element12 = dom.childAt(element9, [5]);
+        var element13 = dom.childAt(element12, [3, 0]);
+        var element14 = dom.childAt(element9, [7]);
+        var element15 = dom.childAt(element14, [3, 0]);
+        var element16 = dom.childAt(element9, [9]);
+        var element17 = dom.childAt(element4, [5]);
+        var element18 = dom.childAt(element17, [1, 1]);
+        var element19 = dom.childAt(element18, [4]);
+        var element20 = dom.childAt(element19, [1]);
+        var element21 = dom.childAt(element19, [3]);
+        var element22 = dom.childAt(fragment, [6, 3]);
         var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
         var morph1 = dom.createMorphAt(element6,0,1);
         var morph2 = dom.createMorphAt(dom.childAt(element6, [2, 0]),-1,-1);
         var morph3 = dom.createMorphAt(dom.childAt(element7, [0, 0]),-1,-1);
         var morph4 = dom.createMorphAt(dom.childAt(element8, [0, 0]),-1,-1);
-        var morph5 = dom.createMorphAt(element11,-1,0);
-        var morph6 = dom.createMorphAt(element11,0,1);
-        var morph7 = dom.createMorphAt(dom.childAt(element12, [0]),-1,-1);
-        var morph8 = dom.createMorphAt(element12,1,2);
-        var morph9 = dom.createMorphAt(element12,2,3);
-        var morph10 = dom.createMorphAt(element12,3,-1);
-        var morph11 = dom.createMorphAt(dom.childAt(element10, [5, 0]),-1,-1);
-        var morph12 = dom.createMorphAt(element13,-1,-1);
-        var morph13 = dom.createMorphAt(dom.childAt(element9, [3]),0,1);
-        var morph14 = dom.createMorphAt(dom.childAt(element9, [5]),0,1);
-        var morph15 = dom.createMorphAt(element15,0,1);
-        var morph16 = dom.createMorphAt(dom.childAt(element14, [3, 1, 3, 1]),0,1);
-        var morph17 = dom.createMorphAt(dom.childAt(element19, [1]),-1,-1);
-        var morph18 = dom.createMorphAt(dom.childAt(element19, [3]),-1,-1);
-        var morph19 = dom.createMorphAt(dom.childAt(element19, [5]),-1,-1);
+        var morph5 = dom.createMorphAt(dom.childAt(element10, [1, 0]),-1,-1);
+        var morph6 = dom.createMorphAt(dom.childAt(element10, [3]),-1,-1);
+        var morph7 = dom.createMorphAt(dom.childAt(element11, [1, 0]),-1,-1);
+        var morph8 = dom.createMorphAt(dom.childAt(element11, [3, 0]),-1,-1);
+        var morph9 = dom.createMorphAt(dom.childAt(element12, [1, 0]),-1,-1);
+        var morph10 = dom.createMorphAt(element13,-1,0);
+        var morph11 = dom.createMorphAt(element13,0,1);
+        var morph12 = dom.createMorphAt(element13,1,-1);
+        var morph13 = dom.createMorphAt(dom.childAt(element14, [1, 0]),-1,-1);
+        var morph14 = dom.createMorphAt(element15,-1,-1);
+        var morph15 = dom.createMorphAt(dom.childAt(element16, [1, 0]),-1,-1);
+        var morph16 = dom.createMorphAt(dom.childAt(element16, [3]),-1,-1);
+        var morph17 = dom.createMorphAt(element18,0,1);
+        var morph18 = dom.createMorphAt(dom.childAt(element17, [3, 1, 3, 1]),0,1);
+        var morph19 = dom.createMorphAt(dom.childAt(element22, [1]),-1,-1);
+        var morph20 = dom.createMorphAt(dom.childAt(element22, [3]),-1,-1);
+        var morph21 = dom.createMorphAt(dom.childAt(element22, [5]),-1,-1);
         content(env, morph0, context, "outlet");
         block(env, morph1, context, "link-to", ["business-edit"], {}, child0, null);
         inline(env, morph2, context, "fa-icon", ["glass"], {});
@@ -6933,25 +6488,644 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         inline(env, morph3, context, "fa-icon", ["star-o"], {});
         element(env, element8, context, "action", ["cancelDestroy"], {});
         inline(env, morph4, context, "fa-icon", ["minus-circle"], {});
-        content(env, morph5, context, "session.currentUser.businessName");
-        inline(env, morph6, context, "fa-icon", ["check-circle"], {});
-        content(env, morph7, context, "session.currentUser.address");
-        content(env, morph8, context, "session.currentUser.city");
-        content(env, morph9, context, "session.currentUser.state");
-        content(env, morph10, context, "session.currentUser.zip");
-        content(env, morph11, context, "session.currentUser.businessHours");
-        element(env, element13, context, "bind-attr", [], {"href": "session.currentUser.website"});
-        content(env, morph12, context, "session.currentUser.website");
-        block(env, morph13, context, "link-to", ["business-edit"], {}, child1, null);
-        block(env, morph14, context, "link-to", ["cover-upload"], {}, child2, null);
-        element(env, element15, context, "action", ["postStatus"], {"on": "submit"});
-        inline(env, morph15, context, "textarea", [], {"id": "business-status", "value": get(env, context, "status"), "autoresize": true, "maxHeight": 200, "required": true, "placeholder": "What's going on?"});
-        element(env, element17, context, "action", ["editDestroy"], {});
-        element(env, element18, context, "action", ["cancelDestroy"], {});
-        block(env, morph16, context, "each", [get(env, context, "sortedPosts")], {"keyword": "post"}, child3, null);
-        inline(env, morph17, context, "fa-icon", ["facebook"], {});
-        inline(env, morph18, context, "fa-icon", ["twitter"], {});
-        inline(env, morph19, context, "fa-icon", ["instagram"], {});
+        inline(env, morph5, context, "fa-icon", ["chevron-right"], {});
+        content(env, morph6, context, "session.currentUser.businessName");
+        inline(env, morph7, context, "fa-icon", ["chevron-right"], {});
+        content(env, morph8, context, "session.currentUser.address");
+        inline(env, morph9, context, "fa-icon", ["chevron-right"], {});
+        content(env, morph10, context, "session.currentUser.city");
+        content(env, morph11, context, "session.currentUser.state");
+        content(env, morph12, context, "session.currentUser.zip");
+        inline(env, morph13, context, "fa-icon", ["chevron-right"], {});
+        element(env, element15, context, "bind-attr", [], {"href": "session.currentUser.website"});
+        content(env, morph14, context, "session.currentUser.website");
+        inline(env, morph15, context, "fa-icon", ["chevron-right"], {});
+        content(env, morph16, context, "session.currentUser.businessHours");
+        element(env, element18, context, "action", ["postStatus"], {"on": "submit"});
+        inline(env, morph17, context, "textarea", [], {"id": "business-status", "value": get(env, context, "status"), "autoresize": true, "maxHeight": 200, "required": true, "placeholder": "What's going on?"});
+        element(env, element20, context, "action", ["editDestroy"], {});
+        element(env, element21, context, "action", ["cancelDestroy"], {});
+        block(env, morph18, context, "each", [get(env, context, "sortedPosts")], {"keyword": "post"}, child1, null);
+        inline(env, morph19, context, "fa-icon", ["facebook"], {});
+        inline(env, morph20, context, "fa-icon", ["twitter"], {});
+        inline(env, morph21, context, "fa-icon", ["instagram"], {});
+        return fragment;
+      }
+    };
+  }()));
+
+});
+define('barapp/templates/my-business-profile/edit', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      return {
+        isHTMLBars: true,
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createElement("li");
+          var el1 = dom.createElement("div");
+          dom.setAttribute(el1,"class","tools-icon");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("div");
+          dom.setAttribute(el1,"class","tools-label");
+          var el2 = dom.createElement("p");
+          var el3 = dom.createTextNode("Edit Profile");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          var hooks = env.hooks, inline = hooks.inline;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          var morph0 = dom.createMorphAt(dom.childAt(fragment, [0]),-1,-1);
+          inline(env, morph0, context, "fa-icon", ["pencil-square-o"], {});
+          return fragment;
+        }
+      };
+    }());
+    return {
+      isHTMLBars: true,
+      blockParams: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      build: function build(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment(" {{outlet}} ");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"class","body-container");
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","my-sidebar-left");
+        var el3 = dom.createTextNode("\n\n\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment(" <div class=\"index-header\">\n      <div class=\"bartender-info\">\n        <p class=\"bartender-info-name\">{{session.currentUser.businessName}}</p>\n        <p class=\"bartender-info-location\">{{session.currentUser.address}}</p>\n        <p class=\"bartender-info-location\">{{session.currentUser.city}}, {{session.currentUser.state}} {{session.currentUser.zip}}</p>\n      </div>\n    </div> ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","business-tools");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("ul");
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("li");
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","tools-icon");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","tools-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("Edit Specials");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("button");
+        dom.setAttribute(el5,"class","edit-destroy");
+        var el6 = dom.createElement("li");
+        dom.setAttribute(el6,"class","edit-feed");
+        var el7 = dom.createElement("div");
+        dom.setAttribute(el7,"class","tools-icon");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createElement("div");
+        dom.setAttribute(el7,"class","tools-label");
+        var el8 = dom.createElement("p");
+        var el9 = dom.createTextNode("Edit Posts");
+        dom.appendChild(el8, el9);
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("button");
+        dom.setAttribute(el5,"class","cancel-destroy hidden");
+        var el6 = dom.createElement("li");
+        dom.setAttribute(el6,"class","cancel-edit hidden");
+        var el7 = dom.createElement("div");
+        dom.setAttribute(el7,"class","tools-icon");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createElement("div");
+        dom.setAttribute(el7,"class","tools-label");
+        var el8 = dom.createElement("p");
+        var el9 = dom.createTextNode("Cancel");
+        dom.appendChild(el8, el9);
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n\n      ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","business-numbers");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("ul");
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("li");
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","numbers");
+        var el7 = dom.createTextNode("340");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","numbers-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("Followers");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("li");
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","numbers");
+        var el7 = dom.createTextNode("126");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","numbers-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("Posts");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("li");
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","numbers");
+        var el7 = dom.createTextNode("4");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","numbers-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("Bartenders");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n      ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n\n\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment(" <div class=\"business-profile-info\">\n      <ul>\n        <li class=\"business-profile-name\"><div class=\"profile-span-name business-profile-span-name\">{{session.currentUser.businessName}} {{fa-icon \"check-circle\"}} </div></li>\n        <li class=\"business-profile-address1\"><div class=\"profile-span-name profile-span-address\"><a href=\"/\">{{session.currentUser.address}}</a> • {{session.currentUser.city}}, {{session.currentUser.state}} {{session.currentUser.zip}}</div></li>\n        <li class=\"business-profile-hours\"><div class=\"profile-span-name\">{{session.currentUser.businessHours}}</div></li>\n        <li class=\"business-profile-website\"><div class=\"profile-span-name\"><a {{bind-attr href=\"session.currentUser.website\"}}>{{session.currentUser.website}}</a></div></li>\n      </ul>\n        <div class=\"business-profile-info-edit\">\n{{#link-to 'business-edit'}}\n            {{fa-icon \"magic\"}} Edit Info\n          {{/link-to}}        </div>\n      <div class=\"business-profile-background-edit\">\n{{#link-to 'cover-upload'}}\n          {{fa-icon \"file-image-o\"}} Upload Cover Image\n        {{/link-to}}      </div>\n    </div> ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n\n\n\n\n\n  ");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","business-profile-info-wrap");
+        var el3 = dom.createTextNode("\n  ");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","login-wrap");
+        var el3 = dom.createTextNode("\n\n\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","business-edit-container");
+        var el4 = dom.createTextNode("\n\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("form");
+        dom.setAttribute(el4,"id","business-edit-form");
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","business-edit-CS");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","business-edit-cancel");
+        var el7 = dom.createTextNode("\n            ");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createElement("button");
+        var el8 = dom.createTextNode("Cancel");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        var el7 = dom.createTextNode("\n          ");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","business-edit-submit");
+        var el7 = dom.createTextNode("\n            ");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createElement("button");
+        dom.setAttribute(el7,"type","submit");
+        var el8 = dom.createTextNode("Save");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        var el7 = dom.createTextNode("\n          ");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","business-edit-name");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("B");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","business-edit-firstname");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("F");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","business-edit-lastname");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("L");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","business-edit-address");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("A");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","business-edit-city");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("C");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","business-edit-state");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("S");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","business-edit-zip");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("Z");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","business-edit-website");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("W");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","business-edit-hours");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        var el8 = dom.createTextNode("H");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n\n\n      ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","loader-container hidden");
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","loader");
+        dom.setAttribute(el5,"title","0");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        dom.setNamespace("http://www.w3.org/2000/svg");
+        var el6 = dom.createElement("svg");
+        dom.setAttribute(el6,"version","1.1");
+        dom.setAttribute(el6,"id","loader-1");
+        dom.setAttribute(el6,"xmlns","http://www.w3.org/2000/svg");
+        dom.setAttribute(el6,"xmlns:xlink","http://www.w3.org/1999/xlink");
+        dom.setAttribute(el6,"x","0px");
+        dom.setAttribute(el6,"y","0px");
+        dom.setAttribute(el6,"width","50px");
+        dom.setAttribute(el6,"height","50px");
+        dom.setAttribute(el6,"viewBox","0 0 40 40");
+        dom.setAttribute(el6,"enable-background","new 0 0 40 40");
+        dom.setAttributeNS(el6,"http://www.w3.org/XML/1998/namespace","xml:space","preserve");
+        var el7 = dom.createTextNode("\n          ");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createElement("path");
+        dom.setAttribute(el7,"opacity","0.2");
+        dom.setAttribute(el7,"fill","#000");
+        dom.setAttribute(el7,"d","M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946\n            s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634\n            c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createTextNode("\n          ");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createElement("path");
+        dom.setAttribute(el7,"fill","#000");
+        dom.setAttribute(el7,"d","M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0\n            C22.32,8.481,24.301,9.057,26.013,10.047z");
+        var el8 = dom.createTextNode("\n            ");
+        dom.appendChild(el7, el8);
+        var el8 = dom.createElement("animateTransform");
+        dom.setAttribute(el8,"attributeType","xml");
+        dom.setAttribute(el8,"attributeName","transform");
+        dom.setAttribute(el8,"type","rotate");
+        dom.setAttribute(el8,"from","0 20 20");
+        dom.setAttribute(el8,"to","360 20 20");
+        dom.setAttribute(el8,"dur","1.0s");
+        dom.setAttribute(el8,"repeatCount","indefinite");
+        dom.appendChild(el7, el8);
+        var el8 = dom.createTextNode("\n            ");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        var el7 = dom.createTextNode("\n          ");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n      ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n\n    ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createComment(" Put this line in the #each over ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createComment(" <li><button {{action 'destroyStatus' post}}>Destroy</button></li> ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n\n    ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n\n");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n\n");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment(" <div class=\"weekly-calendar\">\n  <ul>\n    <li><p class=\"calendar-day\">Sunday</p><div class=\"calendar-hours\">Closed{{session.currentUser.sundayHours}}</div><div class=\"business-specials\">{{session.currentUser.sundaySpecial}}</div></li>\n    <li><p class=\"calendar-day\">Monday</p><div class=\"calendar-hours\">2:30pm – 12:00am{{session.currentUser.mondayHours}}</div><div class=\"business-specials\">{{session.currentUser.mondaySpecial}}</div></li>\n    <li><p class=\"calendar-day\">Tuesday</p><div class=\"calendar-hours\">2:30pm – 12:00am{{session.currentUser.tuesdayHours}}</div><div class=\"business-specials\">{{session.currentUser.tuesdaySpecial}}</div></li>\n    <li><p class=\"calendar-day\">Wednesday</p><div class=\"calendar-hours\">2:30pm – 12:00am{{session.currentUser.wednesdayHours}}</div><div class=\"business-specials\">{{session.currentUser.wednesdaySpecial}}</div></li>\n    <li><p class=\"calendar-day\">Thursday</p><div class=\"calendar-hours\">2:30pm – 12:00am{{session.currentUser.thursdayHours}}</div><div class=\"business-specials\">{{session.currentUser.thursdaySpecial}}</div></li>\n    <li><p class=\"calendar-day\">Friday</p><div class=\"calendar-hours\">2:30pm – 2:00am{{session.currentUser.fridayHours}}</div><div class=\"business-specials\">{{session.currentUser.fridaySpecial}}</div></li>\n    <li><p class=\"calendar-day\">Saturday</p><div class=\"calendar-hours\">2:30pm – 2:00am{{session.currentUser.saturdayHours}}</div><div class=\"business-specials\">{{session.currentUser.saturdaySpecial}}</div></li>\n  </ul>\n</div> ");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n\n");
+        dom.appendChild(el0, el1);
+        dom.setNamespace(null);
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"class","footer-container");
+        var el2 = dom.createTextNode("\n\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","footer-copyright");
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("p");
+        var el4 = dom.createTextNode("Barkeep® 2015 All Rights Reserved");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n  ");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","footer-social-icons");
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","/");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","/");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","/");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n  ");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n\n");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      render: function render(context, env, contextualElement) {
+        var dom = env.dom;
+        var hooks = env.hooks, block = hooks.block, inline = hooks.inline, element = hooks.element, get = hooks.get;
+        dom.detectNamespace(contextualElement);
+        var fragment;
+        if (env.useFragmentCache && dom.canClone) {
+          if (this.cachedFragment === null) {
+            fragment = this.build(dom);
+            if (this.hasRendered) {
+              this.cachedFragment = fragment;
+            } else {
+              this.hasRendered = true;
+            }
+          }
+          if (this.cachedFragment) {
+            fragment = dom.cloneNode(this.cachedFragment, true);
+          }
+        } else {
+          fragment = this.build(dom);
+        }
+        var element0 = dom.childAt(fragment, [2]);
+        var element1 = dom.childAt(element0, [1, 3, 1]);
+        var element2 = dom.childAt(element1, [4]);
+        var element3 = dom.childAt(element1, [6]);
+        var element4 = dom.childAt(element0, [5, 1, 1]);
+        var element5 = dom.childAt(fragment, [6, 3]);
+        var morph0 = dom.createMorphAt(element1,0,1);
+        var morph1 = dom.createMorphAt(dom.childAt(element1, [2, 0]),-1,-1);
+        var morph2 = dom.createMorphAt(dom.childAt(element2, [0, 0]),-1,-1);
+        var morph3 = dom.createMorphAt(dom.childAt(element3, [0, 0]),-1,-1);
+        var morph4 = dom.createMorphAt(dom.childAt(element4, [3]),2,3);
+        var morph5 = dom.createMorphAt(dom.childAt(element4, [5]),2,3);
+        var morph6 = dom.createMorphAt(dom.childAt(element4, [7]),2,3);
+        var morph7 = dom.createMorphAt(dom.childAt(element4, [9]),2,3);
+        var morph8 = dom.createMorphAt(dom.childAt(element4, [11]),2,3);
+        var morph9 = dom.createMorphAt(dom.childAt(element4, [13]),2,3);
+        var morph10 = dom.createMorphAt(dom.childAt(element4, [15]),2,3);
+        var morph11 = dom.createMorphAt(dom.childAt(element4, [17]),2,3);
+        var morph12 = dom.createMorphAt(dom.childAt(element4, [19]),2,3);
+        var morph13 = dom.createMorphAt(dom.childAt(element5, [1]),-1,-1);
+        var morph14 = dom.createMorphAt(dom.childAt(element5, [3]),-1,-1);
+        var morph15 = dom.createMorphAt(dom.childAt(element5, [5]),-1,-1);
+        block(env, morph0, context, "link-to", ["business-edit"], {}, child0, null);
+        inline(env, morph1, context, "fa-icon", ["glass"], {});
+        element(env, element2, context, "action", ["editDestroy"], {});
+        inline(env, morph2, context, "fa-icon", ["star-o"], {});
+        element(env, element3, context, "action", ["cancelDestroy"], {});
+        inline(env, morph3, context, "fa-icon", ["minus-circle"], {});
+        element(env, element4, context, "action", ["saveProfile"], {"on": "submit"});
+        inline(env, morph4, context, "input", [], {"placeholder": "Business Name", "value": get(env, context, "session.currentUser.businessName")});
+        inline(env, morph5, context, "input", [], {"placeholder": "First Name", "value": get(env, context, "session.currentUser.firstName")});
+        inline(env, morph6, context, "input", [], {"placeholder": "Last Name", "value": get(env, context, "session.currentUser.lastName")});
+        inline(env, morph7, context, "input", [], {"placeholder": "Address", "value": get(env, context, "session.currentUser.address")});
+        inline(env, morph8, context, "input", [], {"placeholder": "City", "value": get(env, context, "session.currentUser.city")});
+        inline(env, morph9, context, "input", [], {"placeholder": "State", "value": get(env, context, "session.currentUser.state")});
+        inline(env, morph10, context, "input", [], {"placeholder": "Zip", "value": get(env, context, "session.currentUser.zip")});
+        inline(env, morph11, context, "input", [], {"placeholder": "Website", "value": get(env, context, "session.currentUser.website")});
+        inline(env, morph12, context, "input", [], {"placeholder": "Business Hours", "value": get(env, context, "session.currentUser.businessHours")});
+        inline(env, morph13, context, "fa-icon", ["facebook"], {});
+        inline(env, morph14, context, "fa-icon", ["twitter"], {});
+        inline(env, morph15, context, "fa-icon", ["instagram"], {});
         return fragment;
       }
     };
@@ -7888,6 +8062,16 @@ define('barapp/tests/components/loading-icon.jshint', function () {
   });
 
 });
+define('barapp/tests/controllers/application.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - controllers');
+  test('controllers/application.js should pass jshint', function() { 
+    ok(true, 'controllers/application.js should pass jshint.'); 
+  });
+
+});
 define('barapp/tests/controllers/business-edit.jshint', function () {
 
   'use strict';
@@ -7945,6 +8129,16 @@ define('barapp/tests/controllers/my-business-profile.jshint', function () {
   module('JSHint - controllers');
   test('controllers/my-business-profile.js should pass jshint', function() { 
     ok(true, 'controllers/my-business-profile.js should pass jshint.'); 
+  });
+
+});
+define('barapp/tests/controllers/my-business-profile/edit.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - controllers/my-business-profile');
+  test('controllers/my-business-profile/edit.js should pass jshint', function() { 
+    ok(true, 'controllers/my-business-profile/edit.js should pass jshint.'); 
   });
 
 });
@@ -8165,6 +8359,16 @@ define('barapp/tests/routes/my-business-profile.jshint', function () {
   });
 
 });
+define('barapp/tests/routes/my-business-profile/edit.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - routes/my-business-profile');
+  test('routes/my-business-profile/edit.js should pass jshint', function() { 
+    ok(true, 'routes/my-business-profile/edit.js should pass jshint.'); 
+  });
+
+});
 define('barapp/tests/routes/new.jshint', function () {
 
   'use strict';
@@ -8372,6 +8576,32 @@ define('barapp/tests/unit/components/loading-icon-test.jshint', function () {
   });
 
 });
+define('barapp/tests/unit/controllers/application-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleFor("controller:application", {});
+
+  // Replace this with your real tests.
+  ember_qunit.test("it exists", function (assert) {
+    var controller = this.subject();
+    assert.ok(controller);
+  });
+
+  // Specify the other units that are required for this test.
+  // needs: ['controller:foo']
+
+});
+define('barapp/tests/unit/controllers/application-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/controllers');
+  test('unit/controllers/application-test.js should pass jshint', function() { 
+    ok(true, 'unit/controllers/application-test.js should pass jshint.'); 
+  });
+
+});
 define('barapp/tests/unit/controllers/business-edit-test', ['ember-qunit'], function (ember_qunit) {
 
   'use strict';
@@ -8551,6 +8781,32 @@ define('barapp/tests/unit/controllers/my-business-profile-test.jshint', function
   module('JSHint - unit/controllers');
   test('unit/controllers/my-business-profile-test.js should pass jshint', function() { 
     ok(true, 'unit/controllers/my-business-profile-test.js should pass jshint.'); 
+  });
+
+});
+define('barapp/tests/unit/controllers/my-business-profile/edit-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleFor("controller:my-business-profile/edit", {});
+
+  // Replace this with your real tests.
+  ember_qunit.test("it exists", function (assert) {
+    var controller = this.subject();
+    assert.ok(controller);
+  });
+
+  // Specify the other units that are required for this test.
+  // needs: ['controller:foo']
+
+});
+define('barapp/tests/unit/controllers/my-business-profile/edit-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/controllers/my-business-profile');
+  test('unit/controllers/my-business-profile/edit-test.js should pass jshint', function() { 
+    ok(true, 'unit/controllers/my-business-profile/edit-test.js should pass jshint.'); 
   });
 
 });
@@ -9010,6 +9266,31 @@ define('barapp/tests/unit/routes/my-business-profile-test.jshint', function () {
   module('JSHint - unit/routes');
   test('unit/routes/my-business-profile-test.js should pass jshint', function() { 
     ok(true, 'unit/routes/my-business-profile-test.js should pass jshint.'); 
+  });
+
+});
+define('barapp/tests/unit/routes/my-business-profile/edit-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleFor("route:my-business-profile/edit", {});
+
+  ember_qunit.test("it exists", function (assert) {
+    var route = this.subject();
+    assert.ok(route);
+  });
+
+  // Specify the other units that are required for this test.
+  // needs: ['controller:foo']
+
+});
+define('barapp/tests/unit/routes/my-business-profile/edit-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/routes/my-business-profile');
+  test('unit/routes/my-business-profile/edit-test.js should pass jshint', function() { 
+    ok(true, 'unit/routes/my-business-profile/edit-test.js should pass jshint.'); 
   });
 
 });

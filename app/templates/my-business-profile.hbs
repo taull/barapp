@@ -40,13 +40,13 @@
       </ul>
     </div> -->
 
-    <div class="business-numbers">
+    <!-- <div class="business-numbers">
       <ul>
         <li><div class="numbers">340</div><div class="numbers-label"><p>Followers</p></div></li>
         <li><div class="numbers">126</div><div class="numbers-label"><p>Posts</p></div></li>
         <li><div class="numbers">4</div><div class="numbers-label"><p>Bartenders</p></div></li>
       </ul>
-    </div>
+    </div> -->
 
 
 
@@ -55,21 +55,37 @@
 
     <div class="business-profile-info">
       <ul>
-        <li class="business-profile-name"><div class="profile-span-name business-profile-span-name">{{session.currentUser.businessName}} {{fa-icon "check-circle"}} </div></li>
-        <li class="business-profile-address1"><div class="profile-span-name profile-span-address"><a href="/">{{session.currentUser.address}}</a> • {{session.currentUser.city}}, {{session.currentUser.state}} {{session.currentUser.zip}}</div></li>
-        <li class="business-profile-hours"><div class="profile-span-name">{{session.currentUser.businessHours}}</div></li>
-        <li class="business-profile-website"><div class="profile-span-name"><a {{bind-attr href="session.currentUser.website"}}>{{session.currentUser.website}}</a></div></li>
+        <li class="business-profile-name">
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="profile-span-name business-profile-span-name">{{session.currentUser.businessName}}</div>
+        </li>
+        <li class="business-profile-address1">
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="profile-span-name profile-span-address"><a href="/">{{session.currentUser.address}}</a></div>
+        </li>
+        <li class="business-profile-address1">
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="profile-span-name profile-span-address"><a href="/">{{session.currentUser.city}}, {{session.currentUser.state}} {{session.currentUser.zip}}</a></div>
+        </li>
+        <li class="business-profile-website">
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="profile-span-name"><a {{bind-attr href="session.currentUser.website"}}>{{session.currentUser.website}}</a></div>
+        </li>
+        <li class="business-profile-hours">
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="profile-span-name">{{session.currentUser.businessHours}}</div>
+        </li>
       </ul>
-        <div class="business-profile-info-edit">
+        <!-- <div class="business-profile-info-edit">
           {{#link-to 'business-edit'}}
             {{fa-icon "magic"}} Edit Info
           {{/link-to}}
-        </div>
-      <div class="business-profile-background-edit">
+        </div> -->
+      <!-- <div class="business-profile-background-edit">
         {{#link-to 'cover-upload'}}
           {{fa-icon "file-image-o"}} Upload Cover Image
         {{/link-to}}
-      </div>
+      </div> -->
     </div>
 
 
@@ -145,11 +161,11 @@
                 <li class="feed-status">{{post.status}}</li>
                 <!-- <li class="feed-social-buttons"><span class="feed-addfavorite">{{fa-icon "plus"}} Add to Favorites</span></li> -->
               </div>
-              <div class="interaction-container">
+              <!-- <div class="interaction-container">
                 <li class="interaction-like">Like</li>
                 <li class="interaction-follow">Follow</li>
                 <li class="interaction-hide">Hide</li>
-              </div>
+              </div> -->
             </li>
 
             {{/each}}

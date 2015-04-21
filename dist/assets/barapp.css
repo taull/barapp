@@ -28,7 +28,9 @@ body {
   margin: 0 auto;
   font-size: 0;
   background: #f8f8f8;
-  margin-top: 0px; }
+  margin-top: 0px;
+  position: relative;
+  top: 50px; }
 
 .loading {
   width: 100%;
@@ -46,10 +48,9 @@ header {
   height: 50px;
   z-index: 15;
   margin: 0 auto;
-  position: relative;
+  position: fixed;
   top: 0;
-  background: #111;
-  border-bottom: 1px solid #f0f0f0; }
+  background: #111; }
 
 .header-container {
   margin: 0 auto;
@@ -180,17 +181,20 @@ header {
   overflow: hidden; }
 
 /* End Sidebar */
+.feed-search {
+  border-bottom: 1px solid #dfdfdf; }
+
 .feed-search input {
   width: 100%;
   height: 72px;
   border: none;
-  background: rgba(255, 255, 255, 0.1);
   /* padding-left: 10px; */
   outline: none;
   text-align: center;
   font-size: 20px;
   font-weight: 300;
-  color: #f8f8f8; }
+  color: #000;
+  background: #f8f8f8; }
 
 /* MENU SLIDE IN */
 .header-nav-wrap {
@@ -285,7 +289,8 @@ header {
 
 .business-numbers ul {
   list-style: none;
-  padding-left: 0; }
+  padding-left: 0;
+  display: none; }
 
 .numbers {
   font-size: 24px;
@@ -698,11 +703,18 @@ select:focus {
   font-weight: 300; }
 
 /* Sign In */
-.login-container, .business-signup-container, .business-edit-container {
+.login-container, .business-signup-container {
   position: relative;
   width: 414px;
   margin: 0 auto;
   padding: 0px 50px 50px 50px;
+  margin-top: 0px; }
+
+.business-edit-container {
+  position: relative;
+  width: 414px;
+  margin: 0 auto;
+  padding: 64px 0px 50px 0px;
   margin-top: 0px; }
 
 .cover-upload-container {
@@ -723,24 +735,96 @@ select:focus {
 .login {
   width: 414px;
   margin: 0 auto;
-  margin-top: 25px;
-  background: rgba(0, 0, 0, 0.8);
+  margin-top: 75px;
   font-size: 0; }
 
-.login-email input, .login-password input, .user-signup-firstname input, .user-signup-lastname input, .user-signup-email input, .user-signup-confirm input, .user-signup-password input, .business-signup-name input, .business-signup-firstname input, .business-signup-lastname input, .business-signup-email input, .business-signup-confirm input, .business-signup-password input, .business-edit-name input, .business-edit-firstname input, .business-edit-lastname input, .business-edit-email input, .business-edit-address input, .business-edit-city input, .business-edit-state input, .business-edit-zip input, .business-edit-website input, .business-edit-hours input {
+.login-body {
+  width: 100%;
+  position: fixed;
+  z-index: -1;
+  background: #000;
+  height: 100%;
+  top: 0; }
+
+.login-email input, .login-password input, .user-signup-firstname input, .user-signup-lastname input, .user-signup-email input, .user-signup-confirm input, .user-signup-password input, .business-signup-name input, .business-signup-firstname input, .business-signup-lastname input, .business-signup-email input, .business-signup-confirm input, .business-signup-password input {
   transition: 1000ms;
   border: none;
   border-radius: 0px;
   width: 100%;
-  height: 50px;
+  height: 40px;
   padding: 0px 5px;
-  font-size: 14px;
+  font-size: 16px;
   text-align: center;
   background: #f8f8f8;
   color: #333; }
-  .login-email input:focus, .login-password input:focus, .user-signup-firstname input:focus, .user-signup-lastname input:focus, .user-signup-email input:focus, .user-signup-confirm input:focus, .user-signup-password input:focus, .business-signup-name input:focus, .business-signup-firstname input:focus, .business-signup-lastname input:focus, .business-signup-email input:focus, .business-signup-confirm input:focus, .business-signup-password input:focus, .business-edit-name input:focus, .business-edit-firstname input:focus, .business-edit-lastname input:focus, .business-edit-email input:focus, .business-edit-address input:focus, .business-edit-city input:focus, .business-edit-state input:focus, .business-edit-zip input:focus, .business-edit-website input:focus, .business-edit-hours input:focus {
+  .login-email input:focus, .login-password input:focus, .user-signup-firstname input:focus, .user-signup-lastname input:focus, .user-signup-email input:focus, .user-signup-confirm input:focus, .user-signup-password input:focus, .business-signup-name input:focus, .business-signup-firstname input:focus, .business-signup-lastname input:focus, .business-signup-email input:focus, .business-signup-confirm input:focus, .business-signup-password input:focus {
     border: none;
     outline: 0; }
+
+.business-edit-firstname, .business-edit-lastname, .business-edit-city, .business-edit-state, .business-edit-zip {
+  display: inline-block; }
+
+.business-edit-firstname input, .business-edit-lastname input {
+  transition: 1000ms;
+  display: inline-block;
+  border: none;
+  border-radius: 0px;
+  width: 100px;
+  height: 50px;
+  padding: 0px 5px;
+  font-size: 14px;
+  text-align: left;
+  background: #f8f8f8;
+  color: #333;
+  margin-right: 10px;
+  font-weight: 300; }
+  .business-edit-firstname input:focus, .business-edit-lastname input:focus {
+    border: none;
+    outline: 0; }
+
+.business-edit-city input, .business-edit-state input, .business-edit-zip input {
+  transition: 1000ms;
+  display: inline-block;
+  border: none;
+  border-radius: 0px;
+  height: 50px;
+  padding: 0px 5px;
+  font-size: 14px;
+  text-align: left;
+  background: #f8f8f8;
+  color: #333;
+  margin-right: 10px;
+  font-weight: 300;
+  width: 68%; }
+  .business-edit-city input:focus, .business-edit-state input:focus, .business-edit-zip input:focus {
+    border: none;
+    outline: 0; }
+
+.business-edit-name input, .business-edit-email input, .business-edit-address input, .business-edit-website input, .business-edit-hours input {
+  transition: 1000ms;
+  display: inline-block;
+  border: none;
+  border-radius: 0px;
+  width: 300px;
+  height: 50px;
+  padding: 0px 5px;
+  font-size: 14px;
+  text-align: left;
+  background: #f8f8f8;
+  color: #333;
+  font-weight: 300; }
+  .business-edit-name input:focus, .business-edit-email input:focus, .business-edit-address input:focus, .business-edit-website input:focus, .business-edit-hours input:focus {
+    border: none;
+    outline: 0; }
+
+.input-label {
+  width: 10px;
+  color: #555;
+  font-size: 8px;
+  text-align: right;
+  display: inline-block;
+  margin-right: 5px;
+  font-weight: 100; }
 
 .business-edit-name input, .login-email input, .business-signup-firstname input {
   margin-top: 0; }
@@ -778,6 +862,77 @@ select:focus {
 .login-password input {
   font-size: 14px; }
 
+/* SLIDEOUT NAV */
+/* Navigation Menu - Background */
+.navigation {
+  /* critical sizing and position styles */
+  width: 240px;
+  height: 100%;
+  position: fixed;
+  top: 50px;
+  right: 0;
+  bottom: 0;
+  left: -240px;
+  z-index: 50;
+  transition: 1000ms;
+  /* non-critical appearance styles */
+  list-style: none;
+  background: #111;
+  padding-left: 0; }
+
+/* Navigation Menu - List items */
+.nav-item {
+  /* non-critical appearance styles */
+  width: 240px;
+  border-bottom: 1px solid #333;
+  padding: 15px 30px; }
+
+.nav-item a {
+  /* non-critical appearance styles */
+  display: block;
+  color: #fff;
+  text-decoration: none; }
+
+.open-nav {
+  left: 0; }
+
+.navigation-open {
+  color: #fff;
+  transition: 1000ms;
+  display: inline-block;
+  font-size: 24px; }
+
+#nav-toggle span, #nav-toggle span:before, #nav-toggle span:after {
+  cursor: pointer;
+  border-radius: 1px;
+  height: 5px;
+  width: 35px;
+  background: white;
+  position: absolute;
+  display: block;
+  content: ''; }
+
+#nav-toggle span:before {
+  top: -10px; }
+
+#nav-toggle span:after {
+  bottom: -10px; }
+
+.rotate-positive {
+  transform: rotate(45deg);
+  top: 0; }
+
+.rotate-negative {
+  transform: rotate(-45deg);
+  top: 0; }
+
+.navigation-close {
+  color: #ff0000;
+  transition: 1000ms;
+  display: inline-block;
+  font-size: 24px; }
+
+/* END SLIDEOUT NAV */
 .login-submit {
   display: inline-block;
   width: 50%; }
@@ -819,15 +974,22 @@ select:focus {
   color: #5385d6; }
 
 .loggedin-link {
-  width: 100px;
   position: relative;
   margin: 0 auto;
-  float: right;
   text-align: right;
-  padding-right: 15px; }
+  float: right;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 3px;
+  background: #039BE5;
+  height: 30px;
+  color: #fff;
+  border-radius: 3px;
+  text-transform: uppercase;
+  margin-top: 3px; }
 
 .loggedin-link a {
-  color: #f8f8f8;
+  color: #fff;
   text-decoration: none;
   font-size: 10px; }
 
@@ -903,25 +1065,81 @@ select:focus {
   border-radius: 0px;
   margin-bottom: 100px;
 } */
+.business-edit-name {
+  border-top: 1px solid #dfdfdf; }
+
+.business-edit-name, .business-edit-firstname, .business-edit-lastname, .business-edit-address, .business-edit-website, .business-edit-hours, .business-edit-city, .business-edit-zip, .business-edit-state {
+  border-bottom: 1px solid #f0f0f0;
+  border-top: 1px solid #fff;
+  width: 100%; }
+
+.business-edit-name, .business-edit-firstname, .business-edit-address, .business-edit-website, .business-edit-hours, .business-edit-city {
+  padding-left: 30px; }
+
+.business-edit-state {
+  width: 20%; }
+
+.business-edit-city, .business-edit-zip {
+  width: 40%; }
+
+.business-edit-firstname, .business-edit-lastname {
+  width: 50%; }
+
 .business-signup-name input::-webkit-input-placeholder, .business-signup-firstname input::-webkit-input-placeholder, .business-signup-lastname input::-webkit-input-placeholder, .business-signup-email input::-webkit-input-placeholder, .business-signup-confirm input::-webkit-input-placeholder, .business-signup-password input::-webkit-input-placeholder {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: lighter; }
 
-.business-signup-submit button, .business-edit-submit button {
-  height: 50px;
+.business-edit-CS {
   width: 100%;
-  background: rgba(83, 133, 214, 0.8);
+  border-bottom: 1px solid #dfdfdf; }
+
+.business-edit-submit, .business-edit-cancel {
+  display: inline-block; }
+
+.business-signup-submit button, .business-edit-submit button {
   border: none;
-  border-radius: 0px;
-  text-align: center;
-  margin-top: 12px;
-  padding-top: 7px;
   transition: 500ms;
-  font-family: sans-serif;
-  font-size: 14px;
+  font-size: 12px;
+  width: 100px;
   color: #fff;
   font-weight: 300;
-  text-decoration: none; }
+  text-decoration: none;
+  position: relative;
+  margin: 0 auto;
+  text-align: center;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 3px;
+  background: #558B2F;
+  height: 30px;
+  color: #fff;
+  border-radius: 0px 4px 4px 0px;
+  text-transform: uppercase;
+  margin-top: 3px;
+  margin-left: 0px; }
+
+.business-edit-cancel button {
+  border: none;
+  transition: 500ms;
+  width: 100px;
+  font-size: 12px;
+  color: #fff;
+  font-weight: 300;
+  text-decoration: none;
+  position: relative;
+  margin: 0 auto;
+  text-align: center;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 3px;
+  background: #7CB342;
+  height: 30px;
+  color: #fff;
+  border-radius: 4px 0px 0px 4px;
+  text-transform: uppercase;
+  margin-top: 3px;
+  margin-left: 20px;
+  margin-bottom: 15px; }
 
 label#largeFile:after {
   position: absolute;
@@ -1044,28 +1262,24 @@ label#largeFile input#file {
   width: 75px; }
 
 .profile-span-name {
-  display: block;
+  display: inline-block;
   text-align: left;
-  padding-left: 15px;
+  padding-left: 10px;
   font-size: 12px;
   font-weight: normal;
-  color: #fff;
+  color: #000;
   padding-top: 5px;
-  font-weight: 300;
-  text-shadow: 1px 1px 5px #000; }
+  font-weight: 300; }
 
 .profile-span-name a {
   text-decoration: none;
-  color: #f8f8f8; }
+  color: #000; }
 
 .profile-span-name a:hover {
   color: #FFF; }
 
 .profile-span-username {
   font-size: 16px; }
-
-.profile-span-address {
-  padding-top: 10px; }
 
 .business-profile-info {
   position: relative;
@@ -1075,9 +1289,7 @@ label#largeFile input#file {
   color: #000;
   font-size: 12px;
   font-weight: normal;
-  padding-top: 10px;
-  height: 200px;
-  display: none; }
+  height: 200px; }
 
 .business-profile-background {
   background: url('/assets/images/henrysbar.jpg');
@@ -1102,10 +1314,15 @@ label#largeFile input#file {
   padding-left: 0; }
 
 .business-profile-info li {
-  padding-top: 0px; }
+  padding-top: 12px;
+  width: 100%;
+  border-bottom: 1px solid #f0f0f0;
+  border-top: 1px solid #fff;
+  height: 50px;
+  padding-left: 15px; }
 
 .business-profile-span-name {
-  font-size: 18px; }
+  font-size: 12px; }
 
 .business-profile-feed {
   display: block;
@@ -1193,7 +1410,7 @@ label#largeFile input#file {
   resize: none;
   padding: 5px 30px 5px 15px;
   color: #000;
-  font-weight: 100; }
+  font-weight: 300; }
 
 .post-status {
   margin-left: auto;

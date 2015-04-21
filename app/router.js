@@ -11,7 +11,9 @@ Router.map(function() {
   this.route('user-profile');
   this.route('user-signup');
   this.route('business-signup');
-  this.route('my-business-profile');
+  this.route('my-business-profile', function() {
+    this.route('edit');
+  });
   this.route('signin');
   this.route('signup-type');
   this.route('login');
