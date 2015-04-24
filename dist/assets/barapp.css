@@ -16,7 +16,7 @@ html {
 
 body {
   /*   background: url(/assets/images/nightlife.jpg) no-repeat center center fixed;
- */
+     */
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -24,13 +24,14 @@ body {
   background: #f8f8f8; }
 
 .body-container {
-  width: 735px;
+  width: 1000px;
   margin: 0 auto;
   font-size: 0;
   background: #f8f8f8;
   margin-top: 0px;
   position: relative;
-  top: 50px; }
+  top: 60px;
+  transition: 1000ms; }
 
 .loading {
   width: 100%;
@@ -45,18 +46,19 @@ input {
 
 header {
   width: 100%;
-  height: 50px;
+  height: 60px;
   z-index: 15;
   margin: 0 auto;
   position: fixed;
   top: 0;
-  background: #111; }
+  background: #000;
+  transition: 1000ms; }
 
 .header-container {
   margin: 0 auto;
   margin-top: 0px;
   z-index: 15;
-  padding: 6px 10px 0px 10px; }
+  padding: 6px 15px 0px 15px; }
 
 .header-container p {
   text-align: left;
@@ -67,7 +69,7 @@ header {
   font-size: 36px; }
 
 .header-logo {
-  background: url('/assets/images/barkeep-logo.png');
+  background: url("/assets/images/barkeep-logo.png");
   background-size: contain;
   width: 150px;
   height: 25px;
@@ -132,7 +134,7 @@ header {
 
 /* Sidebar */
 .my-sidebar-left {
-  width: 320px;
+  width: 25%;
   display: inline-block;
   vertical-align: top;
   position: absolute;
@@ -147,6 +149,15 @@ header {
   position: fixed;
   box-shadow: 0 0 6px 0px #000;
   display: none; }
+
+.sidebar-right {
+  width: 25%;
+  border-top: 1px solid #dfdfdf;
+  background: transparent;
+  display: inline-block;
+  position: relative;
+  vertical-align: top;
+  margin-top: 112px; }
 
 .sidebar-photos {
   font-size: 10px;
@@ -263,6 +274,15 @@ header {
 .tools-icon {
   font-size: 24px; }
 
+.editfeed-icon {
+  font-size: 12px;
+  display: inline-block;
+  color: #ccc;
+  padding-right: 5px; }
+
+.edit-destroy p, .cancel-destroy p {
+  display: inline-block; }
+
 .tools-label {
   display: block;
   text-transform: uppercase;
@@ -352,7 +372,7 @@ select {
   z-index: 20;
   text-align: center;
   border: none;
-  background: rgba(255, 255, 255, 0.1);
+  background: #222;
   border-radius: 0;
   font-size: 14px;
   font-weight: 300;
@@ -481,7 +501,9 @@ select:focus {
 
 .feed-avatar {
   width: 7%;
-  display: inline-block; }
+  display: inline-block;
+  padding-top: 18px;
+  padding-left: 15px; }
 
 .feed-avatar-container {
   width: 0%;
@@ -506,23 +528,29 @@ select:focus {
 
 .edit-destroy, .cancel-destroy {
   border: 0;
-  width: 33.33%;
   display: inline-block;
   background: transparent;
   outline: 0;
   font-size: 0;
   color: #000;
   font-weight: 300;
-  padding: 0; }
+  padding: 0;
+  float: right;
+  padding-top: 10px; }
   .edit-destroy:focus, .cancel-destroy:focus {
     outline: 0; }
 
 .edit-feed, .cancel-edit {
-  width: 100% !important; }
+  width: 100% !important;
+  font-size: 14px;
+  font-weight: 300;
+  display: inline-block;
+  padding-right: 15px; }
 
 .cancel-edit {
-  background: #F44336;
-  box-shadow: none; }
+  background: transparent;
+  box-shadow: none;
+  color: #B71C1C; }
 
 .business-config {
   background: #ccc; }
@@ -710,6 +738,12 @@ select:focus {
   padding: 0px 50px 50px 50px;
   margin-top: 0px; }
 
+.business-signup-container {
+  position: relative;
+  width: 414px;
+  margin: 0 auto;
+  padding: 0px 50px 50px 50px; }
+
 .business-edit-container {
   position: relative;
   width: 414px;
@@ -726,27 +760,71 @@ select:focus {
 
 .login-wrap {
   display: inline-block;
-  width: 414px;
+  width: 50%;
   background: #f8f8f8;
   background-size: cover;
-  margin-left: 320px;
-  border-left: 1px solid #dfdfdf; }
+  margin-left: 25%;
+  border-left: 1px solid #dfdfdf;
+  border-right: 1px solid #dfdfdf; }
 
 .login {
   width: 414px;
   margin: 0 auto;
   margin-top: 75px;
-  font-size: 0; }
+  font-size: 0;
+  transition: 1000ms; }
+
+.login-hidden {
+  position: relative;
+  top: -400px;
+  transition: 1000ms; }
+
+.register {
+  width: 414px;
+  position: relative;
+  font-size: 0;
+  background: #000;
+  margin: 0 auto; }
+
+.register-active {
+  margin: 0 auto;
+  left: 0;
+  margin-top: -400px; }
 
 .login-body {
   width: 100%;
   position: fixed;
   z-index: -1;
-  background: #000;
+  background: url('/assets/images/night-street.jpg');
+  background-size: cover;
+  background-position: center center;
   height: 100%;
   top: 0; }
 
-.login-email input, .login-password input, .user-signup-firstname input, .user-signup-lastname input, .user-signup-email input, .user-signup-confirm input, .user-signup-password input, .business-signup-name input, .business-signup-firstname input, .business-signup-lastname input, .business-signup-email input, .business-signup-confirm input, .business-signup-password input {
+.business-signup-firstname, .business-signup-lastname, .business-signup-email, .business-signup-password {
+  border-bottom: 1px solid #dfdfdf;
+  border-top: 1px solid #fff;
+  background: #f8f8f8;
+  padding-left: 15px; }
+
+.business-signup-name input, .business-signup-firstname input, .business-signup-lastname input, .business-signup-email input, .business-signup-confirm input, .business-signup-password input {
+  transition: 1000ms;
+  border: none;
+  border-radius: 0px;
+  width: 284px;
+  height: 50px;
+  padding: 0px 10px;
+  font-size: 14px;
+  text-align: left;
+  background: #f8f8f8;
+  color: #333;
+  display: inline-block;
+  font-weight: 300; }
+  .business-signup-name input:focus, .business-signup-firstname input:focus, .business-signup-lastname input:focus, .business-signup-email input:focus, .business-signup-confirm input:focus, .business-signup-password input:focus {
+    border: none;
+    outline: 0; }
+
+.user-signup-firstname input, .user-signup-lastname input, .user-signup-email input, .user-signup-confirm input, .user-signup-password input {
   transition: 1000ms;
   border: none;
   border-radius: 0px;
@@ -757,7 +835,22 @@ select:focus {
   text-align: center;
   background: #f8f8f8;
   color: #333; }
-  .login-email input:focus, .login-password input:focus, .user-signup-firstname input:focus, .user-signup-lastname input:focus, .user-signup-email input:focus, .user-signup-confirm input:focus, .user-signup-password input:focus, .business-signup-name input:focus, .business-signup-firstname input:focus, .business-signup-lastname input:focus, .business-signup-email input:focus, .business-signup-confirm input:focus, .business-signup-password input:focus {
+  .user-signup-firstname input:focus, .user-signup-lastname input:focus, .user-signup-email input:focus, .user-signup-confirm input:focus, .user-signup-password input:focus {
+    border: none;
+    outline: 0; }
+
+.login-email input, .login-password input {
+  transition: 1000ms;
+  border: none;
+  border-radius: 0px;
+  width: 264px;
+  height: 50px;
+  padding: 0px 15px 0px 0px;
+  font-size: 16px;
+  text-align: center;
+  background: #f8f8f8;
+  color: #333; }
+  .login-email input:focus, .login-password input:focus {
     border: none;
     outline: 0; }
 
@@ -831,25 +924,25 @@ select:focus {
 
 .login-header {
   width: 100%;
-  background: url('/assets/images/bartender.png');
+  background: url("/assets/images/bartender.png");
   background-size: cover;
   height: 200px; }
 
 .register-header {
   width: 100%;
-  background: url('/assets/images/bartender-girl.png');
+  background: url("/assets/images/bartender-girl.png");
   background-size: cover;
   height: 200px; }
 
 .business-edit-header {
   width: 100%;
-  background: url('/assets/images/bartender-guy.png');
+  background: url("/assets/images/bartender-guy.png");
   background-size: cover;
   height: 196px; }
 
 .index-header {
   width: 100%;
-  background: url('/assets/images/henrysbar.jpg');
+  background: url("/assets/images/henrysbar.jpg");
   background-size: cover;
   background-position: 0px -6px;
   height: 200px;
@@ -862,39 +955,68 @@ select:focus {
 .login-password input {
   font-size: 14px; }
 
+.login-email {
+  border-bottom: 1px solid #dfdfdf; }
+
+.login-password {
+  border-top: 1px solid #fff; }
+
+.login-password, .login-email {
+  background: #f8f8f8;
+  padding-left: 10px; }
+
 /* SLIDEOUT NAV */
 /* Navigation Menu - Background */
 .navigation {
-  /* critical sizing and position styles */
-  width: 240px;
-  height: 100%;
+  width: 100%;
+  height: 70px;
   position: fixed;
-  top: 50px;
   right: 0;
-  bottom: 0;
-  left: -240px;
-  z-index: 50;
-  transition: 1000ms;
-  /* non-critical appearance styles */
+  bottom: -70px;
+  /* left: -70px; */
+  z-index: 14;
+  transition: 250ms;
   list-style: none;
-  background: #111;
-  padding-left: 0; }
+  background: #222;
+  padding-left: 0;
+  font-size: 0;
+  border-top: 1px solid #000;
+  text-align: center; }
 
 /* Navigation Menu - List items */
 .nav-item {
-  /* non-critical appearance styles */
-  width: 240px;
-  border-bottom: 1px solid #333;
-  padding: 15px 30px; }
+  width: 80px;
+  /* border-bottom: 1px solid #000; */
+  /* border-top: 1px solid #000; */
+  padding: 16px 0px 19px 0px;
+  background: #222;
+  text-align: center;
+  display: inline-block;
+  border-right: 1px solid #333;
+  border-left: 1px solid #000; }
+
+.nav-item:first-child {
+  border-left: 0; }
+
+.nav-item:last-child {
+  border-right: 0; }
 
 .nav-item a {
-  /* non-critical appearance styles */
-  display: block;
-  color: #fff;
-  text-decoration: none; }
+  display: inline-block;
+  color: #dfdfdf;
+  text-decoration: none;
+  font-weight: 300; }
+
+.nav-label {
+  font-size: 28px;
+  color: #dfdfdf; }
 
 .open-nav {
-  left: 0; }
+  bottom: 0;
+  z-index: 1000; }
+
+.open-nav-body {
+  margin-top: 50px; }
 
 .navigation-open {
   color: #fff;
@@ -1006,7 +1128,7 @@ select:focus {
   color: #fff;
   border-radius: 0px 3px 3px 0px;
   text-transform: uppercase;
-  margin-top: 3px; }
+  margin-top: 10px; }
 
 .sign-out a {
   color: #fff;
@@ -1014,14 +1136,14 @@ select:focus {
   font-size: 8px; }
 
 .sign-out p {
-  color: #000;
-  font-size: 12px;
+  color: #fff;
+  font-size: 8px;
   display: inline-block;
-  border-right: 1px solid #555;
+  /* border-right: 1px solid #555; */
   vertical-align: top;
-  padding: 2px 5px 0px 0px;
-  height: 20px;
-  text-transform: none;
+  padding: 6px 5px 0px 0px;
+  /* height: 20px; */
+  text-transform: uppercase;
   margin-top: 2px;
   font-weight: normal; }
 
@@ -1033,8 +1155,8 @@ select:focus {
   padding: 30px; }
 
 .user-signup-firstname input::-webkit-input-placeholder, .user-signup-lastname input::-webkit-input-placeholder, .user-signup-email input::-webkit-input-placeholder, .user-signup-confirm input::-webkit-input-placeholder, .user-signup-password input::-webkit-input-placeholder {
-  font-size: 14px;
-  font-weight: lighter; }
+  font-size: 16px;
+  font-weight: 300; }
 
 .user-signup-password, .user-signup-confirm, .user-signup-email, .user-signup-lastname {
   margin-top: 15px; }
@@ -1086,8 +1208,8 @@ select:focus {
   width: 50%; }
 
 .business-signup-name input::-webkit-input-placeholder, .business-signup-firstname input::-webkit-input-placeholder, .business-signup-lastname input::-webkit-input-placeholder, .business-signup-email input::-webkit-input-placeholder, .business-signup-confirm input::-webkit-input-placeholder, .business-signup-password input::-webkit-input-placeholder {
-  font-size: 12px;
-  font-weight: lighter; }
+  font-size: 14px;
+  font-weight: 300; }
 
 .business-edit-CS {
   width: 100%;
@@ -1242,7 +1364,7 @@ label#largeFile input#file {
   width: 200px;
   height: 200px;
   border: 1px solid #dfdfdf;
-  background: url('http://devinestreetcolumbiasc.com/public/files/img/henrysbar.jpg') no-repeat center center;
+  background: url("http://devinestreetcolumbiasc.com/public/files/img/henrysbar.jpg") no-repeat center center;
   background-size: auto 200px;
   display: none; }
 
@@ -1258,16 +1380,26 @@ label#largeFile input#file {
   text-align: center;
   font-size: 10px;
   font-weight: lighter;
-  color: #f8f8f8;
+  color: #000;
   width: 75px; }
 
 .profile-span-name {
   display: inline-block;
   text-align: left;
   padding-left: 10px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: normal;
   color: #000;
+  padding-top: 5px;
+  font-weight: 300; }
+
+.profile-span-name-dark {
+  display: inline-block;
+  text-align: left;
+  padding-left: 10px;
+  font-size: 14px;
+  font-weight: normal;
+  color: #dfdfdf;
   padding-top: 5px;
   font-weight: 300; }
 
@@ -1276,6 +1408,13 @@ label#largeFile input#file {
   color: #000; }
 
 .profile-span-name a:hover {
+  color: #000; }
+
+.profile-span-name-dark a {
+  text-decoration: none;
+  color: #FFF; }
+
+.profile-span-name-dark a:hover {
   color: #FFF; }
 
 .profile-span-username {
@@ -1283,16 +1422,41 @@ label#largeFile input#file {
 
 .business-profile-info {
   position: relative;
-  width: 320px;
+  width: 250px;
   display: block;
   vertical-align: top;
   color: #000;
+  border-top: 1px solid #dfdfdf;
+  top: 112px;
   font-size: 12px;
   font-weight: normal;
-  height: 200px; }
+  background: transparent;
+  transition: 250ms; }
+
+.business-profile-info-dark {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  display: none;
+  vertical-align: top;
+  color: #000;
+  top: -100%;
+  font-size: 12px;
+  font-weight: normal;
+  background: #222;
+  transition: 250ms; }
+
+.open-info {
+  top: 50px; }
+
+.info-close, .info-open {
+  color: #dfdfdf;
+  display: inline-block;
+  padding-left: 15px;
+  font-size: 0; }
 
 .business-profile-background {
-  background: url('/assets/images/henrysbar.jpg');
+  background: url("/assets/images/henrysbar.jpg");
   background-size: cover;
   width: 100%;
   height: 200px;
@@ -1309,7 +1473,7 @@ label#largeFile input#file {
   bottom: 0;
   background: rgba(0, 0, 0, 0.2); }
 
-.business-profile-info ul {
+.business-profile-info ul, .business-profile-info-dark ul {
   list-style: none;
   padding-left: 0; }
 
@@ -1318,11 +1482,21 @@ label#largeFile input#file {
   width: 100%;
   border-bottom: 1px solid #f0f0f0;
   border-top: 1px solid #fff;
+  background: transparent;
   height: 50px;
   padding-left: 15px; }
 
+.business-profile-info-dark li {
+  padding-top: 12px;
+  width: 100%;
+  border-bottom: 1px solid #000;
+  border-top: 1px solid #333;
+  background: #222;
+  height: 50px;
+  padding-left: 35px; }
+
 .business-profile-span-name {
-  font-size: 12px; }
+  font-size: 14px; }
 
 .business-profile-feed {
   display: block;
@@ -1358,7 +1532,7 @@ label#largeFile input#file {
 .uber-logo {
   width: 30px;
   height: 30px;
-  background: url('/assets/images/uber-logo.png');
+  background: url("/assets/images/uber-logo.png");
   background-size: contain;
   position: absolute; }
 
@@ -1448,6 +1622,13 @@ label#largeFile input#file {
 .fa-bars {
   text-shadow: 1px 1px 6px #0A4590; }
 
+.camera-icon {
+  font-size: 14px;
+  display: inline-block;
+  float: left;
+  margin-left: 8px;
+  padding-top: 4px; }
+
 .home-icon {
   font-size: 30px;
   color: #000;
@@ -1462,7 +1643,7 @@ label#largeFile input#file {
   color: #000;
   display: inline-block;
   font-size: 8px;
-  margin-top: 3px;
+  margin-top: 10px;
   padding-right: 15px;
   padding-left: 15px;
   padding-top: 11px;
@@ -1589,29 +1770,29 @@ footer {
 
 @media only screen and (min-device-width: 320px) and (max-device-width: 413px) and (orientation: portrait) {
   .header-container {
-    width: 320px; }
+    width: 100%; }
   .login-container {
-    width: 320px; }
+    width: 100%; }
   .footer-container {
-    width: 320px; }
+    width: 100%; }
   .fixed-footer {
     width: 320px; }
   .header-nav {
-    width: 320px; }
+    width: 100%; }
   .homepage-container {
-    width: 320px; }
+    width: 100%; }
   .feed-avatar-container {
     display: none; }
   .feed-info-container {
     width: 100%; }
   .feed-container {
-    width: 320px; }
+    width: 100%; }
   .slider-wrap {
-    width: 320px; }
+    width: 100%; }
   .slider-container {
     width: 220px; }
   .business-profile-container, .business-profile-background, .business-profile-info, .business-profile-feed, .business-edit-container, .business-signup-container, .login-wrap {
-    width: 320px; }
+    width: 100%; }
   .login-header {
     height: 150px; }
   .bartender-info {
@@ -1625,24 +1806,55 @@ footer {
     padding: 10px; }
   .my-sidebar-left {
     display: block;
-    width: 320px; }
+    width: 100%; }
   .login-wrap {
-    display: block; } }
+    display: block;
+    width: 100%; }
+  .sidebar-right {
+    width: 100%;
+    display: block; }
+  .business-profile-info {
+    display: none; }
+  .business-profile-info-dark {
+    display: block; }
+  .open-info {
+    top: 60px; }
+  .info-open, .info-close {
+    font-size: 36px; }
+  .profile-span-name {
+    color: #dfdfdf; }
+  .profile-span-name a {
+    color: #dfdfdf; } }
 
 @media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (device-width: 375px) and (device-height: 667px) {
   .my-sidebar-left {
-    width: 414px;
+    width: 100%;
     display: block; }
   .login-wrap {
-    margin-left: 414px;
-    display: block; } }
+    width: 100%;
+    display: block; }
+  .sidebar-right {
+    width: 100%;
+    display: block; }
+  .business-profile-info {
+    display: none; }
+  .business-profile-info-dark {
+    display: block; }
+  .open-info {
+    top: 60px; }
+  .info-open, .info-close {
+    font-size: 36px; }
+  .profile-span-name-dark {
+    color: #dfdfdf; }
+  .profile-span-name-dark a {
+    color: #dfdfdf; } }
 
 @media screen and (max-width: 734px) {
   .body-container {
-    width: 414px;
+    width: 100%;
     position: relative; }
   .my-sidebar-left {
-    width: 414px;
+    width: 100%;
     display: block;
     position: relative;
     top: 0; }
@@ -1653,8 +1865,24 @@ footer {
     margin-left: 0px;
     display: block;
     position: relative;
-    border-left: 0; }
+    border-left: 0;
+    width: 100%; }
+  .sidebar-right {
+    width: 100%;
+    display: block; }
   .footer-container {
-    width: 414px; } }
+    width: 100%; }
+  .business-profile-info {
+    display: none; }
+  .business-profile-info-dark {
+    display: block; }
+  .open-info {
+    top: 60px; }
+  .info-open, .info-close {
+    font-size: 36px; }
+  .profile-span-name-dark {
+    color: #dfdfdf; }
+  .profile-span-name-dark a {
+    color: #dfdfdf; } }
 
 /*# sourceMappingURL=barapp.css.map */

@@ -11,15 +11,11 @@
       </div>
     </div> -->
 
-    <div class="business-tools">
+    <!-- <div class="business-tools">
       <ul>
         {{#link-to 'business-edit'}}<li><div class="tools-icon">{{fa-icon "pencil-square-o"}}</div><div class="tools-label"><p>Edit Profile</p></div></li>{{/link-to}}
-        <li><div class="tools-icon">{{fa-icon "glass"}}</div><div class="tools-label"><p>Edit Specials</p></div></li>
-        <button {{action 'editDestroy'}} class="edit-destroy"><li class="edit-feed"><div class="tools-icon">{{fa-icon "star-o"}}</div><div class="tools-label"><p>Edit Posts</p></div></li></button>
-        <button {{action 'cancelDestroy'}} class="cancel-destroy hidden"><li class="cancel-edit hidden"><div class="tools-icon">{{fa-icon "minus-circle"}}</div><div class="tools-label"><p>Cancel</p></div></li></button>
-
       </ul>
-    </div>
+    </div> -->
 
     <!-- <div class="business-tools2">
       <ul>
@@ -50,7 +46,40 @@
 
 
 
-
+    <div class="business-profile-info-dark">
+      <ul>
+        <li class="business-profile-name">
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="profile-span-name-dark business-profile-span-name">{{session.currentUser.businessName}}</div>
+        </li>
+        <li class="business-profile-address1">
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="profile-span-name-dark profile-span-address"><a href="/">{{session.currentUser.address}}</a></div>
+        </li>
+        <li class="business-profile-address1">
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="profile-span-name-dark profile-span-address"><a href="/">{{session.currentUser.city}}, {{session.currentUser.state}} {{session.currentUser.zip}}</a></div>
+        </li>
+        <li class="business-profile-website">
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="profile-span-name-dark"><a {{bind-attr href="session.currentUser.website"}}>{{session.currentUser.website}}</a></div>
+        </li>
+        <li class="business-profile-hours">
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="profile-span-name-dark">{{session.currentUser.businessHours}}</div>
+        </li>
+      </ul>
+        <!-- <div class="business-profile-info-edit">
+          {{#link-to 'business-edit'}}
+            {{fa-icon "magic"}} Edit Info
+          {{/link-to}}
+        </div> -->
+      <!-- <div class="business-profile-background-edit">
+        {{#link-to 'cover-upload'}}
+          {{fa-icon "file-image-o"}} Upload Cover Image
+        {{/link-to}}
+      </div> -->
+    </div>
 
 
     <div class="business-profile-info">
@@ -75,6 +104,7 @@
           <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
           <div class="profile-span-name">{{session.currentUser.businessHours}}</div>
         </li>
+
       </ul>
         <!-- <div class="business-profile-info-edit">
           {{#link-to 'business-edit'}}
@@ -129,7 +159,16 @@
           <button {{action 'editDestroy'}} class="edit-destroy">Edit Feed</button>
           <button {{action 'cancelDestroy'}} class="cancel-destroy hidden">Cancel</button>
           <button type="submit" class="post-status">Post</button>
+          <div class="camera-icon">{{fa-icon "camera"}}</div>
+          <button {{action 'editDestroy'}} class="edit-destroy"><li class="edit-feed"><div class="editfeed-icon">{{fa-icon "chevron-left"}}</div><p>Edit Feed</p></li></button>
+          <button {{action 'cancelDestroy'}} class="cancel-destroy hidden"><li class="cancel-edit hidden"><div class="editfeed-icon">{{fa-icon "chevron-left"}}</div><p>Cancel</p></li></button>
+
         </div>
+
+
+
+
+
 
       </form>
 
@@ -177,6 +216,10 @@
 <!-- Put this line in the #each over -->
 <!-- <li><button {{action 'destroyStatus' post}}>Destroy</button></li> -->
 
+  </div>
+
+  <div class="sidebar-right">
+    <p>Another COlumn</p>
   </div>
 
 

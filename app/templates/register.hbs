@@ -1,4 +1,9 @@
-<div class="login-wrap">
+{{outlet}}
+
+<div class="login-body">
+</div>
+
+<div class="register">
 
   <div class="register-header">
     <div class="bartender-info">
@@ -14,19 +19,27 @@
 
 
     <div class="business-signup-firstname">
+      <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+
       {{input placeholder="First Name" value=firstName required=true}}
     </div>
 
     <div class="business-signup-lastname">
+      <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+
       {{input placeholder="Last Name" value=lastName required=true}}
     </div>
 
     <div class="business-signup-email">
-      {{input placeholder="email" type='email' value=username required=true}}
+      <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+
+      {{input placeholder="Email" type='email' value=username required=true}}
     </div>
 
     <div class="business-signup-password">
-      {{input placeholder="password" type='password' value=password required=true}}
+      <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+
+      {{input placeholder="Password" type='password' value=password required=true}}
     </div>
 
     <div class="business-signup-type">
@@ -78,5 +91,3 @@
   </div>
 
 </div>
-
-{{outlet}}

@@ -15,29 +15,27 @@
 
     <form {{action 'authenticate' on='submit'}}>
       <div class="login-email">
+        <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
         {{input value=identification placeholder='Enter Email' type='email'}}
       </div>
       <div class="login-password">
+        <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
         {{input value=password placeholder='Enter Password' type='password'}}
       </div>
-
-        {{#link-to 'register'}}
-        <div class="new-user-link">Register</div>
-        {{/link-to}}
-
+      {{#link-to 'register'}}
+      <div class="new-user-link">Register</div>
+      {{/link-to}}
       <div class="login-submit">
         <button type="submit">Login</button>
       </div>
     </form>
 
-
-
-
-
   </div>
 </div>
 
-  <div class="footer-container">
+  
+
+<!--   <div class="footer-container">
 
     <div class="footer-copyright">
       <p>Barkeep® 2015 All Rights Reserved</p>
@@ -49,4 +47,4 @@
       <a href="/">{{fa-icon "instagram"}}</a>
     </div>
 
-  </div>
+  </div> -->

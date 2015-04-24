@@ -10,5 +10,6 @@ export default Ember.Controller.extend (LoginControllerMixin, {
   //     this.transitionToRoute('index');
   //   }, 2000);
   // }
+  
 
 });
