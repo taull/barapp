@@ -2,7 +2,6 @@
 <div class="body-container">
   <div class="my-sidebar-left">
 
-
     <!-- <div class="index-header">
       <div class="bartender-info">
         <p class="bartender-info-name">{{session.currentUser.businessName}}</p>
@@ -10,41 +9,6 @@
         <p class="bartender-info-location">{{session.currentUser.city}}, {{session.currentUser.state}} {{session.currentUser.zip}}</p>
       </div>
     </div> -->
-
-    <!-- <div class="business-tools">
-      <ul>
-        {{#link-to 'business-edit'}}<li><div class="tools-icon">{{fa-icon "pencil-square-o"}}</div><div class="tools-label"><p>Edit Profile</p></div></li>{{/link-to}}
-      </ul>
-    </div> -->
-
-    <!-- <div class="business-tools2">
-      <ul>
-        <li><div class="tools-icon">{{fa-icon "check-circle"}}</div><div class="tools-label"><p>Edit Profile</p></div></li>
-        <li><div class="tools-icon">{{fa-icon "check-circle"}}</div><div class="tools-label"><p>Edit Specials</p></div></li>
-        <li><div class="tools-icon">{{fa-icon "check-circle"}}</div><div class="tools-label"><p>Edit Profile</p></div></li>
-      </ul>
-    </div> -->
-
-
-<!--
-    <div class="sidebar-photos">
-      <ul>
-        <li><div class="photo-container"><img src="/assets/images/henrysbar.jpg" class="photo-thumbnail"></div></li>
-        <li><div class="photo-container"><img src="/assets/images/nightlife.jpg" class="photo-thumbnail"></div></li>
-        <li><div class="photo-container"><img src="/assets/images/barscene.jpg" class="photo-thumbnail"></div></li>
-
-      </ul>
-    </div> -->
-
-    <!-- <div class="business-numbers">
-      <ul>
-        <li><div class="numbers">340</div><div class="numbers-label"><p>Followers</p></div></li>
-        <li><div class="numbers">126</div><div class="numbers-label"><p>Posts</p></div></li>
-        <li><div class="numbers">4</div><div class="numbers-label"><p>Bartenders</p></div></li>
-      </ul>
-    </div> -->
-
-
 
     <div class="business-profile-info-dark">
       <ul>
@@ -74,11 +38,6 @@
             {{fa-icon "magic"}} Edit Info
           {{/link-to}}
         </div> -->
-      <!-- <div class="business-profile-background-edit">
-        {{#link-to 'cover-upload'}}
-          {{fa-icon "file-image-o"}} Upload Cover Image
-        {{/link-to}}
-      </div> -->
     </div>
 
 
@@ -111,22 +70,14 @@
             {{fa-icon "magic"}} Edit Info
           {{/link-to}}
         </div> -->
-      <!-- <div class="business-profile-background-edit">
-        {{#link-to 'cover-upload'}}
-          {{fa-icon "file-image-o"}} Upload Cover Image
-        {{/link-to}}
-      </div> -->
+
     </div>
-
-
-
-
-
   </div>
+
   <div class="business-profile-info-wrap">
   </div>
-  <div class="login-wrap">
 
+  <div class="login-wrap">
 
     <div class="business-profile-status">
       <form {{action 'postStatus' on="submit"}}>
@@ -164,23 +115,13 @@
           <button {{action 'cancelDestroy'}} class="cancel-destroy hidden"><li class="cancel-edit hidden"><div class="editfeed-icon">{{fa-icon "chevron-left"}}</div><p>Cancel</p></li></button>
 
         </div>
-
-
-
-
-
-
       </form>
-
     </div>
 
   <div class="business-profile-feed">
-
-
-
     <div class="feed-container">
-      <div class="business-config">
 
+      <div class="business-config">
       </div>
 
       <div class="feed-post">
@@ -219,26 +160,82 @@
   </div>
 
   <div class="sidebar-right">
-    <p>Another COlumn</p>
+
+    <div class="calendar-heading">
+      <p>Daily Specials</p>
+    </div>
+
+<!--     <div id="accordion">
+      <h4 class="accordion-toggle default">Accordion 1</h4>
+      <div class="accordion-content">
+        <p>Cras malesuada ultrices augue molestie risus.</p>
+      </div>
+      <h4 class="accordion-toggle">Accordion 2</h4>
+      <div class="accordion-content">
+        <p>Lorem ipsum dolor sit amet mauris eu turpis.</p>
+      </div>
+      <h4 class="accordion-toggle">Accordion 3</h4>
+      <div class="accordion-content">
+        <p>Vivamus facilisisnibh scelerisque laoreet.</p>
+      </div>
+    </div> -->
+
+    <div class="business-calendar">
+      <ul>
+        <li>
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="business-calendar-day">Sunday</div>
+        </li>
+        <li>
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="business-calendar-day">Monday</div>
+        </li>
+        <li>
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="business-calendar-day">Tuesday</div>
+        </li>
+        <li>
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="business-calendar-day">Wednesday</div>
+        </li>
+        <li>
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="business-calendar-day">Thursday</div>
+        </li>
+                <li>
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="business-calendar-day">Friday</div>
+        </li>
+        <li>
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="business-calendar-day">Saturday</div>
+        </li>
+
+      </ul>  
+    </div>
+
   </div>
-
-
 </div>
 
-
-<!-- <div class="weekly-calendar">
-  <ul>
-    <li><p class="calendar-day">Sunday</p><div class="calendar-hours">Closed{{session.currentUser.sundayHours}}</div><div class="business-specials">{{session.currentUser.sundaySpecial}}</div></li>
-    <li><p class="calendar-day">Monday</p><div class="calendar-hours">2:30pm – 12:00am{{session.currentUser.mondayHours}}</div><div class="business-specials">{{session.currentUser.mondaySpecial}}</div></li>
-    <li><p class="calendar-day">Tuesday</p><div class="calendar-hours">2:30pm – 12:00am{{session.currentUser.tuesdayHours}}</div><div class="business-specials">{{session.currentUser.tuesdaySpecial}}</div></li>
-    <li><p class="calendar-day">Wednesday</p><div class="calendar-hours">2:30pm – 12:00am{{session.currentUser.wednesdayHours}}</div><div class="business-specials">{{session.currentUser.wednesdaySpecial}}</div></li>
-    <li><p class="calendar-day">Thursday</p><div class="calendar-hours">2:30pm – 12:00am{{session.currentUser.thursdayHours}}</div><div class="business-specials">{{session.currentUser.thursdaySpecial}}</div></li>
-    <li><p class="calendar-day">Friday</p><div class="calendar-hours">2:30pm – 2:00am{{session.currentUser.fridayHours}}</div><div class="business-specials">{{session.currentUser.fridaySpecial}}</div></li>
-    <li><p class="calendar-day">Saturday</p><div class="calendar-hours">2:30pm – 2:00am{{session.currentUser.saturdayHours}}</div><div class="business-specials">{{session.currentUser.saturdaySpecial}}</div></li>
+  <div class="navigation-container">
+    <div class="navigation-open" {{action 'openNav'}}>{{fa-icon "chevron-up"}}</div>
+    <div class="navigation-close hidden" {{action 'closeNav'}}>{{fa-icon "chevron-up"}}</div>
+  </div>
+  <ul class="navigation">
+    <li class="nav-item">
+      <div class="nav-label"><p>{{fa-icon "home"}}</p></div>
+    </li>
+    <li class="nav-item">
+      <div class="nav-label"><p>{{fa-icon "user"}}</p></div>
+    </li>
+    <li class="nav-item">
+      <div class="nav-label"><p>{{fa-icon "star"}}</p></div>
+    </li>
+    <li class="nav-item">
+      <div class="nav-label"><p>{{fa-icon "cog"}}</p></div>
+    </li>
   </ul>
-</div> -->
-
-<div class="footer-container">
+<!-- <div class="footer-container">
 
   <div class="footer-copyright">
     <p>Barkeep® 2015 All Rights Reserved</p>
@@ -250,4 +247,4 @@
     <a href="/">{{fa-icon "instagram"}}</a>
   </div>
 
-</div>
+</div> -->

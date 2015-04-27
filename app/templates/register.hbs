@@ -43,9 +43,13 @@
     </div>
 
     <div class="business-signup-type">
-      <p>Select User Type:</p>
+      <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
       {{view "select" class="select-user-type" value=userType content=typeUser}}
     </div>
+
+    {{#link-to 'login'}}
+      <div class="new-user-link">Login</div>
+    {{/link-to}}
 
     <div class="business-signup-submit">
       <button type="submit">Register</button>

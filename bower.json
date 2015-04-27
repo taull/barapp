@@ -14,7 +14,7 @@
     "ember-simple-auth": "0.7.3",
     "bourbon": "~4.2.1",
     "neat": "~1.7.1",
-    "jquery-ui": "~1.11.3",
+    "jquery-ui": "~1.11.4",
     "foundation": "~5.5.1",
     "font-awesome": "~4.3.0",
     "dom-ruler": "0.1.4",

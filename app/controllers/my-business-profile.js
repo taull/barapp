@@ -51,9 +51,43 @@ export default Ember.Controller.extend({
 
     },
 
+      openNav: function(){
+        Ember.$('.navigation').addClass('open-nav');
+        Ember.$('header').addClass('open-nav-header');
 
+        Ember.$('.navigation-open').addClass('hidden');
+        Ember.$('.navigation-close').removeClass('hidden');
+
+        Ember.$('.navigation-container').addClass('navigation-container-open');
+
+
+
+    },
+
+      closeNav: function(){
+        Ember.$('.navigation').removeClass('open-nav');
+        Ember.$('header').removeClass('open-nav-header');
+
+        Ember.$('.navigation-open').removeClass('hidden');
+        Ember.$('.navigation-close').addClass('hidden');
+
+        Ember.$('.navigation-container').removeClass('navigation-container-open');
+
+
+    },
 
 }
 
 
 });
+
+
+    // Ember.$('#accordion').find('.accordion-toggle').click(function(){
+
+    //   //Expand or collapse this panel
+    //   $(this).next().slideToggle('fast');
+
+    //   //Hide the other panels
+    //   Ember.$(".accordion-content").not($(this).next()).slideUp('fast');
+
+    // });

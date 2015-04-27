@@ -134,30 +134,37 @@ header {
 
 /* Sidebar */
 .my-sidebar-left {
-  width: 25%;
+  width: 30%;
   display: inline-block;
   vertical-align: top;
   position: absolute;
-  z-index: 5; }
+  z-index: 5;
+  /* height: 300px; */
+  margin-top: 112px;
+  border-top: 1px solid #dfdfdf; }
 
 .my-sidebar-right {
-  width: 200px;
+  width: 320px;
+  border-top: 1px solid #f0f0f0;
+  background: #222;
   display: inline-block;
-  background: rgba(255, 255, 255, 0.1);
-  height: 100%;
-  vertical-align: top;
   position: fixed;
-  box-shadow: 0 0 6px 0px #000;
-  display: none; }
+  vertical-align: top;
+  margin-top: 30px;
+  height: 100%;
+  transition: 250ms; }
 
 .sidebar-right {
-  width: 25%;
-  border-top: 1px solid #dfdfdf;
-  background: transparent;
+  width: 320px;
+  background: #222;
   display: inline-block;
-  position: relative;
+  position: fixed;
   vertical-align: top;
-  margin-top: 112px; }
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  right: -320px;
+  transition: 250ms; }
 
 .sidebar-photos {
   font-size: 10px;
@@ -377,18 +384,20 @@ select {
   font-size: 14px;
   font-weight: 300;
   color: #dfdfdf;
-  text-indent: 15px; }
+  text-indent: 10px; }
 
 select:focus {
   outline: 0;
-  border: 0;
-  background: rgba(255, 255, 255, 0.2); }
+  border: 0; }
 
 .select-user-type {
   position: relative;
-  width: 100%;
+  width: 284px;
   max-width: 375px;
-  margin: 0 auto; }
+  margin: 0 auto;
+  display: inline-block;
+  background: none;
+  color: #333; }
 
 .select-user-type:after {
   content: "";
@@ -410,13 +419,8 @@ select:focus {
 
 .business-signup-type {
   text-align: left;
-  margin-top: 35px; }
-
-.business-signup-type p {
-  color: #dfdfdf;
-  font-weight: 300;
-  font-size: 12px;
-  padding-bottom: 5px; }
+  background: #f8f8f8;
+  padding-left: 15px; }
 
 /* jQuery Slider */
 #jquery-slider > span {
@@ -763,7 +767,7 @@ select:focus {
   width: 50%;
   background: #f8f8f8;
   background-size: cover;
-  margin-left: 25%;
+  margin-left: 30%;
   border-left: 1px solid #dfdfdf;
   border-right: 1px solid #dfdfdf; }
 
@@ -783,8 +787,8 @@ select:focus {
   width: 414px;
   position: relative;
   font-size: 0;
-  background: #000;
-  margin: 0 auto; }
+  margin: 0 auto;
+  margin-top: 50px; }
 
 .register-active {
   margin: 0 auto;
@@ -1018,6 +1022,30 @@ select:focus {
 .open-nav-body {
   margin-top: 50px; }
 
+.navigation-wrap {
+  width: 100%;
+  text-align: center; }
+
+.navigation-container {
+  width: 75px;
+  height: 75px;
+  border-radius: 50px;
+  margin: 0 auto;
+  position: fixed;
+  bottom: -48px;
+  background: #222;
+  padding-left: 24px;
+  padding-top: 0px;
+  z-index: 1;
+  transition: 250ms;
+  /* top: 50%; */
+  left: 50%;
+  /* margin-top: -100px; */
+  margin-left: -37.5px; }
+
+.navigation-container-open {
+  bottom: 22px; }
+
 .navigation-open {
   color: #fff;
   transition: 1000ms;
@@ -1218,11 +1246,15 @@ select:focus {
 .business-edit-submit, .business-edit-cancel {
   display: inline-block; }
 
+.business-signup-submit {
+  display: inline-block;
+  width: 50%; }
+
 .business-signup-submit button, .business-edit-submit button {
   border: none;
   transition: 500ms;
   font-size: 12px;
-  width: 100px;
+  width: 100%;
   color: #fff;
   font-weight: 300;
   text-decoration: none;
@@ -1231,14 +1263,12 @@ select:focus {
   text-align: center;
   padding-left: 15px;
   padding-right: 15px;
-  padding-top: 3px;
   background: #558B2F;
-  height: 30px;
+  height: 45px;
   color: #fff;
-  border-radius: 0px 4px 4px 0px;
   text-transform: uppercase;
-  margin-top: 3px;
-  margin-left: 0px; }
+  margin-left: 0px;
+  display: inline-block; }
 
 .business-edit-cancel button {
   border: none;
@@ -1422,12 +1452,12 @@ label#largeFile input#file {
 
 .business-profile-info {
   position: relative;
-  width: 250px;
+  width: 100%;
   display: block;
   vertical-align: top;
   color: #000;
-  border-top: 1px solid #dfdfdf;
-  top: 112px;
+  /* border-top: 1px solid #dfdfdf; */
+  /* top: 50px; */
   font-size: 12px;
   font-weight: normal;
   background: transparent;
@@ -1446,13 +1476,61 @@ label#largeFile input#file {
   background: #222;
   transition: 250ms; }
 
+.business-calendar {
+  position: relative;
+  width: 100%;
+  display: block;
+  vertical-align: top;
+  color: #000;
+  font-size: 12px;
+  font-weight: normal;
+  background: transparent;
+  transition: 250ms;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #333; }
+
+.business-calendar ul {
+  list-style: none;
+  padding-left: 0; }
+
+.business-calendar li {
+  padding-top: 12px;
+  width: 100%;
+  border-bottom: 1px solid #000;
+  border-top: 1px solid #333;
+  background: transparent;
+  height: 50px;
+  padding-left: 15px; }
+
+.business-calendar-day {
+  display: inline-block;
+  color: #dfdfdf; }
+
+.calendar-heading {
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  font-size: 20px;
+  color: #7CB342;
+  margin-top: 112px;
+  padding-left: 15px;
+  font-weight: 100;
+  padding-bottom: 10px; }
+
+.calendar-close, .calendar-open {
+  color: #dfdfdf;
+  display: inline-block;
+  font-size: 20px; }
+
+.open-calendar {
+  right: 0;
+  transition: 250ms; }
+
 .open-info {
   top: 50px; }
 
 .info-close, .info-open {
   color: #dfdfdf;
   display: inline-block;
-  padding-left: 15px;
   font-size: 0; }
 
 .business-profile-background {
@@ -1545,6 +1623,25 @@ label#largeFile input#file {
   background: #ff0000;
   border-radius: 4px 0px 0px 4px; }
 
+/* ACCORDIAN */
+/*#accordion {
+    font-size: 12px;
+    color:#dfdfdf;
+}
+
+.accordion-toggle {
+    cursor: pointer;
+}
+.accordion-content {
+    display: none;
+    color:#fff;
+    font-size:12px;
+}
+.accordion-content.default {
+    display: block;
+    font-size:12px;
+    color:#fff;
+}*/
 /* MY BUSINESS PROFILE */
 .business-profile-info-edit {
   padding-top: 35px;
@@ -1806,13 +1903,24 @@ footer {
     padding: 10px; }
   .my-sidebar-left {
     display: block;
-    width: 100%; }
+    width: 100%;
+    border-top: 0; }
   .login-wrap {
     display: block;
     width: 100%; }
   .sidebar-right {
     width: 100%;
+    position: fixed;
+    transition: 250ms;
+    right: -100%;
     display: block; }
+  .open-calendar {
+    position: fixed;
+    right: 0;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    transition: 250ms; }
   .business-profile-info {
     display: none; }
   .business-profile-info-dark {
@@ -1829,13 +1937,24 @@ footer {
 @media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (device-width: 375px) and (device-height: 667px) {
   .my-sidebar-left {
     width: 100%;
-    display: block; }
+    display: block;
+    border-top: 0; }
   .login-wrap {
     width: 100%;
     display: block; }
   .sidebar-right {
     width: 100%;
+    position: fixed;
+    transition: 250ms;
+    right: -100%;
     display: block; }
+  .open-calendar {
+    position: fixed;
+    right: 0;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    transition: 250ms; }
   .business-profile-info {
     display: none; }
   .business-profile-info-dark {
@@ -1857,7 +1976,8 @@ footer {
     width: 100%;
     display: block;
     position: relative;
-    top: 0; }
+    top: 0;
+    border-top: 0; }
   .sidebar-photos {
     padding: 25px 10px;
     text-align: center; }
@@ -1869,7 +1989,17 @@ footer {
     width: 100%; }
   .sidebar-right {
     width: 100%;
+    position: fixed;
+    transition: 250ms;
+    right: -100%;
     display: block; }
+  .open-calendar {
+    position: fixed;
+    right: 0;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    transition: 250ms; }
   .footer-container {
     width: 100%; }
   .business-profile-info {

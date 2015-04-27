@@ -39,6 +39,22 @@ export default Ember.Controller.extend({
         Ember.$('.info-close').addClass('hidden');
         Ember.$('.info-open').removeClass('hidden');
     },
+
+      openCalendar: function(){
+        Ember.$('.sidebar-right').addClass('open-calendar');
+
+        Ember.$('.calendar-close').removeClass('hidden');
+        Ember.$('.calendar-open').addClass('hidden');
+
+
+    },
+
+      closeCalendar: function(){
+        Ember.$('.sidebar-right').removeClass('open-calendar');
+
+        Ember.$('.calendar-close').addClass('hidden');
+        Ember.$('.calendar-open').removeClass('hidden');
+    },
 }
 
 });

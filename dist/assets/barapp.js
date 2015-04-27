@@ -2,6 +2,13 @@
 
 /* jshint ignore:end */
 
+define('barapp/adapters/beer', ['exports', 'barapp/adapters/application'], function (exports, ApplicationAdapter) {
+
+	'use strict';
+
+	exports['default'] = ApplicationAdapter['default'].extend({});
+
+});
 define('barapp/adapters/my-business-profile', ['exports', 'ic-ajax', 'ember'], function (exports, ajax, Ember) {
 
   'use strict';
@@ -547,6 +554,20 @@ define('barapp/controllers/application', ['exports', 'ember'], function (exports
 
         Ember['default'].$(".info-close").addClass("hidden");
         Ember['default'].$(".info-open").removeClass("hidden");
+      },
+
+      openCalendar: function openCalendar() {
+        Ember['default'].$(".sidebar-right").addClass("open-calendar");
+
+        Ember['default'].$(".calendar-close").removeClass("hidden");
+        Ember['default'].$(".calendar-open").addClass("hidden");
+      },
+
+      closeCalendar: function closeCalendar() {
+        Ember['default'].$(".sidebar-right").removeClass("open-calendar");
+
+        Ember['default'].$(".calendar-close").addClass("hidden");
+        Ember['default'].$(".calendar-open").removeClass("hidden");
       } }
 
   });
@@ -707,9 +728,39 @@ define('barapp/controllers/my-business-profile', ['exports', 'ember'], function 
         Ember['default'].$(".cancel-edit").addClass("hidden");
         Ember['default'].$(".cancel-destroy").addClass("hidden");
         Ember['default'].$(".feed-info-container").removeClass("feed-info-editing");
+      },
+
+      openNav: function openNav() {
+        Ember['default'].$(".navigation").addClass("open-nav");
+        Ember['default'].$("header").addClass("open-nav-header");
+
+        Ember['default'].$(".navigation-open").addClass("hidden");
+        Ember['default'].$(".navigation-close").removeClass("hidden");
+
+        Ember['default'].$(".navigation-container").addClass("navigation-container-open");
+      },
+
+      closeNav: function closeNav() {
+        Ember['default'].$(".navigation").removeClass("open-nav");
+        Ember['default'].$("header").removeClass("open-nav-header");
+
+        Ember['default'].$(".navigation-open").removeClass("hidden");
+        Ember['default'].$(".navigation-close").addClass("hidden");
+
+        Ember['default'].$(".navigation-container").removeClass("navigation-container-open");
       } }
 
   });
+
+  // Ember.$('#accordion').find('.accordion-toggle').click(function(){
+
+  //   //Expand or collapse this panel
+  //   $(this).next().slideToggle('fast');
+
+  //   //Hide the other panels
+  //   Ember.$(".accordion-content").not($(this).next()).slideUp('fast');
+
+  // });
 
 });
 define('barapp/controllers/my-business-profile/edit', ['exports', 'ember'], function (exports, Ember) {
@@ -1496,7 +1547,7 @@ define('barapp/templates/application', ['exports'], function (exports) {
         hasRendered: false,
         build: function build(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("      ");
+          var el1 = dom.createTextNode("    \n      ");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
           dom.setAttribute(el1,"class","info-open");
@@ -1506,7 +1557,17 @@ define('barapp/templates/application', ['exports'], function (exports) {
           var el1 = dom.createElement("div");
           dom.setAttribute(el1,"class","info-close hidden");
           dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n\n      ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("div");
+          dom.setAttribute(el1,"class","calendar-open");
+          dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n      ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("div");
+          dom.setAttribute(el1,"class","calendar-close hidden");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n\n      ");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
           dom.setAttribute(el1,"class","sign-out");
@@ -1549,15 +1610,23 @@ define('barapp/templates/application', ['exports'], function (exports) {
           var element0 = dom.childAt(fragment, [1]);
           var element1 = dom.childAt(fragment, [3]);
           var element2 = dom.childAt(fragment, [5]);
+          var element3 = dom.childAt(fragment, [7]);
+          var element4 = dom.childAt(fragment, [9]);
           var morph0 = dom.createMorphAt(element0,-1,-1);
           var morph1 = dom.createMorphAt(element1,-1,-1);
-          var morph2 = dom.createMorphAt(fragment,6,7,contextualElement);
+          var morph2 = dom.createMorphAt(element2,-1,-1);
+          var morph3 = dom.createMorphAt(element3,-1,-1);
+          var morph4 = dom.createMorphAt(fragment,10,11,contextualElement);
           element(env, element0, context, "action", ["openInfo"], {});
           inline(env, morph0, context, "fa-icon", ["info-circle"], {});
           element(env, element1, context, "action", ["closeInfo"], {});
           inline(env, morph1, context, "fa-icon", ["info-circle"], {});
-          element(env, element2, context, "action", ["invalidateSession"], {});
-          block(env, morph2, context, "link-to", ["my-business-profile"], {}, child0, null);
+          element(env, element2, context, "action", ["openCalendar"], {});
+          inline(env, morph2, context, "fa-icon", ["calendar"], {});
+          element(env, element3, context, "action", ["closeCalendar"], {});
+          inline(env, morph3, context, "fa-icon", ["calendar"], {});
+          element(env, element4, context, "action", ["invalidateSession"], {});
+          block(env, morph4, context, "link-to", ["my-business-profile"], {}, child0, null);
           return fragment;
         }
       };
@@ -1825,68 +1894,7 @@ define('barapp/templates/application', ['exports'], function (exports) {
       hasRendered: false,
       build: function build(dom) {
         var el0 = dom.createDocumentFragment();
-        var el1 = dom.createElement("ul");
-        dom.setAttribute(el1,"class","navigation");
-        var el2 = dom.createTextNode("\n    ");
-        dom.appendChild(el1, el2);
-        var el2 = dom.createElement("li");
-        dom.setAttribute(el2,"class","nav-item");
-        var el3 = dom.createTextNode("\n      ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","nav-label");
-        var el4 = dom.createElement("p");
-        dom.appendChild(el3, el4);
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
-        dom.appendChild(el2, el3);
-        dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
-        dom.appendChild(el1, el2);
-        var el2 = dom.createElement("li");
-        dom.setAttribute(el2,"class","nav-item");
-        var el3 = dom.createTextNode("\n      ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","nav-label");
-        var el4 = dom.createElement("p");
-        dom.appendChild(el3, el4);
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
-        dom.appendChild(el2, el3);
-        dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
-        dom.appendChild(el1, el2);
-        var el2 = dom.createElement("li");
-        dom.setAttribute(el2,"class","nav-item");
-        var el3 = dom.createTextNode("\n      ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","nav-label");
-        var el4 = dom.createElement("p");
-        dom.appendChild(el3, el4);
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
-        dom.appendChild(el2, el3);
-        dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
-        dom.appendChild(el1, el2);
-        var el2 = dom.createElement("li");
-        dom.setAttribute(el2,"class","nav-item");
-        var el3 = dom.createTextNode("\n      ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","nav-label");
-        var el4 = dom.createElement("p");
-        dom.appendChild(el3, el4);
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
-        dom.appendChild(el2, el3);
-        dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n");
-        dom.appendChild(el1, el2);
-        dom.appendChild(el0, el1);
-        var el1 = dom.createTextNode("\n\n");
+        var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("header");
         var el2 = dom.createTextNode("\n\n  ");
@@ -1898,16 +1906,6 @@ define('barapp/templates/application', ['exports'], function (exports) {
         var el3 = dom.createComment(" <p>{{session.currentUser.firstName}}</p> ");
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n    ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","navigation-open");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("div");
-        dom.setAttribute(el3,"class","navigation-close hidden");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n\n\n    ");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("div");
         dom.setAttribute(el3,"class","home-icon");
@@ -1938,7 +1936,7 @@ define('barapp/templates/application', ['exports'], function (exports) {
         dom.appendChild(el0, el1);
         var el1 = dom.createTextNode("\n\n");
         dom.appendChild(el0, el1);
-        var el1 = dom.createTextNode("\n\n\n\n");
+        var el1 = dom.createTextNode("\n\n\n\n\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("footer");
         var el2 = dom.createTextNode("\n");
@@ -1971,7 +1969,7 @@ define('barapp/templates/application', ['exports'], function (exports) {
       },
       render: function render(context, env, contextualElement) {
         var dom = env.dom;
-        var hooks = env.hooks, inline = hooks.inline, element = hooks.element, block = hooks.block, get = hooks.get, content = hooks.content;
+        var hooks = env.hooks, block = hooks.block, get = hooks.get, content = hooks.content;
         dom.detectNamespace(contextualElement);
         var fragment;
         if (env.useFragmentCache && dom.canClone) {
@@ -1989,39 +1987,22 @@ define('barapp/templates/application', ['exports'], function (exports) {
         } else {
           fragment = this.build(dom);
         }
-        var element3 = dom.childAt(fragment, [0]);
-        var element4 = dom.childAt(fragment, [2, 1]);
-        var element5 = dom.childAt(element4, [3]);
-        var element6 = dom.childAt(element4, [5]);
-        var element7 = dom.childAt(fragment, [5, 1, 1]);
-        var morph0 = dom.createMorphAt(dom.childAt(element3, [1, 1, 0]),-1,-1);
-        var morph1 = dom.createMorphAt(dom.childAt(element3, [3, 1, 0]),-1,-1);
-        var morph2 = dom.createMorphAt(dom.childAt(element3, [5, 1, 0]),-1,-1);
-        var morph3 = dom.createMorphAt(dom.childAt(element3, [7, 1, 0]),-1,-1);
-        var morph4 = dom.createMorphAt(element5,-1,-1);
-        var morph5 = dom.createMorphAt(element6,-1,-1);
-        var morph6 = dom.createMorphAt(dom.childAt(element4, [7]),-1,-1);
-        var morph7 = dom.createMorphAt(element4,8,9);
-        var morph8 = dom.createMorphAt(fragment,3,4,contextualElement);
-        var morph9 = dom.createMorphAt(element7,0,1);
-        var morph10 = dom.createMorphAt(element7,1,2);
-        var morph11 = dom.createMorphAt(element7,2,3);
-        var morph12 = dom.createMorphAt(element7,3,4);
-        inline(env, morph0, context, "fa-icon", ["home"], {});
-        inline(env, morph1, context, "fa-icon", ["user"], {});
-        inline(env, morph2, context, "fa-icon", ["star"], {});
-        inline(env, morph3, context, "fa-icon", ["cog"], {});
-        element(env, element5, context, "action", ["openNav"], {});
-        inline(env, morph4, context, "fa-icon", ["bars"], {});
-        element(env, element6, context, "action", ["closeNav"], {});
-        inline(env, morph5, context, "fa-icon", ["bars"], {});
-        block(env, morph6, context, "link-to", ["index"], {}, child0, null);
-        block(env, morph7, context, "if", [get(env, context, "session.isAuthenticated")], {}, child1, child2);
-        content(env, morph8, context, "outlet");
-        block(env, morph9, context, "link-to", ["index"], {}, child3, null);
-        block(env, morph10, context, "link-to", ["index"], {}, child4, null);
-        block(env, morph11, context, "link-to", ["my-business-profile"], {}, child5, null);
-        block(env, morph12, context, "link-to", ["index"], {}, child6, null);
+        var element5 = dom.childAt(fragment, [1, 1]);
+        var element6 = dom.childAt(fragment, [4, 1, 1]);
+        var morph0 = dom.createMorphAt(dom.childAt(element5, [3]),-1,-1);
+        var morph1 = dom.createMorphAt(element5,4,5);
+        var morph2 = dom.createMorphAt(fragment,2,3,contextualElement);
+        var morph3 = dom.createMorphAt(element6,0,1);
+        var morph4 = dom.createMorphAt(element6,1,2);
+        var morph5 = dom.createMorphAt(element6,2,3);
+        var morph6 = dom.createMorphAt(element6,3,4);
+        block(env, morph0, context, "link-to", ["index"], {}, child0, null);
+        block(env, morph1, context, "if", [get(env, context, "session.isAuthenticated")], {}, child1, child2);
+        content(env, morph2, context, "outlet");
+        block(env, morph3, context, "link-to", ["index"], {}, child3, null);
+        block(env, morph4, context, "link-to", ["index"], {}, child4, null);
+        block(env, morph5, context, "link-to", ["my-business-profile"], {}, child5, null);
+        block(env, morph6, context, "link-to", ["index"], {}, child6, null);
         return fragment;
       }
     };
@@ -5873,27 +5854,11 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2,"class","my-sidebar-left");
-        var el3 = dom.createTextNode("\n\n\n    ");
+        var el3 = dom.createTextNode("\n\n    ");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment(" <div class=\"index-header\">\n      <div class=\"bartender-info\">\n        <p class=\"bartender-info-name\">{{session.currentUser.businessName}}</p>\n        <p class=\"bartender-info-location\">{{session.currentUser.address}}</p>\n        <p class=\"bartender-info-location\">{{session.currentUser.city}}, {{session.currentUser.state}} {{session.currentUser.zip}}</p>\n      </div>\n    </div> ");
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n    ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createComment(" <div class=\"business-tools\">\n      <ul>\n        {{#link-to 'business-edit'}}<li><div class=\"tools-icon\">{{fa-icon \"pencil-square-o\"}}</div><div class=\"tools-label\"><p>Edit Profile</p></div></li>{{/link-to}}\n      </ul>\n    </div> ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n    ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createComment(" <div class=\"business-tools2\">\n      <ul>\n        <li><div class=\"tools-icon\">{{fa-icon \"check-circle\"}}</div><div class=\"tools-label\"><p>Edit Profile</p></div></li>\n        <li><div class=\"tools-icon\">{{fa-icon \"check-circle\"}}</div><div class=\"tools-label\"><p>Edit Specials</p></div></li>\n        <li><div class=\"tools-icon\">{{fa-icon \"check-circle\"}}</div><div class=\"tools-label\"><p>Edit Profile</p></div></li>\n      </ul>\n    </div> ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n\n");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createComment("\n    <div class=\"sidebar-photos\">\n      <ul>\n        <li><div class=\"photo-container\"><img src=\"/assets/images/henrysbar.jpg\" class=\"photo-thumbnail\"></div></li>\n        <li><div class=\"photo-container\"><img src=\"/assets/images/nightlife.jpg\" class=\"photo-thumbnail\"></div></li>\n        <li><div class=\"photo-container\"><img src=\"/assets/images/barscene.jpg\" class=\"photo-thumbnail\"></div></li>\n\n      </ul>\n    </div> ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n    ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createComment(" <div class=\"business-numbers\">\n      <ul>\n        <li><div class=\"numbers\">340</div><div class=\"numbers-label\"><p>Followers</p></div></li>\n        <li><div class=\"numbers\">126</div><div class=\"numbers-label\"><p>Posts</p></div></li>\n        <li><div class=\"numbers\">4</div><div class=\"numbers-label\"><p>Bartenders</p></div></li>\n      </ul>\n    </div> ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n\n\n    ");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("div");
         dom.setAttribute(el3,"class","business-profile-info-dark");
@@ -6013,10 +5978,6 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         var el4 = dom.createTextNode("\n        ");
         dom.appendChild(el3, el4);
         var el4 = dom.createComment(" <div class=\"business-profile-info-edit\">\n{{#link-to 'business-edit'}}\n            {{fa-icon \"magic\"}} Edit Info\n          {{/link-to}}        </div> ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createComment(" <div class=\"business-profile-background-edit\">\n{{#link-to 'cover-upload'}}\n          {{fa-icon \"file-image-o\"}} Upload Cover Image\n        {{/link-to}}      </div> ");
         dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
@@ -6142,28 +6103,24 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         dom.appendChild(el3, el4);
         var el4 = dom.createComment(" <div class=\"business-profile-info-edit\">\n{{#link-to 'business-edit'}}\n            {{fa-icon \"magic\"}} Edit Info\n          {{/link-to}}        </div> ");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n      ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createComment(" <div class=\"business-profile-background-edit\">\n{{#link-to 'cover-upload'}}\n          {{fa-icon \"file-image-o\"}} Upload Cover Image\n        {{/link-to}}      </div> ");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n    ");
+        var el4 = dom.createTextNode("\n\n    ");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n\n\n\n\n  ");
+        var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n  ");
+        var el2 = dom.createTextNode("\n\n  ");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2,"class","business-profile-info-wrap");
         var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n  ");
+        var el2 = dom.createTextNode("\n\n  ");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2,"class","login-wrap");
-        var el3 = dom.createTextNode("\n\n\n    ");
+        var el3 = dom.createTextNode("\n\n    ");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("div");
         dom.setAttribute(el3,"class","business-profile-status");
@@ -6396,25 +6353,25 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         var el6 = dom.createTextNode("\n\n        ");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n\n\n\n\n\n\n      ");
+        var el5 = dom.createTextNode("\n      ");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n    ");
+        var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n\n  ");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("div");
         dom.setAttribute(el3,"class","business-profile-feed");
-        var el4 = dom.createTextNode("\n\n\n\n    ");
+        var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
         dom.setAttribute(el4,"class","feed-container");
-        var el5 = dom.createTextNode("\n      ");
+        var el5 = dom.createTextNode("\n\n      ");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("div");
         dom.setAttribute(el5,"class","business-config");
-        var el6 = dom.createTextNode("\n\n      ");
+        var el6 = dom.createTextNode("\n      ");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
         var el5 = dom.createTextNode("\n\n      ");
@@ -6453,63 +6410,265 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2,"class","sidebar-right");
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createElement("p");
-        var el4 = dom.createTextNode("Another COlumn");
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","calendar-heading");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("p");
+        var el5 = dom.createTextNode("Daily Specials");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n  ");
+        var el3 = dom.createTextNode("\n\n");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment("     <div id=\"accordion\">\n      <h4 class=\"accordion-toggle default\">Accordion 1</h4>\n      <div class=\"accordion-content\">\n        <p>Cras malesuada ultrices augue molestie risus.</p>\n      </div>\n      <h4 class=\"accordion-toggle\">Accordion 2</h4>\n      <div class=\"accordion-content\">\n        <p>Lorem ipsum dolor sit amet mauris eu turpis.</p>\n      </div>\n      <h4 class=\"accordion-toggle\">Accordion 3</h4>\n      <div class=\"accordion-content\">\n        <p>Vivamus facilisisnibh scelerisque laoreet.</p>\n      </div>\n    </div> ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","business-calendar");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("ul");
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("li");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","business-calendar-day");
+        var el7 = dom.createTextNode("Sunday");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("li");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","business-calendar-day");
+        var el7 = dom.createTextNode("Monday");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("li");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","business-calendar-day");
+        var el7 = dom.createTextNode("Tuesday");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("li");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","business-calendar-day");
+        var el7 = dom.createTextNode("Wednesday");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("li");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","business-calendar-day");
+        var el7 = dom.createTextNode("Thursday");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n                ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("li");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","business-calendar-day");
+        var el7 = dom.createTextNode("Friday");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("li");
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","input-label");
+        var el7 = dom.createElement("p");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("div");
+        dom.setAttribute(el6,"class","business-calendar-day");
+        var el7 = dom.createTextNode("Saturday");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n        ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n\n      ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("  \n    ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n\n  ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n\n\n");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
-        var el1 = dom.createTextNode("\n\n\n");
-        dom.appendChild(el0, el1);
-        var el1 = dom.createComment(" <div class=\"weekly-calendar\">\n  <ul>\n    <li><p class=\"calendar-day\">Sunday</p><div class=\"calendar-hours\">Closed{{session.currentUser.sundayHours}}</div><div class=\"business-specials\">{{session.currentUser.sundaySpecial}}</div></li>\n    <li><p class=\"calendar-day\">Monday</p><div class=\"calendar-hours\">2:30pm – 12:00am{{session.currentUser.mondayHours}}</div><div class=\"business-specials\">{{session.currentUser.mondaySpecial}}</div></li>\n    <li><p class=\"calendar-day\">Tuesday</p><div class=\"calendar-hours\">2:30pm – 12:00am{{session.currentUser.tuesdayHours}}</div><div class=\"business-specials\">{{session.currentUser.tuesdaySpecial}}</div></li>\n    <li><p class=\"calendar-day\">Wednesday</p><div class=\"calendar-hours\">2:30pm – 12:00am{{session.currentUser.wednesdayHours}}</div><div class=\"business-specials\">{{session.currentUser.wednesdaySpecial}}</div></li>\n    <li><p class=\"calendar-day\">Thursday</p><div class=\"calendar-hours\">2:30pm – 12:00am{{session.currentUser.thursdayHours}}</div><div class=\"business-specials\">{{session.currentUser.thursdaySpecial}}</div></li>\n    <li><p class=\"calendar-day\">Friday</p><div class=\"calendar-hours\">2:30pm – 2:00am{{session.currentUser.fridayHours}}</div><div class=\"business-specials\">{{session.currentUser.fridaySpecial}}</div></li>\n    <li><p class=\"calendar-day\">Saturday</p><div class=\"calendar-hours\">2:30pm – 2:00am{{session.currentUser.saturdayHours}}</div><div class=\"business-specials\">{{session.currentUser.saturdaySpecial}}</div></li>\n  </ul>\n</div> ");
-        dom.appendChild(el0, el1);
-        var el1 = dom.createTextNode("\n\n");
+        var el1 = dom.createTextNode("\n\n  ");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
-        dom.setAttribute(el1,"class","footer-container");
-        var el2 = dom.createTextNode("\n\n  ");
+        dom.setAttribute(el1,"class","navigation-container");
+        var el2 = dom.createTextNode("\n    ");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
-        dom.setAttribute(el2,"class","footer-copyright");
-        var el3 = dom.createTextNode("\n    ");
+        dom.setAttribute(el2,"class","navigation-open");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n    ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","navigation-close hidden");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n  ");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("ul");
+        dom.setAttribute(el1,"class","navigation");
+        var el2 = dom.createTextNode("\n    ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        dom.setAttribute(el2,"class","nav-item");
+        var el3 = dom.createTextNode("\n      ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createElement("p");
-        var el4 = dom.createTextNode("Barkeep® 2015 All Rights Reserved");
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","nav-label");
+        var el4 = dom.createElement("p");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n  ");
-        dom.appendChild(el2, el3);
-        dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n\n  ");
-        dom.appendChild(el1, el2);
-        var el2 = dom.createElement("div");
-        dom.setAttribute(el2,"class","footer-social-icons");
         var el3 = dom.createTextNode("\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createElement("a");
-        dom.setAttribute(el3,"href","/");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n    ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        dom.setAttribute(el2,"class","nav-item");
+        var el3 = dom.createTextNode("\n      ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("a");
-        dom.setAttribute(el3,"href","/");
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","nav-label");
+        var el4 = dom.createElement("p");
+        dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n    ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createElement("a");
-        dom.setAttribute(el3,"href","/");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n    ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        dom.setAttribute(el2,"class","nav-item");
+        var el3 = dom.createTextNode("\n      ");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n  ");
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","nav-label");
+        var el4 = dom.createElement("p");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n\n");
+        var el2 = dom.createTextNode("\n    ");
         dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        dom.setAttribute(el2,"class","nav-item");
+        var el3 = dom.createTextNode("\n      ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","nav-label");
+        var el4 = dom.createElement("p");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment(" <div class=\"footer-container\">\n\n  <div class=\"footer-copyright\">\n    <p>Barkeep® 2015 All Rights Reserved</p>\n  </div>\n\n  <div class=\"footer-social-icons\">\n    <a href=\"/\">{{fa-icon \"facebook\"}}</a>\n    <a href=\"/\">{{fa-icon \"twitter\"}}</a>\n    <a href=\"/\">{{fa-icon \"instagram\"}}</a>\n  </div>\n\n</div> ");
         dom.appendChild(el0, el1);
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
@@ -6538,7 +6697,7 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         if (this.cachedFragment) { dom.repairClonedNode(fragment,[0]); }
         var element4 = dom.childAt(fragment, [2]);
         var element5 = dom.childAt(element4, [1]);
-        var element6 = dom.childAt(element5, [11, 1]);
+        var element6 = dom.childAt(element5, [3, 1]);
         var element7 = dom.childAt(element6, [1]);
         var element8 = dom.childAt(element6, [3]);
         var element9 = dom.childAt(element6, [5]);
@@ -6546,7 +6705,7 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         var element11 = dom.childAt(element6, [7]);
         var element12 = dom.childAt(element11, [3, 0]);
         var element13 = dom.childAt(element6, [9]);
-        var element14 = dom.childAt(element5, [13, 1]);
+        var element14 = dom.childAt(element5, [5, 1]);
         var element15 = dom.childAt(element14, [1]);
         var element16 = dom.childAt(element14, [3]);
         var element17 = dom.childAt(element14, [5]);
@@ -6561,7 +6720,11 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         var element26 = dom.childAt(element24, [3]);
         var element27 = dom.childAt(element24, [9]);
         var element28 = dom.childAt(element24, [11]);
-        var element29 = dom.childAt(fragment, [6, 3]);
+        var element29 = dom.childAt(element4, [7, 5, 1]);
+        var element30 = dom.childAt(fragment, [4]);
+        var element31 = dom.childAt(element30, [1]);
+        var element32 = dom.childAt(element30, [3]);
+        var element33 = dom.childAt(fragment, [6]);
         var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
         var morph1 = dom.createMorphAt(dom.childAt(element7, [1, 0]),-1,-1);
         var morph2 = dom.createMorphAt(dom.childAt(element7, [3]),-1,-1);
@@ -6592,9 +6755,19 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         var morph27 = dom.createMorphAt(dom.childAt(element27, [0, 0]),-1,-1);
         var morph28 = dom.createMorphAt(dom.childAt(element28, [0, 0]),-1,-1);
         var morph29 = dom.createMorphAt(dom.childAt(element22, [3, 1, 3, 1]),0,1);
-        var morph30 = dom.createMorphAt(dom.childAt(element29, [1]),-1,-1);
-        var morph31 = dom.createMorphAt(dom.childAt(element29, [3]),-1,-1);
-        var morph32 = dom.createMorphAt(dom.childAt(element29, [5]),-1,-1);
+        var morph30 = dom.createMorphAt(dom.childAt(element29, [1, 1, 0]),-1,-1);
+        var morph31 = dom.createMorphAt(dom.childAt(element29, [3, 1, 0]),-1,-1);
+        var morph32 = dom.createMorphAt(dom.childAt(element29, [5, 1, 0]),-1,-1);
+        var morph33 = dom.createMorphAt(dom.childAt(element29, [7, 1, 0]),-1,-1);
+        var morph34 = dom.createMorphAt(dom.childAt(element29, [9, 1, 0]),-1,-1);
+        var morph35 = dom.createMorphAt(dom.childAt(element29, [11, 1, 0]),-1,-1);
+        var morph36 = dom.createMorphAt(dom.childAt(element29, [13, 1, 0]),-1,-1);
+        var morph37 = dom.createMorphAt(element31,-1,-1);
+        var morph38 = dom.createMorphAt(element32,-1,-1);
+        var morph39 = dom.createMorphAt(dom.childAt(element33, [1, 1, 0]),-1,-1);
+        var morph40 = dom.createMorphAt(dom.childAt(element33, [3, 1, 0]),-1,-1);
+        var morph41 = dom.createMorphAt(dom.childAt(element33, [5, 1, 0]),-1,-1);
+        var morph42 = dom.createMorphAt(dom.childAt(element33, [7, 1, 0]),-1,-1);
         content(env, morph0, context, "outlet");
         inline(env, morph1, context, "fa-icon", ["chevron-right"], {});
         content(env, morph2, context, "session.currentUser.businessName");
@@ -6632,9 +6805,21 @@ define('barapp/templates/my-business-profile', ['exports'], function (exports) {
         element(env, element28, context, "action", ["cancelDestroy"], {});
         inline(env, morph28, context, "fa-icon", ["chevron-left"], {});
         block(env, morph29, context, "each", [get(env, context, "sortedPosts")], {"keyword": "post"}, child0, null);
-        inline(env, morph30, context, "fa-icon", ["facebook"], {});
-        inline(env, morph31, context, "fa-icon", ["twitter"], {});
-        inline(env, morph32, context, "fa-icon", ["instagram"], {});
+        inline(env, morph30, context, "fa-icon", ["chevron-right"], {});
+        inline(env, morph31, context, "fa-icon", ["chevron-right"], {});
+        inline(env, morph32, context, "fa-icon", ["chevron-right"], {});
+        inline(env, morph33, context, "fa-icon", ["chevron-right"], {});
+        inline(env, morph34, context, "fa-icon", ["chevron-right"], {});
+        inline(env, morph35, context, "fa-icon", ["chevron-right"], {});
+        inline(env, morph36, context, "fa-icon", ["chevron-right"], {});
+        element(env, element31, context, "action", ["openNav"], {});
+        inline(env, morph37, context, "fa-icon", ["chevron-up"], {});
+        element(env, element32, context, "action", ["closeNav"], {});
+        inline(env, morph38, context, "fa-icon", ["chevron-up"], {});
+        inline(env, morph39, context, "fa-icon", ["home"], {});
+        inline(env, morph40, context, "fa-icon", ["user"], {});
+        inline(env, morph41, context, "fa-icon", ["star"], {});
+        inline(env, morph42, context, "fa-icon", ["cog"], {});
         return fragment;
       }
     };
@@ -7310,6 +7495,48 @@ define('barapp/templates/register', ['exports'], function (exports) {
   'use strict';
 
   exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      return {
+        isHTMLBars: true,
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("      ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("div");
+          dom.setAttribute(el1,"class","new-user-link");
+          var el2 = dom.createTextNode("Login");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          return fragment;
+        }
+      };
+    }());
     return {
       isHTMLBars: true,
       blockParams: 0,
@@ -7436,8 +7663,9 @@ define('barapp/templates/register', ['exports'], function (exports) {
         dom.setAttribute(el4,"class","business-signup-type");
         var el5 = dom.createTextNode("\n      ");
         dom.appendChild(el4, el5);
-        var el5 = dom.createElement("p");
-        var el6 = dom.createTextNode("Select User Type:");
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","input-label");
+        var el6 = dom.createElement("p");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
         var el5 = dom.createTextNode("\n      ");
@@ -7445,7 +7673,9 @@ define('barapp/templates/register', ['exports'], function (exports) {
         var el5 = dom.createTextNode("\n    ");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n    ");
+        var el4 = dom.createTextNode("\n\n");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
         dom.setAttribute(el4,"class","business-signup-submit");
@@ -7576,7 +7806,7 @@ define('barapp/templates/register', ['exports'], function (exports) {
       },
       render: function render(context, env, contextualElement) {
         var dom = env.dom;
-        var hooks = env.hooks, content = hooks.content, element = hooks.element, inline = hooks.inline, get = hooks.get;
+        var hooks = env.hooks, content = hooks.content, element = hooks.element, inline = hooks.inline, get = hooks.get, block = hooks.block;
         dom.detectNamespace(contextualElement);
         var fragment;
         if (env.useFragmentCache && dom.canClone) {
@@ -7600,7 +7830,8 @@ define('barapp/templates/register', ['exports'], function (exports) {
         var element2 = dom.childAt(element0, [3]);
         var element3 = dom.childAt(element0, [5]);
         var element4 = dom.childAt(element0, [7]);
-        var element5 = dom.childAt(fragment, [6, 3]);
+        var element5 = dom.childAt(element0, [9]);
+        var element6 = dom.childAt(fragment, [6, 3]);
         var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
         var morph1 = dom.createMorphAt(dom.childAt(element1, [1, 0]),-1,-1);
         var morph2 = dom.createMorphAt(element1,2,3);
@@ -7610,10 +7841,12 @@ define('barapp/templates/register', ['exports'], function (exports) {
         var morph6 = dom.createMorphAt(element3,2,3);
         var morph7 = dom.createMorphAt(dom.childAt(element4, [1, 0]),-1,-1);
         var morph8 = dom.createMorphAt(element4,2,3);
-        var morph9 = dom.createMorphAt(dom.childAt(element0, [9]),2,3);
-        var morph10 = dom.createMorphAt(dom.childAt(element5, [1]),-1,-1);
-        var morph11 = dom.createMorphAt(dom.childAt(element5, [3]),-1,-1);
-        var morph12 = dom.createMorphAt(dom.childAt(element5, [5]),-1,-1);
+        var morph9 = dom.createMorphAt(dom.childAt(element5, [1, 0]),-1,-1);
+        var morph10 = dom.createMorphAt(element5,2,3);
+        var morph11 = dom.createMorphAt(element0,10,11);
+        var morph12 = dom.createMorphAt(dom.childAt(element6, [1]),-1,-1);
+        var morph13 = dom.createMorphAt(dom.childAt(element6, [3]),-1,-1);
+        var morph14 = dom.createMorphAt(dom.childAt(element6, [5]),-1,-1);
         content(env, morph0, context, "outlet");
         element(env, element0, context, "action", ["register"], {"on": "submit"});
         inline(env, morph1, context, "fa-icon", ["chevron-right"], {});
@@ -7624,10 +7857,12 @@ define('barapp/templates/register', ['exports'], function (exports) {
         inline(env, morph6, context, "input", [], {"placeholder": "Email", "type": "email", "value": get(env, context, "username"), "required": true});
         inline(env, morph7, context, "fa-icon", ["chevron-right"], {});
         inline(env, morph8, context, "input", [], {"placeholder": "Password", "type": "password", "value": get(env, context, "password"), "required": true});
-        inline(env, morph9, context, "view", ["select"], {"class": "select-user-type", "value": get(env, context, "userType"), "content": get(env, context, "typeUser")});
-        inline(env, morph10, context, "fa-icon", ["facebook"], {});
-        inline(env, morph11, context, "fa-icon", ["twitter"], {});
-        inline(env, morph12, context, "fa-icon", ["instagram"], {});
+        inline(env, morph9, context, "fa-icon", ["chevron-right"], {});
+        inline(env, morph10, context, "view", ["select"], {"class": "select-user-type", "value": get(env, context, "userType"), "content": get(env, context, "typeUser")});
+        block(env, morph11, context, "link-to", ["login"], {}, child0, null);
+        inline(env, morph12, context, "fa-icon", ["facebook"], {});
+        inline(env, morph13, context, "fa-icon", ["twitter"], {});
+        inline(env, morph14, context, "fa-icon", ["instagram"], {});
         return fragment;
       }
     };
@@ -8168,6 +8403,16 @@ define('barapp/templates/user-signup', ['exports'], function (exports) {
   }()));
 
 });
+define('barapp/tests/adapters/beer.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - adapters');
+  test('adapters/beer.js should pass jshint', function() { 
+    ok(true, 'adapters/beer.js should pass jshint.'); 
+  });
+
+});
 define('barapp/tests/adapters/my-business-profile.jshint', function () {
 
   'use strict';
@@ -8639,6 +8884,32 @@ define('barapp/tests/test-helper.jshint', function () {
   module('JSHint - .');
   test('test-helper.js should pass jshint', function() { 
     ok(true, 'test-helper.js should pass jshint.'); 
+  });
+
+});
+define('barapp/tests/unit/adapters/beer-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleFor("adapter:beer", "BeerAdapter", {});
+
+  // Replace this with your real tests.
+  ember_qunit.test("it exists", function (assert) {
+    var adapter = this.subject();
+    assert.ok(adapter);
+  });
+
+  // Specify the other units that are required for this test.
+  // needs: ['serializer:foo']
+
+});
+define('barapp/tests/unit/adapters/beer-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/adapters');
+  test('unit/adapters/beer-test.js should pass jshint', function() { 
+    ok(true, 'unit/adapters/beer-test.js should pass jshint.'); 
   });
 
 });
@@ -9738,7 +10009,7 @@ catch(err) {
 if (runningTests) {
   require("barapp/tests/test-helper");
 } else {
-  require("barapp/app")["default"].create({"name":"barapp","version":"0.0.0.deda2669"});
+  require("barapp/app")["default"].create({"name":"barapp","version":"0.0.0.5ffb0954"});
 }
 
 /* jshint ignore:end */
