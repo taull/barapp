@@ -15,16 +15,40 @@ export default Ember.Controller.extend({
         data: JSON.stringify(data),
         contentType: 'application/json'
       }).then(function(response){
+
         Ember.$('.loader-container').removeClass('hidden');
         Ember.run.later(this, function(){
-          this.transitionToRoute('/', response);
-        }, 2000);
-        this.session.authenticate('authenticator:parse-email', {
+          this.session.authenticate('authenticator:parse-email', {
           sessionToken: response.sessionToken,
         });
+          this.transitionToRoute('/', response);
+        }, 2000);
+
 
       }.bind(this));
   },
-}
 
+    // confirmPassword: function(){
+    //   var password = Ember.$("#password");
+    //   var confirm_password = Ember.$("#confirm_password");
+
+    //   function validatePassword(){
+    //     if(password.value !== confirm_password.value) {
+    //       confirm_password.setCustomValidity("Passwords Don't Match");
+    //     } else {
+    //       confirm_password.setCustomValidity('');
+    //     }
+    //   }
+
+    //   password.onchange = validatePassword;
+    //   confirm_password.onkeyup = validatePassword;
+    // },
+
+
+
+
+
+  }
 });
+
+

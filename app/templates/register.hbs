@@ -17,7 +17,6 @@
   <form id="business-signup-form" {{action 'register' on='submit'}}>
 
 
-
     <div class="business-signup-firstname">
       <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
 
@@ -39,8 +38,14 @@
     <div class="business-signup-password">
       <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
 
-      {{input placeholder="Password" type='password' value=password required=true}}
+      {{input placeholder="Password" type='password' value=password required=true id="password"}}
     </div>
+
+<!--     <div class="business-signup-confirm">
+      <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+
+      {{input placeholder="Confirm Password" type='password' value=confirmPassword required=true id="confirm_password"}}
+    </div> -->
 
     <div class="business-signup-type">
       <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
@@ -78,7 +83,6 @@
 
 
   </form>
-
 </div>
 </div>
 

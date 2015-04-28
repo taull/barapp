@@ -820,16 +820,32 @@ define('barapp/controllers/register', ['exports', 'ic-ajax', 'ember'], function 
           data: JSON.stringify(data),
           contentType: "application/json"
         }).then((function (response) {
+
           Ember['default'].$(".loader-container").removeClass("hidden");
           Ember['default'].run.later(this, function () {
+            this.session.authenticate("authenticator:parse-email", {
+              sessionToken: response.sessionToken });
             this.transitionToRoute("/", response);
           }, 2000);
-          this.session.authenticate("authenticator:parse-email", {
-            sessionToken: response.sessionToken });
         }).bind(this));
       } }
-
   });
+
+  // confirmPassword: function(){
+  //   var password = Ember.$("#password");
+  //   var confirm_password = Ember.$("#confirm_password");
+
+  //   function validatePassword(){
+  //     if(password.value !== confirm_password.value) {
+  //       confirm_password.setCustomValidity("Passwords Don't Match");
+  //     } else {
+  //       confirm_password.setCustomValidity('');
+  //     }
+  //   }
+
+  //   password.onchange = validatePassword;
+  //   confirm_password.onkeyup = validatePassword;
+  // },
 
 });
 define('barapp/controllers/slide-show', ['exports', 'ember', 'ember-slide-show/mixins/slide-show-controller'], function (exports, Ember, SlideShowController) {
@@ -8226,7 +8242,7 @@ define('barapp/templates/register', ['exports'], function (exports) {
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("form");
         dom.setAttribute(el3,"id","business-signup-form");
-        var el4 = dom.createTextNode("\n\n\n\n    ");
+        var el4 = dom.createTextNode("\n\n\n    ");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
         dom.setAttribute(el4,"class","business-signup-firstname");
@@ -8289,6 +8305,10 @@ define('barapp/templates/register', ['exports'], function (exports) {
         dom.appendChild(el4, el5);
         var el5 = dom.createTextNode("\n    ");
         dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n\n");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createComment("     <div class=\"business-signup-confirm\">\n      <div class=\"input-label\"><p>{{fa-icon \"chevron-right\"}}</p></div>\n\n      {{input placeholder=\"Confirm Password\" type='password' value=confirmPassword required=true id=\"confirm_password\"}}\n    </div> ");
         dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n\n    ");
         dom.appendChild(el3, el4);
@@ -8384,7 +8404,7 @@ define('barapp/templates/register', ['exports'], function (exports) {
         var el4 = dom.createTextNode("\n\n\n  ");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -8463,7 +8483,7 @@ define('barapp/templates/register', ['exports'], function (exports) {
         var element2 = dom.childAt(element0, [3]);
         var element3 = dom.childAt(element0, [5]);
         var element4 = dom.childAt(element0, [7]);
-        var element5 = dom.childAt(element0, [9]);
+        var element5 = dom.childAt(element0, [11]);
         var element6 = dom.childAt(fragment, [6, 3]);
         var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
         var morph1 = dom.createMorphAt(dom.childAt(element1, [1, 0]),-1,-1);
@@ -8476,7 +8496,7 @@ define('barapp/templates/register', ['exports'], function (exports) {
         var morph8 = dom.createMorphAt(element4,2,3);
         var morph9 = dom.createMorphAt(dom.childAt(element5, [1, 0]),-1,-1);
         var morph10 = dom.createMorphAt(element5,2,3);
-        var morph11 = dom.createMorphAt(element0,10,11);
+        var morph11 = dom.createMorphAt(element0,12,13);
         var morph12 = dom.createMorphAt(dom.childAt(element6, [1]),-1,-1);
         var morph13 = dom.createMorphAt(dom.childAt(element6, [3]),-1,-1);
         var morph14 = dom.createMorphAt(dom.childAt(element6, [5]),-1,-1);
@@ -8489,7 +8509,7 @@ define('barapp/templates/register', ['exports'], function (exports) {
         inline(env, morph5, context, "fa-icon", ["chevron-right"], {});
         inline(env, morph6, context, "input", [], {"placeholder": "Email", "type": "email", "value": get(env, context, "username"), "required": true});
         inline(env, morph7, context, "fa-icon", ["chevron-right"], {});
-        inline(env, morph8, context, "input", [], {"placeholder": "Password", "type": "password", "value": get(env, context, "password"), "required": true});
+        inline(env, morph8, context, "input", [], {"placeholder": "Password", "type": "password", "value": get(env, context, "password"), "required": true, "id": "password"});
         inline(env, morph9, context, "fa-icon", ["chevron-right"], {});
         inline(env, morph10, context, "view", ["select"], {"class": "select-user-type", "value": get(env, context, "userType"), "content": get(env, context, "typeUser")});
         block(env, morph11, context, "link-to", ["login"], {}, child0, null);
@@ -10597,6 +10617,29 @@ define('barapp/tests/unit/views/index-test.jshint', function () {
   });
 
 });
+define('barapp/tests/unit/views/register-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleFor("view:register");
+
+  // Replace this with your real tests.
+  ember_qunit.test("it exists", function (assert) {
+    var view = this.subject();
+    assert.ok(view);
+  });
+
+});
+define('barapp/tests/unit/views/register-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/views');
+  test('unit/views/register-test.js should pass jshint', function() { 
+    ok(true, 'unit/views/register-test.js should pass jshint.'); 
+  });
+
+});
 define('barapp/tests/views/index.jshint', function () {
 
   'use strict';
@@ -10607,11 +10650,33 @@ define('barapp/tests/views/index.jshint', function () {
   });
 
 });
+define('barapp/tests/views/register.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - views');
+  test('views/register.js should pass jshint', function() { 
+    ok(true, 'views/register.js should pass jshint.'); 
+  });
+
+});
 define('barapp/views/index', ['exports', 'ember'], function (exports, Ember) {
 
 	'use strict';
 
 	exports['default'] = Ember['default'].View.extend({});
+
+});
+define('barapp/views/register', ['exports', 'ember'], function (exports, Ember) {
+
+	'use strict';
+
+	exports['default'] = Ember['default'].View.extend({});
+
+	// registerUser: function(){
+	// 	this.get('controller').send('register');
+	// 	this.get('controller').send('confirmPassword');
+	// }
 
 });
 /* jshint ignore:start */

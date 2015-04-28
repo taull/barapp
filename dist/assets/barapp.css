@@ -589,7 +589,7 @@ select:focus {
 
 .feed-info-container {
   display: inline-block;
-  width: 99%;
+  width: 100%;
   vertical-align: top;
   padding: 20px; }
 
@@ -626,9 +626,9 @@ select:focus {
   background: #ccc; }
 
 .feed-name {
-  font-size: 14px;
-  color: navy;
-  font-weight: bold;
+  font-size: 18px;
+  color: #000;
+  font-weight: normal;
   width: 100%; }
 
 .feed-name button {
@@ -645,7 +645,7 @@ select:focus {
 .feed-name a {
   background: transparent;
   text-decoration: none;
-  color: navy; }
+  color: #000; }
 
 .destroy-button {
   border: none;
@@ -675,7 +675,7 @@ select:focus {
   color: #999; }
 
 .feed-status {
-  font-size: 14px;
+  font-size: 16px;
   padding-top: 5px;
   width: 100%;
   line-height: 20px;
@@ -691,7 +691,7 @@ select:focus {
   padding-top: 2px; }
 
 .feed-address {
-  font-size: 10px;
+  font-size: 12px;
   margin: 0;
   padding-top: 3px;
   font-weight: 300; }
@@ -830,7 +830,7 @@ select:focus {
 
 .login-wrap {
   display: inline-block;
-  width: 50%;
+  width: 40%;
   background: #f8f8f8;
   background-size: cover;
   margin-left: 25%;
@@ -2039,7 +2039,8 @@ footer {
   .feed-avatar-container {
     display: none; }
   .feed-info-container {
-    width: 100%; }
+    width: 100%;
+    padding: 10px; }
   .feed-container {
     width: 100%; }
   .slider-wrap {
