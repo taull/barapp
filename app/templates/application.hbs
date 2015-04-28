@@ -7,12 +7,15 @@
     <div class="home-icon">{{#link-to 'index'}}{{fa-icon "home"}}{{/link-to}}</div>
 
     {{#if session.isAuthenticated}}
-    
+
       <div class="info-open" {{action 'openInfo'}}>{{fa-icon "info-circle"}}</div>
       <div class="info-close hidden" {{action 'closeInfo'}}>{{fa-icon "info-circle"}}</div>
 
       <div class="calendar-open" {{action 'openCalendar'}}>{{fa-icon "calendar"}}</div>
       <div class="calendar-close hidden" {{action 'closeCalendar'}}>{{fa-icon "calendar"}}</div>
+
+      <div class="beer-open" {{action 'openBeer'}}>{{fa-icon "beer"}}</div>
+      <div class="beer-close hidden" {{action 'closeBeer'}}>{{fa-icon "beer"}}</div>
 
       <div class="sign-out" {{ action 'invalidateSession' }} href="javascript:void(0)">
         <p>Sign out</p>

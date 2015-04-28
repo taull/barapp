@@ -1,5 +1,29 @@
 {{outlet}}
+
+
+<div class="body-overlay hidden">
+</div>
+
+  <div class="sidebar-nav">
+    <ul>
+      <li class="sidebar-nav-item">
+        <div class="sidebar-nav-label"><p>{{fa-icon "home"}}</p></div>
+      </li>
+      <li class="sidebar-nav-item">
+        <div class="sidebar-nav-label"><p>{{fa-icon "user"}}</p></div>
+      </li>
+      <li class="sidebar-nav-item">
+        <div class="sidebar-nav-label"><p>{{fa-icon "star"}}</p></div>
+      </li>
+      <li class="sidebar-nav-item">
+        <div class="sidebar-nav-label"><p>{{fa-icon "cog"}}</p></div>
+      </li>
+    </ul>
+  </div>
+
+
 <div class="body-container">
+
   <div class="my-sidebar-left">
 
     <!-- <div class="index-header">
@@ -159,27 +183,55 @@
 
   </div>
 
-  <div class="sidebar-right">
+    <div class="my-sidebar-right">
 
-    <div class="calendar-heading">
-      <p>Daily Specials</p>
+    <div class="business-profile-info">
+      <ul>
+        <li class="business-profile-name">
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="profile-span-name business-profile-span-name">{{session.currentUser.businessName}}</div>
+        </li>
+        <li class="business-profile-address1">
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="profile-span-name profile-span-address"><a href="/">{{session.currentUser.address}}</a></div>
+        </li>
+        <li class="business-profile-address1">
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="profile-span-name profile-span-address"><a href="/">{{session.currentUser.city}}, {{session.currentUser.state}} {{session.currentUser.zip}}</a></div>
+        </li>
+        <li class="business-profile-website">
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="profile-span-name"><a {{bind-attr href="session.currentUser.website"}}>{{session.currentUser.website}}</a></div>
+        </li>
+        <li class="business-profile-hours">
+          <div class="input-label"><p>{{fa-icon "chevron-right"}}</p></div>
+          <div class="profile-span-name">{{session.currentUser.businessHours}}</div>
+        </li>
+
+      </ul>
+      
+        <div class="business-profile-info-edit">
+          {{#link-to 'business-edit'}}
+            {{fa-icon "magic"}} Edit Info
+          {{/link-to}}
+        </div>
+
     </div>
 
-<!--     <div id="accordion">
-      <h4 class="accordion-toggle default">Accordion 1</h4>
-      <div class="accordion-content">
-        <p>Cras malesuada ultrices augue molestie risus.</p>
-      </div>
-      <h4 class="accordion-toggle">Accordion 2</h4>
-      <div class="accordion-content">
-        <p>Lorem ipsum dolor sit amet mauris eu turpis.</p>
-      </div>
-      <h4 class="accordion-toggle">Accordion 3</h4>
-      <div class="accordion-content">
-        <p>Vivamus facilisisnibh scelerisque laoreet.</p>
-      </div>
-    </div> -->
+  </div>
 
+
+</div>
+
+
+
+
+
+
+
+
+
+  <div class="sidebar-right">
     <div class="business-calendar">
       <ul>
         <li>
@@ -215,9 +267,111 @@
     </div>
 
   </div>
-</div>
 
-  <div class="navigation-container">
+
+
+
+
+  <div class="sidebar-left">
+
+    <div class="business-beer">
+
+<!--       <p>Beme Brewery</p>
+ -->
+      <ul>
+        <div class="single-beer">
+          <li class="beer-abv-list">
+            <div class="beer-abv"><p>6.8%</p></div>
+          </li>
+          <li class="beer-name">
+            <div class="beer-title"><p>White Thai</p></div>
+            <div class="beer-brand"><p>Westbrook Brewing Company</p></div>
+          </li>
+        </div>
+
+        <div class="single-beer">
+          <li class="beer-abv-list">
+            <div class="beer-abv"><p>7.2%</p></div>
+          </li>
+          <li class="beer-name">
+            <div class="beer-title"><p>Hop Drop &amp; Roll</p></div>
+            <div class="beer-brand"><p>NoDa Brewing</p></div>
+          </li>
+        </div>
+
+        <div class="single-beer">
+          <li class="beer-abv-list">
+            <div class="beer-abv"><p>5.9%</p></div>
+          </li>
+          <li class="beer-name">
+            <div class="beer-title"><p>Rich &amp; Dan's Rye IPA</p></div>
+            <div class="beer-brand"><p>Harpoon Brewery</p></div>
+          </li>
+        </div>
+
+        <div class="single-beer">
+          <li class="beer-abv-list">
+            <div class="beer-abv"><p>5.4%</p></div>
+          </li>
+          <li class="beer-name">
+            <div class="beer-title"><p>420 Extra Pale Ale</p></div>
+            <div class="beer-brand"><p>Sweet Water Brewing Company</p></div>
+          </li>
+        </div>
+
+                <div class="single-beer">
+          <li class="beer-abv-list">
+            <div class="beer-abv"><p>6.8%</p></div>
+          </li>
+          <li class="beer-name">
+            <div class="beer-title"><p>White Thai</p></div>
+            <div class="beer-brand"><p>Westbrook Brewing Company</p></div>
+          </li>
+        </div>
+
+        <div class="single-beer">
+          <li class="beer-abv-list">
+            <div class="beer-abv"><p>7.2%</p></div>
+          </li>
+          <li class="beer-name">
+            <div class="beer-title"><p>Hop Drop &amp; Roll</p></div>
+            <div class="beer-brand"><p>NoDa Brewing</p></div>
+          </li>
+        </div>
+
+        <div class="single-beer">
+          <li class="beer-abv-list">
+            <div class="beer-abv"><p>5.9%</p></div>
+          </li>
+          <li class="beer-name">
+            <div class="beer-title"><p>Rich &amp; Dan's Rye IPA</p></div>
+            <div class="beer-brand"><p>Harpoon Brewery</p></div>
+          </li>
+        </div>
+
+        <div class="single-beer">
+          <li class="beer-abv-list">
+            <div class="beer-abv"><p>5.4%</p></div>
+          </li>
+          <li class="beer-name">
+            <div class="beer-title"><p>420 Extra Pale Ale</p></div>
+            <div class="beer-brand"><p>Sweet Water Brewing Company</p></div>
+          </li>
+        </div>
+
+
+      </ul>
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+<!--   <div class="navigation-container">
     <div class="navigation-open" {{action 'openNav'}}>{{fa-icon "chevron-up"}}</div>
     <div class="navigation-close hidden" {{action 'closeNav'}}>{{fa-icon "chevron-up"}}</div>
   </div>
@@ -234,7 +388,7 @@
     <li class="nav-item">
       <div class="nav-label"><p>{{fa-icon "cog"}}</p></div>
     </li>
-  </ul>
+  </ul> -->
 <!-- <div class="footer-container">
 
   <div class="footer-copyright">

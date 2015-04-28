@@ -42,6 +42,7 @@ export default Ember.Controller.extend({
 
       openCalendar: function(){
         Ember.$('.sidebar-right').addClass('open-calendar');
+        Ember.$('.body-container').addClass('open-calendar-body');
 
         Ember.$('.calendar-close').removeClass('hidden');
         Ember.$('.calendar-open').addClass('hidden');
@@ -51,9 +52,31 @@ export default Ember.Controller.extend({
 
       closeCalendar: function(){
         Ember.$('.sidebar-right').removeClass('open-calendar');
+        Ember.$('.body-container').removeClass('open-calendar-body');
 
         Ember.$('.calendar-close').addClass('hidden');
         Ember.$('.calendar-open').removeClass('hidden');
+    },
+
+      openBeer: function(){
+        Ember.$('.sidebar-left').addClass('open-beer');
+
+        Ember.$('.body-container').addClass('open-beer-body');
+        Ember.$('.sidebar-nav').addClass('open-beer-sidebar-nav');
+
+        Ember.$('.beer-close').removeClass('hidden');
+        Ember.$('.beer-open').addClass('hidden');
+
+
+    },
+
+      closeBeer: function(){
+        Ember.$('.sidebar-left').removeClass('open-beer');
+        Ember.$('.body-container').removeClass('open-beer-body');
+        Ember.$('.sidebar-nav').removeClass('open-beer-sidebar-nav');
+
+        Ember.$('.beer-close').addClass('hidden');
+        Ember.$('.beer-open').removeClass('hidden');
     },
 }
 
